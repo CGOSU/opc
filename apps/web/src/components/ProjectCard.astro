@@ -1,0 +1,10 @@
+---
+import type {HomeContent} from '../lib/home';
+import StudioIllustration from './StudioIllustration.astro';
+interface Props {project: HomeContent['projects'][number]; concept: string}
+const {project, concept} = Astro.props;
+---
+<article class="project-card">
+  <div class="project-visual"><StudioIllustration variant={project.visual === 'web' ? 'web' : 'film'}/></div>
+  <div class="project-copy"><p class="card-meta">{concept}</p><h3>{project.title}</h3><p>{project.summary}</p><p class="project-tags">{project.tags}</p></div>
+</article>

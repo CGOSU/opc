@@ -1,0 +1,16 @@
+---
+import '../styles/global.css';
+interface Props {title: string; description: string; locale: 'zh' | 'en'; noindex?: boolean; skip: string}
+const {title, description, locale, noindex = false, skip} = Astro.props;
+const canonical = Astro.site ? new URL(`/${locale}/`, Astro.site) : undefined;
+---
+<!doctype html>
+<html lang={locale === 'zh' ? 'zh-Hans' : 'en'}>
+  <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="generator" content={Astro.generator}/><title>{title}</title><meta name="description" content={description}/><meta name="theme-color" content="#F8FAFA"/><link rel="icon" href="/goose-placeholder.svg" type="image/svg+xml"/>
+    {(noindex || !Astro.site) && <meta name="robots" content="noindex, follow"/>}
+    {canonical && <link rel="canonical" href={canonical}/>}
+    {Astro.site && <><link rel="alternate" hreflang="zh-Hans" href={new URL('/zh/', Astro.site)}/><link rel="alternate" hreflang="en" href={new URL('/en/', Astro.site)}/><link rel="alternate" hreflang="x-default" href={Astro.site}/></>}
+    <meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:type" content="website"/>{canonical && <meta property="og:url" content={canonical}/>}
+  </head>
+  <body><a class="skip-link" href="#main">{skip}</a><slot/></body>
+</html>

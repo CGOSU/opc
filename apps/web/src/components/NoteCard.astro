@@ -1,0 +1,10 @@
+---
+import type { HomeContent } from '../lib/home';
+import StudioIllustration from './StudioIllustration.astro';
+interface Props { article: HomeContent['articles'][number]; sample: string; preview: string }
+const {article, sample, preview} = Astro.props;
+---
+<article class:list={['note-card', { 'note-feature': article.kind === 'feature' }]} data-category={article.category}>
+  <div class="note-art"><StudioIllustration variant={article.kind === 'feature' ? 'film' : 'web'}/></div>
+  <div class="note-copy"><div class="card-meta"><span>{sample}</span><span>{article.category}</span></div><h3>{article.title}</h3><p>{article.summary}</p><details><summary>{preview}<span aria-hidden="true">＋</span></summary><p>{article.detail}</p></details></div>
+</article>
