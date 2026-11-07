@@ -1,9 +1,48 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 ---
-<!doctype html><html lang="zh-Hans"><head><script>
-  import { resolveBrowserLocale } from '../lib/browser-locale.mjs';
-  const preferences = navigator.languages?.length ? navigator.languages : [navigator.language];
-  const locale = resolveBrowserLocale(preferences);
-  window.location.replace(`/${locale}/${window.location.search}${window.location.hash}`);
-</script><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="robots" content="noindex, follow"/><title>选择语言 / Choose your language</title></head><body class="language-page"><main><img src="/goose-placeholder.svg" width="80" height="88" alt="鹅形象占位 / Goose placeholder"/><p class="eyebrow">INDEPENDENT STUDIO</p><h1>欢迎来坐坐。<br/><span lang="en">Make yourself at home.</span></h1><p>选择语言 / Choose your language</p><div class="hero-actions"><a class="button primary" href="/zh/" lang="zh-Hans">中文 →</a><a class="button secondary" href="/en/" lang="en">English →</a></div></main></body></html>
+
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <script>
+      import { resolveBrowserLocale } from "../lib/browser-locale.mjs";
+      const preferences = navigator.languages?.length
+        ? navigator.languages
+        : [navigator.language];
+      const locale = resolveBrowserLocale(preferences);
+      window.location.replace(
+        `/${locale}/${window.location.search}${window.location.hash}`,
+      );
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
+    <title>选择语言 / Choose your language</title>
+  </head>
+  <body class="language-page">
+    <main>
+      <img
+        src="/goose-placeholder.svg"
+        width="80"
+        height="88"
+        alt="鹅形象占位 / Goose placeholder"
+      />
+      <p class="eyebrow">INDEPENDENT STUDIO</p>
+      <h1>
+        欢迎来坐坐。
+        <br />
+        <span lang="en">Make yourself at home.</span>
+      </h1>
+      <p>选择语言 / Choose your language</p>
+      <div class="hero-actions">
+        <a class="button primary" href="/zh/" lang="zh-Hans">
+          中文 →
+        </a>
+        <a class="button secondary" href="/en/" lang="en">
+          English →
+        </a>
+      </div>
+    </main>
+  </body>
+</html>

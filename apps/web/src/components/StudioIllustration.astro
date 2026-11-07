@@ -1,19 +1,108 @@
 ---
-interface Props { variant?: 'editor' | 'web' | 'film'; hero?: boolean }
-const { variant = 'editor', hero = false } = Astro.props;
+interface Props {
+  variant?: "editor" | "web" | "film";
+  hero?: boolean;
+}
+const { variant = "editor", hero = false } = Astro.props;
 ---
-<svg class:list={['studio-illustration', { 'hero-illustration': hero }]} viewBox="0 0 520 360" fill="none" aria-hidden="true">
-  {hero && <g stroke="#bdcfd5" stroke-width="1"><path d="M18 48h470M44 24v308M170 25v290M13 288h485" stroke-dasharray="6 5"/><path d="M9 135h106v105H9zM358 28h140v216H358z" fill="#eff4f5"/><path d="M26 193l76-83M376 94l57-66M310 84h216v83H310"/></g>}
-  <g transform={hero ? 'translate(58 58) scale(.82)' : 'translate(20 25)'}>
-    <rect width="460" height="256" rx="12" fill={variant === 'film' ? '#53676e' : '#fcfdfd'} stroke="#526d78" stroke-width="1.5"/>
-    <path d="M0 31h460" stroke="#8399a2"/>
-    <g fill="#80969f"><circle cx="19" cy="16" r="4"/><circle cx="34" cy="16" r="4"/><circle cx="49" cy="16" r="4"/></g>
-    <rect x="22" y="52" width="252" height="161" fill="#e0e8eb" stroke="#acbfc7"/>
-    <path d="M22 156l54-35 80 49 66-36 52 37v42H22z" fill="#afc0c7"/>
-    <path d="M22 193l78-36 56 33 67-42 51 35v30H22z" fill="#8ba1aa"/>
-    {variant !== 'web' && <><circle cx="148" cy="120" r="23" fill="white" stroke="#b1c4cc"/><path d="M142 109l18 11-18 11z" fill={hero ? '#e77b24' : '#65838f'}/><path d="M30 199h235" stroke="white" stroke-width="3"/><circle cx="111" cy="199" r="4" fill="white"/></>}
-    {[54, 110, 166].map(y => <g><rect x="296" y={y} width="55" height="39" fill="#e4ebee" stroke="#b3c4cb"/><path d={`M296 ${y+30}l15-13 12 9 13-16 15 18v11h-55z`} fill="#aabdc5"/><path d={`M365 ${y+5}h70M365 ${y+16}h70M365 ${y+28}h45`} stroke="#b3c4cb" stroke-width="4"/></g>)}
-    <path d="M22 231h252M296 231h55" stroke="#c4d0d5" stroke-width="3"/>
+
+<svg
+  class:list={["studio-illustration", { "hero-illustration": hero }]}
+  viewBox="0 0 520 360"
+  fill="none"
+  aria-hidden="true"
+>
+  {hero && (
+    <g stroke="#bdcfd5" stroke-width="1">
+      <path
+        d="M18 48h470M44 24v308M170 25v290M13 288h485"
+        stroke-dasharray="6 5"
+      />
+      <path d="M9 135h106v105H9zM358 28h140v216H358z" fill="#eff4f5" />
+      <path d="M26 193l76-83M376 94l57-66M310 84h216v83H310" />
+    </g>
+  )}
+  <g transform={hero ? "translate(58 58) scale(.82)" : "translate(20 25)"}>
+    <rect
+      width="460"
+      height="256"
+      rx="12"
+      fill={variant === "film" ? "#53676e" : "#fcfdfd"}
+      stroke="#526d78"
+      stroke-width="1.5"
+    />
+    <path d="M0 31h460" stroke="#8399a2" />
+    <g fill="#80969f">
+      <circle cx="19" cy="16" r="4" />
+      <circle cx="34" cy="16" r="4" />
+      <circle cx="49" cy="16" r="4" />
+    </g>
+    <rect
+      x="22"
+      y="52"
+      width="252"
+      height="161"
+      fill="#e0e8eb"
+      stroke="#acbfc7"
+    />
+    <path d="M22 156l54-35 80 49 66-36 52 37v42H22z" fill="#afc0c7" />
+    <path d="M22 193l78-36 56 33 67-42 51 35v30H22z" fill="#8ba1aa" />
+    {variant !== "web" && (
+      <>
+        <circle cx="148" cy="120" r="23" fill="white" stroke="#b1c4cc" />
+        <path d="M142 109l18 11-18 11z" fill={hero ? "#e77b24" : "#65838f"} />
+        <path d="M30 199h235" stroke="white" stroke-width="3" />
+        <circle cx="111" cy="199" r="4" fill="white" />
+      </>
+    )}
+    {[54, 110, 166].map((y) => (
+      <g>
+        <rect
+          x="296"
+          y={y}
+          width="55"
+          height="39"
+          fill="#e4ebee"
+          stroke="#b3c4cb"
+        />
+        <path
+          d={`M296 ${y + 30}l15-13 12 9 13-16 15 18v11h-55z`}
+          fill="#aabdc5"
+        />
+        <path
+          d={`M365 ${y + 5}h70M365 ${y + 16}h70M365 ${y + 28}h45`}
+          stroke="#b3c4cb"
+          stroke-width="4"
+        />
+      </g>
+    ))}
+    <path d="M22 231h252M296 231h55" stroke="#c4d0d5" stroke-width="3" />
   </g>
-  {hero ? <><g stroke="#a7bbc4"><path d="M58 306h295v39H58z" fill="#fafcfc"/><path d="M72 320h266v14H72z" fill="#c4d0d5"/><path d="M126 320v14m12-14v14m73-14v14m11-14v14m58-14v14m12-14v14" stroke="white"/><path d="M204 299v60M41 359h442"/></g><path d="M199 291h10l-5 10z" fill="#e77b24"/><image href="/goose-placeholder.svg" x="388" y="224" width="112" height="126"/></> : <g stroke="#9eb2bb"><path d="M20 300h460M20 321h460"/><path d="M52 289v40m79-40v40m182-40v40"/><path d="M55 306h72m9 0h172m10 0h118" stroke-width="10"/></g>}
+  {hero ? (
+    <>
+      <g stroke="#a7bbc4">
+        <path d="M58 306h295v39H58z" fill="#fafcfc" />
+        <path d="M72 320h266v14H72z" fill="#c4d0d5" />
+        <path
+          d="M126 320v14m12-14v14m73-14v14m11-14v14m58-14v14m12-14v14"
+          stroke="white"
+        />
+        <path d="M204 299v60M41 359h442" />
+      </g>
+      <path d="M199 291h10l-5 10z" fill="#e77b24" />
+      <image
+        href="/goose-placeholder.svg"
+        x="388"
+        y="224"
+        width="112"
+        height="126"
+      />
+    </>
+  ) : (
+    <g stroke="#9eb2bb">
+      <path d="M20 300h460M20 321h460" />
+      <path d="M52 289v40m79-40v40m182-40v40" />
+      <path d="M55 306h72m9 0h172m10 0h118" stroke-width="10" />
+    </g>
+  )}
 </svg>
