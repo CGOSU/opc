@@ -1,0 +1,770 @@
+{
+  "$schema": "dengta12-animations-spec/v1",
+  "metadata": {
+    "targetUrl": "https://www.dengta12.com/",
+    "capturedAt": "2026-11-19T14:28:00Z",
+    "waapiActiveCountAt1440": {
+      "value": 32,
+      "unit": "count",
+      "source": "WAAPI",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "totalKeyframesInStylesheet": {
+      "value": 22,
+      "unit": "count",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "thirdPartyAnimationLibraries": {
+      "value": "none",
+      "unit": "keyword",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "note": "No GSAP, Framer Motion, Anime.js, AOS, Lenis, Lottie, Swiper, or Three.js detected in bundle."
+    },
+    "reducedMotionPolicy": {
+      "query": "@media (prefers-reduced-motion: reduce)",
+      "transitionDuration": { "value": 0.01, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "animationDuration": { "value": 0.01, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "animationIterationCount": { "value": 1, "unit": "count", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "revealOverride": { "value": "opacity: 1; transform: none", "unit": "css-declaration", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "globeAutoRotateDisabled": { "value": true, "unit": "boolean", "source": "CSS-rule", "confidence": "measured", "viewport": "all", "note": "Verified in app-CPChXnDg.js: window.matchMedia('(prefers-reduced-motion: reduce)').matches gates auto-rotation." }
+    }
+  },
+  "cssKeyframeAnimations": [
+    {
+      "id": "hero-beam-sweep",
+      "animationName": "beam-sweep",
+      "target": ".hero__art > svg g.beam",
+      "transformOrigin": { "value": "200px 106px", "unit": "svg-coord", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "trigger": "on-load",
+      "duration": { "value": 5000, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "rotate(-14deg)" },
+        { "offset": 0.5, "transform": "rotate(14deg)" },
+        { "offset": 1, "transform": "rotate(-14deg)" }
+      ]
+    },
+    {
+      "id": "hero-stars-twinkle",
+      "animationName": "twinkle",
+      "target": ".hero__art > svg path.star (3 instances: sun, sky, coral)",
+      "trigger": "on-load",
+      "duration": { "value": 2600, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delayStaggers": [
+        { "instance": 1, "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+        { "instance": 2, "value": 900, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+        { "instance": 3, "value": 1700, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" }
+      ],
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0.25, "transform": "scale(0.75) rotate(0deg)" },
+        { "offset": 0.5, "opacity": 1, "transform": "scale(1.1) rotate(12deg)" },
+        { "offset": 1, "opacity": 0.25, "transform": "scale(0.75) rotate(0deg)" }
+      ]
+    },
+    {
+      "id": "hero-cloud-drift",
+      "animationName": "drift",
+      "target": ".hero__art > svg g.cloud (left cloud & right .cloud--slow)",
+      "trigger": "on-load",
+      "durationLeft": { "value": 7000, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delayLeft": { "value": 400, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "durationRightSlow": { "value": 9500, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delayRightSlow": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "translate(0px)" },
+        { "offset": 0.5, "transform": "translate(16px)" },
+        { "offset": 1, "transform": "translate(0px)" }
+      ]
+    },
+    {
+      "id": "hero-tower-float",
+      "animationName": "float-y",
+      "target": ".hero__art > svg g.tower",
+      "trigger": "on-load",
+      "duration": { "value": 6000, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "translateY(0px)" },
+        { "offset": 0.5, "transform": "translateY(-10px)" },
+        { "offset": 1, "transform": "translateY(0px)" }
+      ]
+    },
+    {
+      "id": "hero-lamp-glow",
+      "animationName": "glow-pulse",
+      "target": ".hero__art > svg circle.lamp (2 concentric circles r=11, r=20)",
+      "trigger": "on-load",
+      "duration": { "value": 2400, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0.45 },
+        { "offset": 0.5, "opacity": 1 },
+        { "offset": 1, "opacity": 0.45 }
+      ]
+    },
+    {
+      "id": "hero-waves-dash",
+      "animationName": "dash-shift-a3a2ec2a",
+      "target": ".hero__art > svg path.wave & path.wave.wave--late",
+      "strokeDasharray": { "value": "26 14", "unit": "svg-units", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "on-load",
+      "durationPrimary": { "value": 3200, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "durationSecondary": { "value": 4600, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "linear", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "strokeDashoffset": "0px" },
+        { "offset": 1, "strokeDashoffset": "-40px" }
+      ]
+    },
+    {
+      "id": "hero-stickers-float",
+      "animationName": "float-y",
+      "target": ".hero__sticker--a (99.9%), .hero__sticker--b (45ms), .hero__sticker--c (80+)",
+      "trigger": "on-load",
+      "duration": { "value": 4200, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delayStaggers": [
+        { "target": ".hero__sticker--a", "baseRotate": "4deg", "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+        { "target": ".hero__sticker--b", "baseRotate": "-5deg", "value": 1100, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+        { "target": ".hero__sticker--c", "baseRotate": "3deg", "value": 2200, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" }
+      ],
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "translateY(0px)" },
+        { "offset": 0.5, "transform": "translateY(-10px)" },
+        { "offset": 1, "transform": "translateY(0px)" }
+      ],
+      "note": "Because @keyframes float-y writes transform: translateY(...), it overrides the static rotate(4deg/-5deg/3deg) on transform during animation (confirmed in live screenshots and dwell boxes where sticker rects remain axis-aligned)."
+    },
+    {
+      "id": "marquee-strip-scroll",
+      "animationName": "marquee",
+      "target": ".marquee__track (inside .marquee rotated -1.2deg)",
+      "trigger": "on-load",
+      "duration": { "value": 22000, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "linear", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "translate(0px)" },
+        { "offset": 1, "transform": "translate(-50%)" }
+      ],
+      "measuredVelocity": {
+        "trackWidth": { "value": 1859.73, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+        "loopDistance": { "value": 929.87, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+        "speedPxPerSec": { "value": -42.54, "unit": "px/s", "source": "frame-analysis", "confidence": "measured", "viewport": "1920x1080", "note": "Measured via 10-frame rAF DOMMatrix sampling across 768/1024/1440/1920: -42.25 to -43.64 px/s (exact theoretical -929.87 / 22 = -42.27 px/s)." }
+      }
+    },
+    {
+      "id": "feature-rocket-bob",
+      "animationName": "bob",
+      "target": ".points .point:nth-child(1) svg g.ship",
+      "transformOrigin": { "value": "66px 64px", "unit": "svg-coord", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "on-load",
+      "duration": { "value": 3400, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "rotate(-4deg) translateY(0px)" },
+        { "offset": 0.5, "transform": "rotate(4deg) translateY(-7px)" },
+        { "offset": 1, "transform": "rotate(-4deg) translateY(0px)" }
+      ]
+    },
+    {
+      "id": "feature-rocket-flame",
+      "animationName": "flame",
+      "target": ".points .point:nth-child(1) svg g.flame",
+      "transformOrigin": { "value": "66px 116px", "unit": "svg-coord", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "on-load",
+      "duration": { "value": 500, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "scaleY(1)" },
+        { "offset": 0.5, "transform": "scaleY(0.68)" },
+        { "offset": 1, "transform": "scaleY(1)" }
+      ]
+    },
+    {
+      "id": "feature-rocket-speed-lines",
+      "animationName": "speed-line",
+      "target": ".points .point:nth-child(1) svg line.speed (3 lines)",
+      "trigger": "on-load",
+      "duration": { "value": 1100, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delayStaggers": [
+        { "instance": 1, "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+        { "instance": 2, "value": 350, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+        { "instance": 3, "value": 700, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "1440x900" }
+      ],
+      "easing": { "value": "ease-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0, "transform": "translate(10px)" },
+        { "offset": 0.3, "opacity": 1 },
+        { "offset": 1, "opacity": 0, "transform": "translate(-14px)" }
+      ]
+    },
+    {
+      "id": "feature-shield-pulse-ring",
+      "animationName": "pulse-ring",
+      "target": ".points .point:nth-child(2) svg path.ring",
+      "transformOrigin": { "value": "70px 70px", "unit": "svg-coord", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "on-load",
+      "duration": { "value": 2200, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0.7, "transform": "scale(0.62)" },
+        { "offset": 1, "opacity": 0, "transform": "scale(1.5)" }
+      ]
+    },
+    {
+      "id": "feature-shield-keyhole-glow",
+      "animationName": "glow-pulse",
+      "target": ".points .point:nth-child(2) svg circle.keyhole",
+      "trigger": "on-load",
+      "duration": { "value": 2200, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0.45 },
+        { "offset": 0.5, "opacity": 1 },
+        { "offset": 1, "opacity": 0.45 }
+      ]
+    },
+    {
+      "id": "feature-gauge-needle",
+      "animationName": "needle",
+      "target": ".points .point:nth-child(3) svg g.needle",
+      "trigger": "on-load",
+      "duration": { "value": 2600, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "rotate(-42deg)" },
+        { "offset": 0.5, "transform": "rotate(46deg)" },
+        { "offset": 1, "transform": "rotate(-42deg)" }
+      ]
+    },
+    {
+      "id": "feature-uptime-pulse-line",
+      "animationName": "dash-draw",
+      "target": ".points .point:nth-child(4) svg path.pulse-line",
+      "strokeDasharray": { "value": 160, "unit": "svg-units", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "strokeDashoffsetInitial": { "value": 160, "unit": "svg-units", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "on-load",
+      "duration": { "value": 2800, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)", "unit": "cubic-bezier", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "strokeDashoffset": "160px" },
+        { "offset": 1, "strokeDashoffset": "0px" }
+      ]
+    },
+    {
+      "id": "feature-uptime-anchor-bob",
+      "animationName": "bob",
+      "target": ".points .point:nth-child(4) svg g.anchor",
+      "transformOrigin": { "value": "70px 92px", "unit": "svg-coord", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "on-load",
+      "duration": { "value": 4000, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "rotate(-4deg) translateY(0px)" },
+        { "offset": 0.5, "transform": "rotate(4deg) translateY(-7px)" },
+        { "offset": 1, "transform": "rotate(-4deg) translateY(0px)" }
+      ]
+    },
+    {
+      "id": "feature-uptime-bubbles-float",
+      "animationName": "float-y",
+      "target": ".points .point:nth-child(4) svg circle.bubble (2 instances)",
+      "trigger": "on-load",
+      "duration": { "value": 3000, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delayStaggers": [
+        { "instance": 1, "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+        { "instance": 2, "value": 600, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" }
+      ],
+      "easing": { "value": "ease-in-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "transform": "translateY(0px)" },
+        { "offset": 0.5, "transform": "translateY(-10px)" },
+        { "offset": 1, "transform": "translateY(0px)" }
+      ]
+    },
+    {
+      "id": "globe-arc-flow",
+      "animationName": "arc-flow-f43a5a4d",
+      "target": ".globe__svg path.arc (dynamic count by visible front-hemisphere nodes; 5 active in snapshot)",
+      "strokeDasharray": { "value": "5 7", "unit": "svg-units", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "on-load",
+      "duration": { "value": 1600, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "linear", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "none", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "strokeDashoffset": "0px" },
+        { "offset": 1, "strokeDashoffset": "-12px" }
+      ]
+    },
+    {
+      "id": "globe-hub-pulse",
+      "animationName": "hub-ring-f43a5a4d",
+      "target": ".globe__svg circle.hub-pulse (rendered when HK hub z > 0.06)",
+      "transformOrigin": { "value": "center (transform-box: fill-box)", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "trigger": "conditional-visible-hemisphere",
+      "duration": { "value": 2000, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "ease-out", "unit": "timing-function", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fill": { "value": "none", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0.9, "transform": "scale(0.5)" },
+        { "offset": 1, "opacity": 0, "transform": "scale(1.5)" }
+      ]
+    },
+    {
+      "id": "support-bubble-enter",
+      "animationName": "support-bubble-in-b8f41460",
+      "target": "button.support-bubble",
+      "trigger": "on-mount",
+      "duration": { "value": 280, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "ease-out", "unit": "timing-function", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "iterations": { "value": 1, "unit": "count", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "fill": { "value": "both", "unit": "keyword", "source": "WAAPI", "confidence": "measured", "viewport": "1440x900" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0, "transform": "translateY(8px) scale(0.94)" },
+        { "offset": 1, "opacity": 1, "transform": "none" }
+      ]
+    },
+    {
+      "id": "support-bubble-loading-spin",
+      "animationName": "support-spin-b8f41460",
+      "target": ".support-bubble__ring (when Crisp chat is loading / .is-busy)",
+      "trigger": "on-click-loading",
+      "duration": { "value": 800, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "linear", "unit": "timing-function", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fill": { "value": "none", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "keyframes": [
+        { "offset": 0, "transform": "rotate(0deg)" },
+        { "offset": 1, "transform": "rotate(360deg)" }
+      ]
+    },
+    {
+      "id": "announcement-overlay-fade",
+      "animationName": "ann-fade-4fab3f93",
+      "target": ".ann-overlay (announcement modal backdrop)",
+      "trigger": "on-click-ann-card",
+      "duration": { "value": 250, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "iterations": { "value": 1, "unit": "count", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fill": { "value": "none", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0 },
+        { "offset": 1, "opacity": 1 }
+      ]
+    },
+    {
+      "id": "announcement-dialog-pop",
+      "animationName": "ann-pop-4fab3f93",
+      "target": ".ann-dialog (announcement modal panel)",
+      "trigger": "on-click-ann-card",
+      "duration": { "value": 360, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "iterations": { "value": 1, "unit": "count", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fill": { "value": "none", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0, "transform": "translateY(22px) scale(0.94)" },
+        { "offset": 1, "opacity": 1, "transform": "none" }
+      ]
+    },
+    {
+      "id": "ios-dialog-pop",
+      "animationName": "ios-pop-7c0729fb",
+      "target": ".ios-dialog (iOS TestFlight guide modal)",
+      "trigger": "on-click-ios-guide",
+      "duration": { "value": 340, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "iterations": { "value": 1, "unit": "count", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fill": { "value": "none", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "keyframes": [
+        { "offset": 0, "opacity": 0, "transform": "translateY(18px) scale(0.94)" },
+        { "offset": 1, "opacity": 1, "transform": "none" }
+      ]
+    },
+    {
+      "id": "skeleton-sweep",
+      "animationName": "sk-sweep-35556b02",
+      "target": ".sk (loading skeleton placeholders)",
+      "trigger": "while-loading",
+      "duration": { "value": 1400, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "iterations": { "value": "Infinity", "unit": "count", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "direction": { "value": "normal", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fill": { "value": "none", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "keyframes": [
+        { "offset": 0, "backgroundPosition": "-120% 0" },
+        { "offset": 1, "backgroundPosition": "220% 0" }
+      ]
+    }
+  ],
+  "cssTransitions": [
+    {
+      "id": "scroll-reveal-transition",
+      "target": ".reveal -> .reveal.is-revealed",
+      "trigger": "IntersectionObserver (threshold: 0.12, rootMargin: '0px 0px -8% 0px')",
+      "properties": ["opacity", "transform"],
+      "duration": { "value": 650, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": "var(--reveal-delay, 0ms)", "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fromState": "opacity: 0; transform: translateY(26px) scale(0.985)",
+      "toState": "opacity: 1; transform: none"
+    },
+    {
+      "id": "site-nav-scrolled",
+      "target": ".site-nav__bar -> .site-nav.is-scrolled .site-nav__bar",
+      "trigger": "scrollY > 24px",
+      "properties": ["box-shadow", "transform"],
+      "duration": { "value": 300, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fromState": "box-shadow: 4px 4px 0 #1b2432; transform: none",
+      "toState": "box-shadow: 6px 6px 0 #1b2432; transform: translateY(-2px)"
+    },
+    {
+      "id": "nav-link-underline",
+      "target": ".site-nav__links a::after",
+      "trigger": "hover",
+      "properties": ["transform"],
+      "duration": { "value": 250, "unit": "ms", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "delay": { "value": 0, "unit": "ms", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "fromState": "transform: scaleX(0); transform-origin: left",
+      "toState": "transform: scaleX(1)"
+    },
+    {
+      "id": "nav-cta-active",
+      "target": ".site-nav__cta-btn",
+      "trigger": "active (pointerdown)",
+      "properties": ["transform", "box-shadow"],
+      "duration": { "value": 200, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fromState": "box-shadow: 5px 5px 0 #1b2432; transform: none",
+      "toState": "box-shadow: 2px 2px 0 #1b2432; transform: translate(3px, 3px)",
+      "note": "No :hover shift on .site-nav__cta-btn (confirmed by both CSS-rule and live hover measurement delta 0px)."
+    },
+    {
+      "id": "pop-btn-hover-active",
+      "target": ".pop-btn (.pop-btn--solid, .pop-btn--paper)",
+      "trigger": "hover / active",
+      "properties": ["transform", "box-shadow"],
+      "duration": { "value": 180, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "hoverState": "transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #1b2432 (live verified: x 152.5->150.5, y 499.03->497.03)",
+      "activeState": "transform: translate(3px, 3px); box-shadow: 1px 1px 0 #1b2432"
+    },
+    {
+      "id": "ann-card-hover",
+      "target": ".ann-card (plus child img, .ann-card__title, .ann-card__more span)",
+      "trigger": "hover / focus-visible",
+      "cardDuration": { "value": 250, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "cardEasing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "coverImgDuration": { "value": 600, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "coverImgEasing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "arrowDuration": { "value": 200, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "titleColorDuration": { "value": 150, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "hoverState": "card: translate(-2px, -2px), box-shadow 5px 5px 0 #1b2432 (live verified: dx=-2.01px, dy=-2.01px); cover img: scale(1.04); title & more: color #4d96ff; arrow span: translate(4px)"
+    },
+    {
+      "id": "pop-card-hover",
+      "target": ".pop-card.is-hoverable (used by .points .point cards)",
+      "trigger": "hover",
+      "properties": ["transform", "box-shadow"],
+      "duration": { "value": 400, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "delay": { "value": 0, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "hoverState": "transform: rotate(0) translate(-2px, -2px); box-shadow: 5px 5px 0 #1b2432; z-index: 2 (live verified: dx=-2.20px, dy=-2.20px at 266ms overshoot of spring curve)"
+    },
+    {
+      "id": "plan-card-hover",
+      "target": ".plan",
+      "trigger": "hover",
+      "properties": ["transform", "box-shadow", "opacity"],
+      "transformDuration": { "value": 350, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "shadowDuration": { "value": 300, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "opacityDuration": { "value": 350, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "hoverState": "transform: translate(-3px, -3px) rotate(-0.6deg); box-shadow: 8px 8px 0 #1b2432 (live verified boundingBox expanded 266.5x563.16 -> 272.88x566.15 due to -0.6deg rotation)"
+    },
+    {
+      "id": "plan-cta-hover-active",
+      "target": ".plan__cta",
+      "trigger": "hover / active",
+      "properties": ["transform", "box-shadow"],
+      "duration": { "value": 200, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "hoverState": "transform: translate(-1.5px, -1.5px); box-shadow: 5px 5px 0 #1b2432",
+      "activeState": "transform: translate(2.5px, 2.5px); box-shadow: 1px 1px 0 #1b2432"
+    },
+    {
+      "id": "tabs-switch",
+      "target": ".kind-tab, .dl-tab",
+      "trigger": "click",
+      "properties": ["background", "color"],
+      "duration": { "value": 200, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "ease", "unit": "timing-function", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "activeClass": ".kind-tab--on / .dl-tab--on (background: #ffc94d, color: #1b2432, box-shadow: inset 0 0 0 2px #1b2432)"
+    },
+    {
+      "id": "download-option-hover",
+      "target": "a.dl-option, .dl-main",
+      "trigger": "hover",
+      "properties": ["transform", "box-shadow"],
+      "duration": { "value": 200, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "hoverState": "transform: translate(-2px, -2px); box-shadow: 5px 5px 0 #1b2432; a.dl-option background -> #ffe9c0"
+    },
+    {
+      "id": "support-bubble-hover-active",
+      "target": "button.support-bubble",
+      "trigger": "hover / active / .is-away",
+      "properties": ["transform", "box-shadow", "opacity"],
+      "duration": { "value": 180, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "easing": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "unit": "cubic-bezier", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "hoverState": "transform: translate(-2px, -2px); box-shadow: 8px 8px 0 #1b2432",
+      "activeState": "transform: translate(3px, 3px); box-shadow: 2px 2px 0 #1b2432",
+      "awayState": "opacity: 0; visibility: hidden; transform: translateY(12px) scale(0.9); transition: 240ms ease"
+    }
+  ],
+  "jsDrivenAnimations": [
+    {
+      "id": "globe-raf-rotation-and-inertia",
+      "mechanism": "requestAnimationFrame + Pointer Events (D3-geo orthographic projection)",
+      "target": "#nodes .globe__svg (path.land, path.arc, g.marker)",
+      "sourceFile": "/assets/app-CPChXnDg.js (GlobeMap component)",
+      "parameters": {
+        "projectionRadius": { "value": 228, "unit": "svg-units", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "projectionCenter": { "value": "300, 300", "unit": "svg-coord", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "initialYawDeg": { "value": -116, "unit": "deg", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "initialPitchDeg": { "value": -22, "unit": "deg", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "pitchClampDeg": { "value": 35, "unit": "deg", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "autoRotateIdleDelay": { "value": 1600, "unit": "ms", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "autoRotateStepPer60fpsFrame": { "value": 0.055, "unit": "deg/frame", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "autoRotateSpeed": { "value": 3.29, "unit": "deg/s", "source": "frame-analysis", "confidence": "estimated", "viewport": "all", "note": "0.055 deg / (16.7ms / 1000) = 3.293 deg/s; full 360deg period ~109.3s." },
+        "dragSensitivityYaw": { "value": 0.35, "unit": "deg/px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "dragSensitivityPitch": { "value": 0.25, "unit": "deg/px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "inertiaDecayFactor": { "value": 0.94, "unit": "multiplier/frame", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "inertiaStopThreshold": { "value": 0.02, "unit": "deg/frame", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "arcInterpolationSteps": { "value": 40, "unit": "segments", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "frontHemisphereCutoffZ": { "value": 0.06, "unit": "unit-sphere-z", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      }
+    },
+    {
+      "id": "hero-mouse-parallax",
+      "mechanism": "pointer/mouse coordinates reactive transform",
+      "target": ".hero__art",
+      "sourceFile": "/assets/app-CPChXnDg.js (HeroSection component)",
+      "parameters": {
+        "maxOffsetX": { "value": 7, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all", "note": "(x / width - 0.5) * 14 => range [-7px, +7px]" },
+        "maxOffsetY": { "value": 5, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all", "note": "(y / height - 0.5) * 10 => range [-5px, +5px]" },
+        "smoothingTransition": { "value": "transform 250ms cubic-bezier(0.22, 1, 0.36, 1)", "unit": "css-transition", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "touchEnabled": { "value": false, "unit": "boolean", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      }
+    },
+    {
+      "id": "scroll-reveal-observer",
+      "mechanism": "IntersectionObserver (Vue v-reveal directive)",
+      "target": ".reveal elements (.news-home__head, .points, #nodes .globe, .plans, .dl, etc.)",
+      "sourceFile": "/assets/app-CPChXnDg.js",
+      "parameters": {
+        "threshold": { "value": 0.12, "unit": "ratio", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "rootMargin": { "value": "0px 0px -8% 0px", "unit": "css-margin", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "once": { "value": true, "unit": "boolean", "source": "CSS-rule", "confidence": "measured", "viewport": "all", "note": "Unobserves element immediately upon adding .is-revealed." }
+      }
+    },
+    {
+      "id": "plans-carousel-dim-observer",
+      "mechanism": "IntersectionObserver",
+      "target": ".plans.is-carousel .plan (active only when plans count triggers carousel mode)",
+      "sourceFile": "/assets/app-CPChXnDg.js",
+      "parameters": {
+        "thresholds": { "value": [0, 0.75, 1], "unit": "ratio", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "dimWhenRatioBelow": { "value": 0.75, "unit": "ratio", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "dimState": { "value": "opacity: 0.4; transform: scale(0.94)", "unit": "css-declaration", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      }
+    },
+    {
+      "id": "nav-scroll-threshold",
+      "mechanism": "window scrollY watcher",
+      "target": "header.site-nav",
+      "sourceFile": "/assets/app-CPChXnDg.js (SiteNav component)",
+      "parameters": {
+        "scrollYThreshold": { "value": 24, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "toggledClass": { "value": "is-scrolled", "unit": "class-name", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      }
+    }
+  ],
+  "liveDwellAndInteractionLog": {
+    "viewport": "1440x900",
+    "dwellSamplesMs": [
+      {
+        "t": { "value": 0, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerA_y": { "value": 178.58, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerB_y": { "value": 469.09, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerC_y": { "value": 529.26, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "cloudLeft_x": { "value": 852.35, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tower_y": { "value": 183.74, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "t": { "value": 1001, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerA_y": { "value": 184.63, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerB_y": { "value": 465.36, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerC_y": { "value": 523.90, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "cloudLeft_x": { "value": 859.29, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tower_y": { "value": 181.30, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "t": { "value": 3002, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerA_y": { "value": 183.00, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerB_y": { "value": 475.31, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerC_y": { "value": 523.91, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "cloudLeft_x": { "value": 872.14, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tower_y": { "value": 170.87, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "t": { "value": 5000, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "stickerA_y": { "value": 178.58, "unit": "px", "source": "frame-analysis", "confidence": "estimated", "viewport": "1440x900", "note": "Period is 4200ms; at t=5000ms phase returns near initial trough." },
+        "cloudLeft_x": { "value": 859.21, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tower_y": { "value": 180.20, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "star1_size": { "value": 30.12, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      }
+    ],
+    "hoverTimestampedDeltas": [
+      {
+        "target": "hero_primary_btn (.pop-btn--solid)",
+        "tBefore": { "value": 163, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tDuring": { "value": 431, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tAfter": { "value": 730, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaX": { "value": -2.0, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaY": { "value": -2.0, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "target": "hero_secondary_btn (.pop-btn--paper)",
+        "tBefore": { "value": 895, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tDuring": { "value": 1163, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tAfter": { "value": 1430, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaX": { "value": -2.0, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaY": { "value": -2.0, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "target": "header_cta_btn (.site-nav__cta-btn)",
+        "tBefore": { "value": 1593, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tDuring": { "value": 1863, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tAfter": { "value": 2130, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaX": { "value": 0, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaY": { "value": 0, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "target": "first_ann_card (.ann-card)",
+        "tBefore": { "value": 2985, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tDuring": { "value": 3253, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tAfter": { "value": 3512, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaX": { "value": -2.01, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaY": { "value": -2.01, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "target": "first_point_card (.points .point)",
+        "tBefore": { "value": 3679, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tDuring": { "value": 3945, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tAfter": { "value": 4204, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaX": { "value": -2.20, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaY": { "value": -2.20, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      },
+      {
+        "target": "first_plan_card (.plan)",
+        "tBefore": { "value": 4369, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tDuring": { "value": 4635, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "tAfter": { "value": 4945, "unit": "ms", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" },
+        "deltaX": { "value": -6.45, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900", "note": "Includes translate(-3px,-3px) + bounding box expansion from rotate(-0.6deg)." },
+        "deltaY": { "value": -4.75, "unit": "px", "source": "frame-analysis", "confidence": "measured", "viewport": "1440x900" }
+      }
+    ]
+  }
+}

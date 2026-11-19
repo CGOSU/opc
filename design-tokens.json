@@ -1,0 +1,1012 @@
+{
+  "$schema": "dengta12-visual-design-tokens/v1",
+  "metadata": {
+    "targetUrl": "https://www.dengta12.com/",
+    "pageTitle": "灯塔加速器 · 企业级跨境网络加速",
+    "capturedAt": "2026-11-19T14:28:00Z",
+    "stackDetected": [
+      "Vue 3 SFC (scoped [data-v-*])",
+      "Vite bundle (/assets/app-fdX_CiBi.css, /assets/app-CPChXnDg.js)",
+      "D3-geo orthographic projection (embedded inline in app bundle)",
+      "Crisp live chat (https://client.crisp.chat)"
+    ],
+    "thirdPartyAnimationLibraries": "none",
+    "canvasCount": {
+      "value": 0,
+      "unit": "count",
+      "source": "computed-style",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "svgCount": {
+      "value": 30,
+      "unit": "count",
+      "source": "computed-style",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "viewportsTested": ["390x844", "768x1024", "1024x768", "1440x900", "1920x1080"],
+    "sourcesLegend": {
+      "CSS-rule": "Extracted directly from /assets/app-fdX_CiBi.css (49,738 bytes) served by https://www.dengta12.com/",
+      "computed-style": "Measured via getComputedStyle() / getBoundingClientRect() in Chromium (live browser + exact local DOM mount verification)",
+      "WAAPI": "Measured via document.getAnimations({ subtree: true }) in Chromium",
+      "frame-analysis": "Derived from time-stamped live boundingBox / requestAnimationFrame DOMMatrix sampling"
+    }
+  },
+  "colors": {
+    "palette": {
+      "paper": {
+        "cssVar": "--paper",
+        "value": "#fff6e9",
+        "rgb": "rgb(255, 246, 233)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "paperDim": {
+        "cssVar": "--paper-dim",
+        "value": "#fbe8cd",
+        "rgb": "rgb(251, 232, 205)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "card": {
+        "cssVar": "--card",
+        "value": "#fffdf8",
+        "rgb": "rgb(255, 253, 248)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "ink": {
+        "cssVar": "--ink",
+        "value": "#1b2432",
+        "rgb": "rgb(27, 36, 50)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "inkSoft": {
+        "cssVar": "--ink-soft",
+        "value": "#556072",
+        "rgb": "rgb(85, 96, 114)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "sun": {
+        "cssVar": "--sun",
+        "value": "#ffc94d",
+        "rgb": "rgb(255, 201, 77)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "sunSoft": {
+        "cssVar": "--sun-soft",
+        "value": "#ffe9c0",
+        "rgb": "rgb(255, 233, 192)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "coral": {
+        "cssVar": "--coral",
+        "value": "#ff6b6b",
+        "rgb": "rgb(255, 107, 107)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "coralSoft": {
+        "cssVar": "--coral-soft",
+        "value": "#ffd9d4",
+        "rgb": "rgb(255, 217, 212)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "sky": {
+        "cssVar": "--sky",
+        "value": "#4d96ff",
+        "rgb": "rgb(77, 150, 255)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "skySoft": {
+        "cssVar": "--sky-soft",
+        "value": "#d3e5ff",
+        "rgb": "rgb(211, 229, 255)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "mint": {
+        "cssVar": "--mint",
+        "value": "#54c07a",
+        "rgb": "rgb(84, 192, 122)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "mintSoft": {
+        "cssVar": "--mint-soft",
+        "value": "#d4f0dd",
+        "rgb": "rgb(212, 240, 221)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "grape": {
+        "cssVar": "--grape",
+        "value": "#9b5de5",
+        "rgb": "rgb(155, 93, 229)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "grapeSoft": {
+        "cssVar": "--grape-soft",
+        "value": "#e9dcfb",
+        "rgb": "rgb(233, 220, 251)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "leaf": {
+        "cssVar": "--leaf",
+        "value": "#7cb342",
+        "rgb": "rgb(124, 179, 66)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "leafSoft": {
+        "cssVar": "--leaf-soft",
+        "value": "#e3f0d2",
+        "rgb": "rgb(227, 240, 210)",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      }
+    },
+    "componentSpecific": {
+      "globeSphereFill": {
+        "value": "#f7faff",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "globeLandFill": {
+        "value": "#b9d9c8",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "globeLandStroke": {
+        "value": "#8fbfa8",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "heroRockFill": {
+        "value": "#9aa7bd",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "codeBlockBackground": {
+        "value": "#1f2937",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "codeBlockText": {
+        "value": "#e5e7eb",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "authMaskBackground": {
+        "value": "#1b24328c",
+        "unit": "hex8",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "annOverlayBackground": {
+        "value": "#1b243257",
+        "unit": "hex8",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "iosOverlayBackground": {
+        "value": "#1b24324d",
+        "unit": "hex8",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "footerBottomDivider": {
+        "value": "rgb(255 255 255 / 12%)",
+        "unit": "rgba",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "receiptDashedDivider": {
+        "value": "rgb(0 0 0 / 14%)",
+        "unit": "rgba",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "supportRingBorder": {
+        "value": "rgba(27, 36, 50, 0.25)",
+        "unit": "rgba",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "errorText": {
+        "value": "#c0392b",
+        "unit": "hex",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      }
+    }
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": {
+        "cssVar": "--font-round",
+        "value": "\"Yuanti SC\", \"YouYuan\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
+        "unit": "font-family-stack",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "monospace": {
+        "value": "ui-monospace, SFMono-Regular, Menlo, monospace",
+        "unit": "font-family-stack",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all"
+      },
+      "customWebfontLoaded": {
+        "value": "none",
+        "unit": "keyword",
+        "source": "CSS-rule",
+        "confidence": "measured",
+        "viewport": "all",
+        "note": "No @font-face rules present in /assets/app-fdX_CiBi.css; renders with local OS rounded/CJK font stack."
+      }
+    },
+    "scale": {
+      "heroTitle": {
+        "cssRule": {
+          "value": "clamp(44px, 7.2vw, 84px)",
+          "unit": "css-clamp",
+          "source": "CSS-rule",
+          "confidence": "measured",
+          "viewport": "all"
+        },
+        "computedByViewport": {
+          "390x844": { "value": 44, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "390x844" },
+          "768x1024": { "value": 55.296, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "768x1024" },
+          "1024x768": { "value": 73.728, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1024x768" },
+          "1440x900": { "value": 84, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+          "1920x1080": { "value": 84, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1920x1080" }
+        },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "computed-style", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.14, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "letterSpacing": { "value": -0.01, "unit": "em", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "sectionTitle": {
+        "cssRule": {
+          "value": "clamp(28px, 4.4vw, 44px)",
+          "unit": "css-clamp",
+          "source": "CSS-rule",
+          "confidence": "measured",
+          "viewport": "all"
+        },
+        "computedByViewport": {
+          "390x844": { "value": 28, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "390x844" },
+          "768x1024": { "value": 33.792, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "768x1024" },
+          "1024x768": { "value": 44, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1024x768" },
+          "1440x900": { "value": 44, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+          "1920x1080": { "value": 44, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1920x1080" }
+        },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.25, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "letterSpacing": { "value": -0.01, "unit": "em", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "footerBrandTitle": {
+        "fontSize": { "value": 22, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "planQuota": {
+        "fontSize": { "value": 21, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.1, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "heroStickerStrong": {
+        "fontSize": { "value": 20, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.3, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "planName": {
+        "fontSize": { "value": 19, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.2, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "downloadPlatformName": {
+        "fontSize": { "value": 18, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "heroSubtitle": {
+        "fontSize": { "value": 17, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 500, "unit": "weight", "source": "computed-style", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.7, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "navBrandName": {
+        "fontSizeDesktop": { "value": 17, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "1440x900" },
+        "fontSizeMobile": { "value": 15, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "390x844" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "letterSpacing": { "value": 0.01, "unit": "em", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "pointTitle": {
+        "fontSize": { "value": 17, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.25, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "bodyBase": {
+        "fontSize": { "value": 16, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 500, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.7, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "primaryButton": {
+        "fontSize": { "value": 16, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "annCardTitle": {
+        "fontSize": { "value": 15.5, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.45, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "marqueeItem": {
+        "fontSize": { "value": 15, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "tabLabel": {
+        "fontSizeDesktop": { "value": 15, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "1440x900" },
+        "fontSizeDlMobile": { "value": 11.5, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "390x844" },
+        "fontWeight": { "value": 800, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "navLink": {
+        "fontSizeDesktop": { "value": 14.5, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "1440x900" },
+        "fontSizeTablet": { "value": 14, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "768x1024" },
+        "fontWeight": { "value": 700, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "footerBody": {
+        "fontSize": { "value": 14, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.7, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "footerHeading": {
+        "fontSize": { "value": 13, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 700, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "letterSpacing": { "value": 0.06, "unit": "em", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "opacity": { "value": 0.55, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "cardDescription": {
+        "fontSize": { "value": 13, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeightAnn": { "value": 1.6, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeightPoint": { "value": 1.65, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "planDesc": {
+        "fontSize": { "value": 12.5, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "lineHeight": { "value": 1.65, "unit": "unitless", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "badgeAndMeta": {
+        "fontSize": { "value": 12, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 700, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      },
+      "priceTag": {
+        "fontSize": { "value": 10, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+        "fontWeight": { "value": 700, "unit": "weight", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+      }
+    }
+  },
+  "spacingAndLayout": {
+    "shellMaxWidth": {
+      "cssVar": "--shell",
+      "value": 1120,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "navHeightToken": {
+      "cssVar": "--nav-h",
+      "value": 68,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "pageHorizontalGutter": {
+      "value": 20,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "note": "Applied via width: min(var(--shell), 100% - 40px) across hero__inner, news-home, home-duo, pop-section, site-footer__inner."
+    },
+    "sectionTopPaddingDesktop": {
+      "value": 120,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "sectionTopPaddingMobile": {
+      "value": 88,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "390x844"
+    },
+    "sectionHeadBottomMarginDesktop": {
+      "value": 44,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "sectionHeadBottomMarginMobile": {
+      "value": 32,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "390x844"
+    },
+    "heroPaddingTop": {
+      "value": 134,
+      "unit": "px",
+      "source": "computed-style",
+      "confidence": "measured",
+      "viewport": "all",
+      "note": "calc(var(--nav-h) + 66px) = 68px + 66px = 134px"
+    },
+    "heroPaddingBottom": {
+      "value": 40,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "heroGridGap": {
+      "value": 32,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "heroCopyGap": {
+      "value": 22,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "marqueeMarginTop": {
+      "value": 44,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "marqueeTrackGap": {
+      "value": 44,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "newsTrackGapDesktop": {
+      "value": 20,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "newsTrackGapMobile": {
+      "value": 16,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "390x844"
+    },
+    "homeDuoMarginTop": {
+      "value": 120,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "homeDuoGapDesktop": {
+      "value": 36,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "homeDuoGapStacked": {
+      "value": 88,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "768x1024"
+    },
+    "pointsGridGap": {
+      "value": 16,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "plansGridGap": {
+      "value": 18,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "planCardPadding": {
+      "value": 20,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "downloadMaxWidth": {
+      "value": 640,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "footerMarginTop": {
+      "value": 96,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "footerInnerPadding": {
+      "value": "56px 0 28px",
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "supportBubbleOffsetDesktop": {
+      "value": 22,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "1440x900"
+    },
+    "supportBubbleOffsetMobile": {
+      "value": 16,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "390x844"
+    }
+  },
+  "bordersAndRadii": {
+    "strokeLine": {
+      "cssVar": "--line",
+      "value": "2.5px solid #1b2432",
+      "unit": "border",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "strokeThin": {
+      "value": "2px solid #1b2432",
+      "unit": "border",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "radiusBase": {
+      "cssVar": "--radius",
+      "value": 20,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "radiusLg": {
+      "cssVar": "--radius-lg",
+      "value": 28,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "radiusCard": {
+      "value": 16,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "usedBy": [".ann-card", ".pop-card", ".hero__sticker", ".dl-option", ".dl-sys__card", ".site-nav__menu"]
+    },
+    "radiusButtonMedium": {
+      "value": 14,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "usedBy": [".plan__cta", ".dl-chip", ".dl-body--fold", ".dl-ver__opt"]
+    },
+    "radiusIconBox": {
+      "value": 12,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "usedBy": [".point__art", ".site-nav__more-btn", ".dl-cmd__code", ".dl-cmd__copy"]
+    },
+    "radiusSmall": {
+      "value": 10,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "usedBy": [".plan__icon", ".price", ".ann-dialog__close"]
+    },
+    "radiusLogo": {
+      "value": 9,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "usedBy": [".site-nav__logo"]
+    },
+    "radiusPill": {
+      "value": 999,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "usedBy": [".site-nav__bar", ".site-nav__cta-btn", ".pop-btn", ".nh-btn", ".kind-tabs", ".kind-tab", ".dl-tabs", ".dl-tab", ".dl-main", ".pop-badge", ".support-bubble"]
+    },
+    "radiusDlTabsMobile": {
+      "value": 22,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "390x844"
+    }
+  },
+  "shadowsAndMaterials": {
+    "shadowPop": {
+      "cssVar": "--shadow-pop",
+      "value": "5px 5px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowPopLg": {
+      "cssVar": "--shadow-pop-lg",
+      "value": "8px 8px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowDialog": {
+      "value": "10px 10px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowNavScrolled": {
+      "value": "6px 6px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowNavAndButton": {
+      "value": "4px 4px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowCtaSmall": {
+      "value": "3.5px 3.5px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowCard": {
+      "value": "3px 3px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowBadge": {
+      "value": "2.5px 2.5px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "shadowActivePressed": {
+      "value": "1px 1px 0 #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "tabActiveInsetBorder": {
+      "value": "inset 0 0 0 2px #1b2432",
+      "unit": "box-shadow",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "backdropFilterAnnOverlay": {
+      "value": "blur(3px)",
+      "unit": "filter-function",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "backdropFilterMainPage": {
+      "value": "none",
+      "unit": "keyword",
+      "source": "computed-style",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "filterCoverPlaceholderArt": {
+      "value": "drop-shadow(3px 3px 0 rgb(27 36 50 / 18%))",
+      "unit": "filter-function",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    }
+  },
+  "backgroundsAndGradients": {
+    "bodyDotGridPattern": {
+      "backgroundColor": { "value": "#fff6e9", "unit": "hex", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "backgroundImage": { "value": "radial-gradient(#fbe8cd 1.6px, transparent 2px)", "unit": "gradient", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "backgroundSize": { "value": "26px 26px", "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "backgroundPosition": { "value": "0% 0%", "unit": "percent", "source": "computed-style", "confidence": "measured", "viewport": "all" }
+    },
+    "markerHighlightSun": {
+      "value": "linear-gradient(transparent 58%, #ffc94d 58%, #ffc94d 94%, transparent 94%)",
+      "unit": "gradient",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "markerHighlightSky": {
+      "value": "linear-gradient(transparent 58%, #d3e5ff 58%, #d3e5ff 94%, transparent 94%)",
+      "unit": "gradient",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "globeAmbientGlow": {
+      "value": "radial-gradient(circle, #ffe9c0 0%, transparent 65%)",
+      "unit": "gradient",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "skeletonSweepGradient": {
+      "value": "linear-gradient(90deg, transparent 0%, #fff6e9 45%, #fff6e9 55%, transparent 100%)",
+      "backgroundSize": { "value": "220% 100%", "unit": "percent", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "unit": "gradient",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    }
+  },
+  "easings": {
+    "spring": {
+      "cssVar": "--spring",
+      "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      "unit": "cubic-bezier",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    },
+    "easeOut": {
+      "cssVar": "--ease-out",
+      "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "unit": "cubic-bezier",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all"
+    }
+  },
+  "breakpoints": [
+    {
+      "name": "bp-960",
+      "query": "@media (max-width: 960px)",
+      "value": 960,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "effects": [
+        ".home-duo switches from 2 columns (minmax(0,1.05fr) minmax(0,0.95fr), gap 36px, align-items: stretch) to 1 column (1fr, gap 88px)",
+        "#nodes .globe switches from absolute vertically-centered aspect-square sizing (height: calc(100% * 600 / 456)) to normal flow width: min(620px, 100%)"
+      ]
+    },
+    {
+      "name": "bp-900",
+      "query": "@media (max-width: 900px)",
+      "value": 900,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "effects": [
+        ".hero__inner switches from 2 columns (minmax(0,1.05fr) minmax(0,0.95fr)) to 1 column (1fr); .hero__art constrained to max-width: 440px; margin: 0 auto",
+        ".site-nav__links gap shrinks 22px -> 14px, font-size 14.5px -> 14px, and hides links not matching /, /help, /news, #download, .is-external (hides '产品价格')",
+        ".news-home__track grid-auto-columns switches from calc((100% - 3 * 20px) / 4) to calc((100% - 20px) / 2)"
+      ]
+    },
+    {
+      "name": "bp-860",
+      "query": "@media (max-width: 860px)",
+      "value": 860,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "effects": [
+        ".site-footer__top switches from 4 columns (2fr 1fr 1fr 1.6fr) to 2 columns (1fr 1fr) with .site-footer__brand and .site-footer__contact spanning grid-column: 1 / -1",
+        ".site-nav__more.has-tabs becomes display: block (when account tabs exist)"
+      ]
+    },
+    {
+      "name": "bp-720",
+      "query": "@media (max-width: 720px)",
+      "value": 720,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "effects": [
+        ".plans:not(.is-carousel) forces single-column grid-template-columns: 1fr",
+        ".plans.is-carousel .plan changes flex-basis from 31% to 84% and hides .plans-nav arrows"
+      ]
+    },
+    {
+      "name": "bp-640",
+      "query": "@media (max-width: 640px)",
+      "value": 640,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "effects": [
+        ".site-nav__links hidden (display: none); .site-nav__more and .site-nav__menu-links shown",
+        ".site-nav__bar gap 24px -> 10px, padding 10px 12px 10px 18px -> 10px 10px 10px 14px",
+        ".site-nav__name font-size 17px -> 15px; .site-nav__cta-btn padding 13px 26px -> 9px 16px, font-size 16px -> 14px, box-shadow 5px 5px 0 -> 3px 3px 0",
+        ".news-home and .pop-section padding-top 120px -> 88px; .pop-section__head margin-bottom 44px -> 32px",
+        ".news-home__track --gap 20px -> 16px, grid-auto-columns -> 84%"
+      ]
+    },
+    {
+      "name": "bp-560",
+      "query": "@media (max-width: 560px)",
+      "value": 560,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "effects": [
+        ".points switches from 2x2 grid to 1fr single column",
+        ".dl-tab stacks icon above label (flex-direction: column, gap: 3px, padding: 7px 2px, font-size: 11.5px, border-radius: 16px); .dl-tabs border-radius: 22px",
+        ".dl-options switches from 2 columns to 1fr",
+        ".support-bubble hides .support-bubble__label, sets padding: 13px and right/bottom: 16px (53x53px circle)"
+      ]
+    },
+    {
+      "name": "bp-340",
+      "query": "@media (max-width: 340px)",
+      "value": 340,
+      "unit": "px",
+      "source": "CSS-rule",
+      "confidence": "measured",
+      "viewport": "all",
+      "effects": [
+        ".site-nav__name hidden (display: none)"
+      ]
+    }
+  ],
+  "zIndexScale": {
+    "hoverPopCard": { "value": 2, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+    "plansCarouselNav": { "value": 5, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+    "navDropdownMenu": { "value": 30, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+    "siteNavFixed": { "value": 50, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+    "supportBubbleFixed": { "value": 60, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+    "iosDialogOverlay": { "value": 70, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+    "announcementDialogOverlay": { "value": 80, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+    "authModalMask": { "value": 100, "unit": "integer", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+  },
+  "pseudoElements": [
+    {
+      "selector": ".site-nav__links a::after",
+      "content": { "value": "\"\"", "unit": "string", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "height": { "value": 3, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "bottom": { "value": -4, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "backgroundColor": { "value": "#ffc94d", "unit": "hex", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "borderRadius": { "value": 2, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "transformDefault": { "value": "scaleX(0)", "unit": "transform", "source": "CSS-rule", "confidence": "measured", "viewport": "1440x900" },
+      "transformHover": { "value": "scaleX(1)", "unit": "transform", "source": "CSS-rule", "confidence": "measured", "viewport": "1440x900" },
+      "transformOrigin": { "value": "left", "unit": "keyword", "source": "CSS-rule", "confidence": "measured", "viewport": "1440x900" }
+    },
+    {
+      "selector": ".plan-desc ul > li::before",
+      "content": { "value": "\"✦\"", "unit": "string", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "color": { "value": "#ffc94d", "unit": "hex", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" },
+      "left": { "value": 0, "unit": "px", "source": "computed-style", "confidence": "measured", "viewport": "1440x900" }
+    },
+    {
+      "selector": ".dl-body__sum::after",
+      "content": { "value": "\"›\"", "unit": "string", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "fontSize": { "value": 20, "unit": "px", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "color": { "value": "#556072", "unit": "hex", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "transformOpen": { "value": "rotate(90deg)", "unit": "transform", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+    },
+    {
+      "selector": "::selection",
+      "color": { "value": "#1b2432", "unit": "hex", "source": "CSS-rule", "confidence": "measured", "viewport": "all" },
+      "backgroundColor": { "value": "#ffc94d", "unit": "hex", "source": "CSS-rule", "confidence": "measured", "viewport": "all" }
+    }
+  ]
+}
