@@ -1,0 +1,123 @@
+---
+import { env } from "cloudflare:workers";
+import EditorialLayout from "../../layouts/EditorialLayout.astro";
+import {
+  articleLocale,
+  articleUnavailable,
+  searchArticles,
+} from "../../lib/articles";
+import { editorialCopy, loadEditorialSite } from "../../lib/editorial-site";
+import "../../styles/reading.css";
+export const prerender = false;
+
+const locale = articleLocale(Astro.params.locale);
+if (!locale) return new Response("Not found", { status: 404 });
+if (!env.CONTENT) return articleUnavailable();
+const zh = locale === "zh";
+const c = editorialCopy(locale);
+const path = `/${locale}/search/`;
+const raw = Astro.url.searchParams.get("q")?.trim() ?? "";
+const tooLong = raw.length > 120;
+const query = raw.slice(0, 120);
+const intro = zh
+  ? "按标题和摘要搜索本站已发布的技术文章。"
+  : "Search published articles by title and summary.";
+let editorial, results;
+try {
+  [editorial, results] = await Promise.all([
+    loadEditorialSite(env.CONTENT, locale),
+    query && !tooLong ? searchArticles(env.CONTENT, locale, query) : [],
+  ]);
+} catch {
+  return articleUnavailable();
+}
+Astro.response.headers.set("Cache-Control", "no-store");
+---
+
+<EditorialLayout
+  {locale}
+  {editorial}
+  title={c.search}
+  description={intro}
+  seo={{}}
+  noindex
+>
+  <main id="main" class="container reading-page">
+    <h1>{c.search}</h1>
+    <p>{intro}</p>
+    <form action={path} method="get" role="search">
+      <label for="article-query">{zh ? "关键词" : "Search terms"}</label>
+      <div class="search-fields">
+        <input
+          id="article-query"
+          type="search"
+          name="q"
+          maxlength="120"
+          value={query}
+          required
+        />
+        <button class="button secondary" type="submit">
+          {c.search}
+        </button>
+      </div>
+    </form>
+    {tooLong ? (
+      <p>
+        {zh ? "请将关键词缩短到 120 字符以内。" : "Enter up to 120 characters."}
+      </p>
+    ) : (
+      query && (
+        <section>
+          <h2>{zh ? "搜索结果" : "Search results"}</h2>
+          {results.length ? (
+            <ul class="search-results">
+              {results.slice(0, 20).map((result) => (
+                <li>
+                  <h3>
+                    <a href={result.path}>{result.title}</a>
+                  </h3>
+                  <p>{result.summary}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>{zh ? "没有匹配的文章。" : "No matching articles."}</p>
+          )}
+          {results.length > 20 && (
+            <p>
+              {zh
+                ? "仅显示最新 20 条结果。可缩小关键词范围。"
+                : "Showing the latest 20 matches. Refine your query to narrow the results."}
+            </p>
+          )}
+        </section>
+      )
+    )}
+  </main>
+</EditorialLayout>
+<style>
+  .search-results {
+    padding-inline-start: 1.5rem;
+    max-width: 72ch;
+  }
+  .search-results li {
+    padding-block: 0.75rem;
+  }
+  .search-results a {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  .search-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0 2rem;
+  }
+  input {
+    max-width: 100%;
+    min-width: 0;
+    padding: 0.5rem;
+    font: inherit;
+    color: inherit;
+  }
+</style>

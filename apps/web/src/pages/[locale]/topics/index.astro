@@ -1,0 +1,63 @@
+---
+import { env } from "cloudflare:workers";
+import EditorialCards from "../../../components/EditorialCards.astro";
+import EditorialLayout from "../../../layouts/EditorialLayout.astro";
+import { articleLocale, articleUnavailable } from "../../../lib/articles";
+import { editorialCopy, loadEditorialSite } from "../../../lib/editorial-site";
+import { listTopics, topicsPath } from "../../../lib/topics";
+import "../../../styles/reading.css";
+
+export const prerender = false;
+const locale = articleLocale(Astro.params.locale);
+if (!locale) return new Response("Not found", { status: 404 });
+if (!env.CONTENT) return articleUnavailable();
+const c = editorialCopy(locale);
+const other = locale === "zh" ? "en" : "zh";
+let editorial, topics, translated;
+try {
+  [editorial, topics, translated] = await Promise.all([
+    loadEditorialSite(env.CONTENT, locale),
+    listTopics(env.CONTENT, locale),
+    listTopics(env.CONTENT, other, 1),
+  ]);
+} catch {
+  return articleUnavailable();
+}
+const available = topics.length > 0;
+Astro.response.headers.set("Cache-Control", "no-store");
+if (!available) Astro.response.status = 404;
+const alternate =
+  available && translated.length
+    ? ({ locale: other, path: topicsPath(other) } as const)
+    : undefined;
+const path = topicsPath(locale);
+const seo = available
+  ? { path, alternates: [{ locale, path }, ...(alternate ? [alternate] : [])] }
+  : {};
+const title = available
+  ? c.topics
+  : locale === "zh"
+    ? "暂无公开专题"
+    : "No public topics";
+---
+
+<EditorialLayout
+  {locale}
+  {editorial}
+  {title}
+  description={c.topicIntro}
+  {seo}
+  {alternate}
+  noindex={!available}
+>
+  <main id="main" class="container reading-page">
+    <h1>{title}</h1>
+    {available && (
+      <section>
+        <h2>{locale === "zh" ? "专题目录" : "Topic directory"}</h2>
+        <p>{c.topicIntro}</p>
+        <EditorialCards {locale} entries={topics} />
+      </section>
+    )}
+  </main>
+</EditorialLayout>

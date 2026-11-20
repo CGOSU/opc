@@ -1,0 +1,111 @@
+---
+import { env } from "cloudflare:workers";
+import EditorialLayout from "../../../layouts/EditorialLayout.astro";
+import { loadEditorialSite } from "../../../lib/editorial-site";
+import {
+  articleDate,
+  articleLocale,
+  articlesPath,
+  articleUnavailable,
+  listArticles,
+} from "../../../lib/articles";
+import "../../../styles/reading.css";
+
+export const prerender = false;
+
+const locale = articleLocale(Astro.params.locale);
+if (!locale) return new Response("Not found", { status: 404 });
+if (!env.CONTENT) return articleUnavailable();
+let articles, editorial;
+try {
+  [articles, editorial] = await Promise.all([
+    listArticles(env.CONTENT, locale),
+    loadEditorialSite(env.CONTENT, locale),
+  ]);
+} catch {
+  return articleUnavailable();
+}
+Astro.response.headers.set("Cache-Control", "no-store");
+
+const zh = locale === "zh";
+const title = zh ? "技术文章" : "Technical Articles";
+const description = zh
+  ? "按发布日期浏览技术教程与工程实践。"
+  : "Browse technical tutorials and engineering notes in publication order.";
+const other = zh ? ("en" as const) : ("zh" as const);
+const seo = {
+  path: articlesPath(locale),
+  alternates: [
+    { locale, path: articlesPath(locale) },
+    { locale: other, path: articlesPath(other) },
+  ],
+};
+---
+
+<EditorialLayout
+  {locale}
+  {title}
+  {description}
+  {seo}
+  {editorial}
+  alternate={{ locale: other, path: articlesPath(other) }}
+>
+  <main id="main" class="container reading-page">
+    <h1>{title}</h1>
+    <p class="reading-summary">{description}</p>
+    {articles.length > 0 ? (
+      <ul class="archive">
+        {articles.map((article) => (
+          <li>
+            <time
+              datetime={new Date(article.first_published_at_ms).toISOString()}
+            >
+              {articleDate(article.first_published_at_ms, locale)}
+            </time>
+            <h2>
+              <a href={article.path}>{article.title}</a>
+            </h2>
+            {article.summary && <p>{article.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty-archive">
+        {zh ? "暂时没有已发布的文章。" : "No articles have been published yet."}
+      </p>
+    )}
+  </main>
+</EditorialLayout>
+
+<style>
+  .archive,
+  .empty-archive {
+    margin-block-start: 2rem;
+    max-width: 72ch;
+  }
+  .archive {
+    list-style: none;
+    padding: 0;
+    border-block-start: 1px solid var(--line);
+  }
+  .archive li {
+    padding-block: 1.35rem;
+    border-block-end: 1px solid var(--line);
+  }
+  .archive h2 {
+    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    margin-block: 0.3rem;
+  }
+  .archive h2 a:hover {
+    color: var(--teal);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .archive time,
+  .archive p {
+    color: var(--muted);
+  }
+  .archive time {
+    font-size: 0.9rem;
+  }
+</style>

@@ -1,197 +1,129 @@
 ---
-import SiteLayout from "../layouts/SiteLayout.astro";
-import Header from "../components/Header.astro";
+import { env } from "cloudflare:workers";
+import EditorialCards from "../components/EditorialCards.astro";
 import StudioIllustration from "../components/StudioIllustration.astro";
-import NoteCard from "../components/NoteCard.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import { getHome, type Locale } from "../lib/home";
-export function getStaticPaths() {
-  return ["zh", "en"].map((locale) => ({ params: { locale } }));
+import EditorialLayout from "../layouts/EditorialLayout.astro";
+import {
+  articleLocale,
+  articlesPath,
+  articleUnavailable,
+  listArticles,
+} from "../lib/articles";
+import {
+  editorialCopy,
+  loadEditorialSite,
+  publishedHomeIndexPolicy,
+} from "../lib/editorial-site";
+import { articleTopics, featuredPractice, topicsPath } from "../lib/topics";
+
+export const prerender = false;
+const locale = articleLocale(Astro.params.locale);
+if (!locale) return new Response("Not found", { status: 404 });
+if (!env.CONTENT) return articleUnavailable();
+const c = editorialCopy(locale);
+const other = locale === "zh" ? "en" : "zh";
+let editorial, latest, practice, home, labels;
+try {
+  [editorial, latest, home] = await Promise.all([
+    loadEditorialSite(env.CONTENT, locale),
+    listArticles(env.CONTENT, locale, 6),
+    env.CONTENT.prepare(
+      `SELECT noindex FROM (${publishedHomeIndexPolicy}) WHERE locale = ?`,
+    )
+      .bind(locale)
+      .first<number>("noindex"),
+  ]);
+  const ids = latest.map((a) => a.content_id);
+  [practice, labels] = await Promise.all([
+    featuredPractice(env.CONTENT, locale, ids),
+    articleTopics(env.CONTENT, locale, ids),
+  ]);
+} catch {
+  return articleUnavailable();
 }
-const locale = Astro.params.locale as Locale;
-const { content: c, noindex, headerMenu, footerMenu } = getHome(locale);
+Astro.response.headers.set("Cache-Control", "no-store");
+const archive = articlesPath(locale);
+const topics = topicsPath(locale);
 ---
 
-<SiteLayout
-  title={`${c.title} — ${c.name}`}
+<EditorialLayout
+  title={editorial.name === c.name ? c.title : `${c.title} — ${editorial.name}`}
   description={c.description}
-  locale={locale}
-  noindex={noindex}
-  skip={c.skip}
+  {locale}
+  {editorial}
+  noindex={home === 1}
+  alternate={{ locale: other, path: `/${other}/` }}
 >
-  <Header content={c} locale={locale} menu={headerMenu} />
   <main id="main" class="container">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow">
-          <span class="tiny-square"></span>
-          {c.eyebrow}
+          <span class="tiny-square"></span> DEVELOPMENT · ENGINEERING · OPEN
+          SOURCE
         </p>
         <h1 id="hero-title">
-          {c.headline[0]}
+          {c.heading[0]}
           <br />
-          <span>{c.headline[1]}</span>
+          <span>{c.heading[1]}</span>
         </h1>
-        <p class="hero-intro">{c.intro}</p>
+        <p class="hero-intro">{c.description}</p>
         <div class="hero-actions">
-          <a class="button primary" href="#notes">
-            {c.read}
-            <span aria-hidden="true">↗</span>
+          <a class="button primary" href={archive}>
+            {c.archive} <span aria-hidden="true">↗</span>
           </a>
-          <a class="button secondary" href="#work">
-            {c.work}
-            <span aria-hidden="true">→</span>
-          </a>
+          {editorial.topics.length > 0 && (
+            <a class="button secondary" href={topics}>
+              {c.topics} <span aria-hidden="true">→</span>
+            </a>
+          )}
         </div>
-        <p class="hero-footnote">
-          AI VIDEO <span>/</span> WEB <span>/</span> MINI APPS
-        </p>
       </div>
       <figure class="studio-art">
         <StudioIllustration hero />
-        <figcaption>{c.illustration}</figcaption>
       </figure>
     </section>
     <section id="notes" class="section notes-section">
       <div class="section-heading">
-        <h2>{c.noteLabel}</h2>
-        <div
-          class="note-filters"
-          role="group"
-          aria-label={locale === "zh" ? "筛选技术笔记" : "Filter field notes"}
-        >
-          <button type="button" data-filter="all" aria-pressed="true">
-            {locale === "zh" ? "全部" : "All"}
-          </button>
-          {[...new Set(c.articles.map((article) => article.category))].map(
-            (category) => (
-              <button type="button" data-filter={category} aria-pressed="false">
-                {category}
-              </button>
-            ),
-          )}
+        <h2>{c.latest}</h2>
+      </div>
+      {latest.length ? (
+        <EditorialCards
+          {locale}
+          entries={latest.map((entry) => ({
+            ...entry,
+            topic: labels.get(entry.content_id),
+          }))}
+        />
+      ) : (
+        <p>{c.empty}</p>
+      )}
+    </section>
+    {editorial.topics.length > 0 && (
+      <section class="section">
+        <div class="section-heading">
+          <h2>{c.topicHeading}</h2>
         </div>
-      </div>
-      <div class="notes-grid">
-        {c.articles.map((article) => (
-          <NoteCard article={article} sample={c.sample} preview={c.preview} />
-        ))}
-      </div>
-    </section>
-    <section id="work" class="section">
-      <div class="section-heading">
-        <h2>{c.projectLabel}</h2>
-      </div>
-      <div class="projects-grid">
-        {c.projects.map((project) => (
-          <ProjectCard project={project} concept={c.concept} />
-        ))}
-      </div>
-    </section>
-    <section id="services" class="section services-section">
-      <div class="section-heading">
-        <h2>{locale === "zh" ? "服务能力" : "Services"}</h2>
-      </div>
-      <div class="services-list">
-        {c.services.map((service, i) => (
-          <article>
-            <svg
-              class="service-icon"
-              viewBox="0 0 32 32"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              aria-hidden="true"
-            >
-              {i === 0 ? (
-                <>
-                  <rect x="3" y="7" width="19" height="18" rx="2" />
-                  <path d="m22 12 7-4v16l-7-4M10 12l7 4-7 4z" />
-                </>
-              ) : i === 1 ? (
-                <path d="m10 8-8 8 8 8m12-16 8 8-8 8M19 3l-6 26" />
-              ) : (
-                <>
-                  <rect x="3" y="3" width="10" height="10" rx="2" />
-                  <rect x="19" y="3" width="10" height="10" rx="2" />
-                  <rect x="3" y="19" width="10" height="10" rx="2" />
-                  <rect x="19" y="19" width="10" height="10" rx="2" />
-                </>
-              )}
-            </svg>
-            <h3>{service.title}</h3>
-            <p>{service.text}</p>
-            <span class="service-arrow" aria-hidden="true">
-              ↗
-            </span>
-          </article>
-        ))}
-      </div>
-    </section>
+        <p>{c.topicIntro}</p>
+        <EditorialCards {locale} entries={editorial.topics} />
+      </section>
+    )}
+    {practice.length > 0 && (
+      <section class="section">
+        <div class="section-heading">
+          <h2>{c.practice}</h2>
+        </div>
+        <p>{c.practiceIntro}</p>
+        <EditorialCards {locale} entries={practice} />
+      </section>
+    )}
     <section id="about" class="section about-section">
-      <div>
-        <p class="eyebrow">{c.aboutLabel}</p>
-        <h2>{c.aboutTitle}</h2>
+      <div id="services">
+        <h2>{c.about}</h2>
       </div>
-      <p>{c.aboutText}</p>
-    </section>
-    <section id="contact" class="contact-section">
-      <div>
-        <p class="eyebrow">LET’S MAKE SOMETHING</p>
-        <h2>{c.contactTitle}</h2>
-        <p>{c.contactText}</p>
-      </div>
-      <div class="contact-status">
-        <span class="unavailable">
-          <span aria-hidden="true">○</span>
-          {c.contactEmpty}
-        </span>
-        <p>{c.contactNote}</p>
+      <div id="contact">
+        <p>{c.aboutIntro}</p>
+        <p id="work">{c.emptyWork}</p>
       </div>
     </section>
   </main>
-  <footer class="site-footer container">
-    <div class="footer-main">
-      <div>
-        <a class="brand" href={`/${locale}/`}>
-          <img src="/goose-placeholder.svg" width="27" height="30" alt="" />
-          {c.name}
-        </a>
-        <p>{c.footer}</p>
-      </div>
-      <nav aria-label={c.footerNav}>
-        {footerMenu.map((item) => (
-          <a href={item.href}>{item.label}</a>
-        ))}
-        <a
-          href={locale === "zh" ? "/en/" : "/zh/"}
-          lang={locale === "zh" ? "en" : "zh-Hans"}
-        >
-          {locale === "zh" ? "English ↗" : "中文 ↗"}
-        </a>
-      </nav>
-    </div>
-    <div class="footer-bottom">
-      <p>{c.notice}</p>
-      <a href="#top">{c.back} ↑</a>
-    </div>
-  </footer>
-</SiteLayout>
-<script>
-  const filters = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
-  const cards = document.querySelectorAll<HTMLElement>("[data-category]");
-  const grid = document.querySelector(".notes-grid");
-  filters.forEach((button) =>
-    button.addEventListener("click", () => {
-      const category = button.dataset.filter;
-      filters.forEach((item) =>
-        item.setAttribute("aria-pressed", String(item === button)),
-      );
-      cards.forEach((card) => {
-        card.hidden = category !== "all" && card.dataset.category !== category;
-      });
-      grid?.classList.toggle("is-filtered", category !== "all");
-    }),
-  );
-  document.querySelector(".note-filters")?.classList.add("is-ready");
-</script>
+</EditorialLayout>

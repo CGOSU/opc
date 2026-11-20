@@ -1,0 +1,260 @@
+---
+import { env } from "cloudflare:workers";
+import ArticleBody from "../../../components/ArticleBody.astro";
+import EditorialLayout from "../../../layouts/EditorialLayout.astro";
+import { loadEditorialSite } from "../../../lib/editorial-site";
+import { articleTopic, topicMembers } from "../../../lib/topics";
+import {
+  articleAlternate,
+  articleCover,
+  articleDate,
+  articleLocale,
+  articlesPath,
+  articleUnavailable,
+  findArticle,
+  nearbyArticles,
+} from "../../../lib/articles";
+import { renderArticleMarkdown } from "../../../lib/article-markdown";
+import "../../../styles/reading.css";
+
+export const prerender = false;
+
+const locale = articleLocale(Astro.params.locale);
+if (!locale) return new Response("Not found", { status: 404 });
+if (!env.CONTENT) return articleUnavailable();
+const { slug } = Astro.params;
+let article;
+try {
+  article = await findArticle(env.CONTENT, locale, slug);
+} catch {
+  return articleUnavailable();
+}
+Astro.response.headers.set("Cache-Control", "no-store");
+if (!article) Astro.response.status = 404;
+const archive = articlesPath(locale);
+if (article && article.path !== archive + slug + "/") {
+  return new Response(null, {
+    status: 308,
+    headers: { Location: article.path, "Cache-Control": "no-store" },
+  });
+}
+
+let editorial, topic, previous, next;
+let related: { path: string; title: string }[] = [];
+try {
+  editorial = await loadEditorialSite(env.CONTENT, locale);
+  if (article) {
+    topic = await articleTopic(env.CONTENT, locale, article.content_id);
+    if (topic) {
+      const members = await topicMembers(env.CONTENT, locale, topic.content_id);
+      const current = members.findIndex(({ path }) => path === article.path);
+      if (current >= 0) {
+        previous = members[current - 1];
+        next = members[current + 1];
+        related = members.filter((_, index) => index !== current).slice(0, 3);
+      }
+    }
+    if (!related.length)
+      ({ previous, next, related } = await nearbyArticles(
+        env.CONTENT,
+        locale,
+        article,
+      ));
+  }
+} catch {
+  return articleUnavailable();
+}
+
+const zh = locale === "zh";
+const root = `/${locale}/`;
+const notFound = zh ? "找不到这篇文章" : "Article not found";
+const homeLabel = zh ? "首页" : "Home";
+const articlesLabel = zh ? "技术文章" : "Articles";
+const back = zh ? "返回技术文章" : "Back to articles";
+const title = article?.seo_title?.trim() || article?.title || notFound;
+const description =
+  article?.seo_description?.trim() ||
+  article?.summary ||
+  article?.title ||
+  notFound;
+const alternate = article && articleAlternate(article, locale);
+const cover =
+  article && articleCover(env.CONTENT_ASSET_BASE_URL, article.cover_key);
+const coverAlt = article?.cover_alt?.trim() || undefined;
+const published =
+  article && new Date(article.first_published_at_ms).toISOString();
+const modified = article && new Date(article.modified_at_ms).toISOString();
+const site = Astro.site;
+const body = article && renderArticleMarkdown(article.body_markdown);
+const trail = article
+  ? [
+      { name: homeLabel, path: root },
+      { name: articlesLabel, path: archive },
+      { name: article.title, path: article.path },
+    ]
+  : [];
+const seo = article
+  ? {
+      path: article.path,
+      type: "article" as const,
+      alternates: [
+        { locale, path: article.path },
+        ...(alternate && !alternate.noindex ? [alternate] : []),
+      ],
+      image: cover || undefined,
+      imageAlt: coverAlt,
+      structuredData: site
+        ? [
+            {
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              url: new URL(article.path, site).href,
+              mainEntityOfPage: new URL(article.path, site).href,
+              headline: article.title,
+              description,
+              inLanguage: zh ? "zh-Hans" : "en",
+              datePublished: published,
+              dateModified: modified,
+              ...(cover ? { image: cover.href } : {}),
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: trail.map(({ name, path }, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name,
+                item: new URL(path, site).href,
+              })),
+            },
+          ]
+        : undefined,
+    }
+  : {};
+---
+
+<EditorialLayout
+  {locale}
+  {title}
+  {description}
+  {seo}
+  {editorial}
+  noindex={!article || article.noindex === 1}
+  alternate={alternate || undefined}
+>
+  <main id="main" class="container reading-page">
+    {article && body ? (
+      <article>
+        <nav class="breadcrumbs" aria-label={zh ? "面包屑" : "Breadcrumb"}>
+          <ol>
+            <li>
+              <a href={root}>{homeLabel}</a>
+            </li>
+            <li>
+              <span aria-hidden="true">/ </span>
+              <a href={archive}>{articlesLabel}</a>
+            </li>
+            <li>
+              <span aria-hidden="true">/ </span>
+              <span aria-current="page">{article.title}</span>
+            </li>
+          </ol>
+        </nav>
+        <header>
+          <h1>{article.title}</h1>
+          {article.summary && <p class="reading-summary">{article.summary}</p>}
+          <div class="reading-meta">
+            <span>
+              {zh ? "发布于 " : "Published "}
+              <time datetime={published || undefined}>
+                {articleDate(article.first_published_at_ms, locale)}
+              </time>
+            </span>
+            {published !== modified && (
+              <span>
+                {zh ? "更新于 " : "Updated "}
+                <time datetime={modified || undefined}>
+                  {articleDate(article.modified_at_ms, locale)}
+                </time>
+              </span>
+            )}
+            {article.source_author?.trim() && (
+              <span>
+                {zh ? "原文作者：" : "Source author: "}
+                {article.source_author}
+              </span>
+            )}
+          </div>
+          {cover && (
+            <img
+              class="reading-cover"
+              src={cover.href}
+              alt={coverAlt ?? ""}
+              decoding="async"
+            />
+          )}
+        </header>
+        <div class="article-body">
+          <ArticleBody {locale} {...body} />
+        </div>
+      </article>
+    ) : (
+      <h1>{notFound}</h1>
+    )}
+    {article && (previous || next) && (
+      <nav
+        class="reading-more"
+        aria-label={zh ? "前后篇" : "Previous and next articles"}
+      >
+        {previous && (
+          <a href={previous.path}>
+            {zh ? "上一篇" : "Previous"}: {previous.title}
+          </a>
+        )}
+        {next && (
+          <a href={next.path}>
+            {zh ? "下一篇" : "Next"}: {next.title}
+          </a>
+        )}
+      </nav>
+    )}
+    {related.length > 0 && (
+      <section class="reading-more">
+        <h2>{zh ? "相关文章" : "Related articles"}</h2>
+        <ul>
+          {related.map((entry) => (
+            <li>
+              <a href={entry.path}>{entry.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+    <div class="reading-links">
+      {topic && (
+        <a class="back-to-articles" href={topic.path}>
+          {zh ? "返回专题" : "Back to topic"}: {topic.title}
+        </a>
+      )}
+      <a class="back-to-articles" href={archive}>
+        {back}
+      </a>
+    </div>
+  </main>
+</EditorialLayout>
+<style>
+  .reading-more {
+    margin-block-start: 2rem;
+    max-width: 72ch;
+  }
+  nav.reading-more,
+  .reading-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+  }
+  .reading-more a {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+</style>

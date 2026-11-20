@@ -1,0 +1,215 @@
+---
+import type { ArticleHeading } from "../lib/article-markdown";
+import type { Locale } from "../lib/home";
+
+interface Props {
+  headings: ArticleHeading[];
+  html: string;
+  locale: Locale;
+}
+const { headings, html, locale } = Astro.props;
+const zh = locale === "zh";
+const tocLabel = zh ? "文章目录" : "On this page";
+---
+
+<div class:list={["reader", { "with-toc": headings.length }]}>
+  {headings.length > 0 && (
+    <nav class="toc" aria-label={tocLabel}>
+      <h2>{tocLabel}</h2>
+      <ol>
+        {headings.map(({ id, label, level }) => (
+          <li class:list={{ nested: level > 2 }}>
+            <a href={`#${id}`}>{label}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )}
+  <div
+    class="prose"
+    data-copy={zh ? "复制" : "Copy"}
+    data-copied={zh ? "已复制" : "Copied"}
+    data-copy-error={zh ? "复制失败" : "Copy failed"}
+    set:html={html}
+  />
+</div>
+
+<script>
+  const clipboard = navigator.clipboard;
+  if (clipboard) {
+    for (const prose of document.querySelectorAll<HTMLElement>(
+      ".prose[data-copy]",
+    )) {
+      const status = document.createElement("span");
+      status.className = "copy-status";
+      status.setAttribute("role", "status");
+      prose.append(status);
+      for (const code of prose.querySelectorAll("pre > code")) {
+        const pre = code.parentElement!;
+        const wrapper = document.createElement("div");
+        const button = document.createElement("button");
+        wrapper.className = "code-block";
+        button.type = "button";
+        button.className = "code-copy";
+        button.textContent = prose.dataset.copy!;
+        pre.before(wrapper);
+        wrapper.append(pre, button);
+        button.addEventListener("click", async () => {
+          status.textContent = "";
+          try {
+            await clipboard.writeText(code.textContent ?? "");
+            status.textContent = prose.dataset.copied!;
+          } catch {
+            status.textContent = prose.dataset.copyError!;
+          }
+        });
+      }
+    }
+  }
+</script>
+
+<style>
+  .reader {
+    display: grid;
+    gap: 2rem;
+  }
+  .toc {
+    border-inline-start: 2px solid var(--line);
+    padding-inline-start: 1rem;
+    min-width: 0;
+  }
+  .toc h2 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+  }
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .toc li {
+    margin-block: 0.35rem;
+  }
+  .toc .nested {
+    padding-inline-start: 0.85rem;
+  }
+  .toc a {
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+  .toc a:hover {
+    color: var(--teal);
+    text-decoration: underline;
+  }
+  .prose {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .prose :global(> * + *) {
+    margin-block-start: 1.15em;
+  }
+  .prose :global(h2, h3, h4, h5, h6) {
+    margin-block-start: 1.5em;
+    margin-block-end: 0.4em;
+  }
+  .prose :global(> :first-child) {
+    margin-block-start: 0;
+  }
+  .prose :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    color: var(--teal);
+  }
+  .prose :global(blockquote) {
+    border-inline-start: 3px solid var(--line);
+    color: var(--muted);
+    margin-inline: 0;
+    padding-inline-start: 1rem;
+  }
+  .prose :global(img) {
+    height: auto;
+    border-radius: var(--radius);
+  }
+  .prose :global(table, pre) {
+    max-width: 100%;
+    overflow: auto;
+  }
+  .prose :global(table) {
+    display: block;
+    border-collapse: collapse;
+  }
+  .prose :global(th, td) {
+    border: 1px solid var(--line);
+    padding: 0.45rem 0.7rem;
+  }
+  .prose :global(pre) {
+    margin-block-end: 0;
+    border-radius: var(--radius);
+    padding: 1rem;
+    background: var(--wash);
+    border: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+  .prose :global(:not(pre) > code) {
+    background: var(--wash);
+  }
+  .prose :global(.code-block) {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  .prose :global(.code-block > pre) {
+    margin: 0;
+  }
+  .prose :global(.code-copy) {
+    justify-self: end;
+    color: var(--teal);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+  }
+  .prose :global(.copy-status:not(:empty)) {
+    display: block;
+    color: var(--muted);
+  }
+  .prose
+    :global(
+      .hljs-keyword,
+      .hljs-built_in,
+      .hljs-section,
+      .hljs-type,
+      .hljs-tag
+    ) {
+    color: #674188;
+  }
+  .prose :global(.hljs-string, .hljs-attr, .hljs-attribute, .hljs-regexp) {
+    color: #245e45;
+  }
+  .prose :global(.hljs-number, .hljs-literal, .hljs-variable) {
+    color: #8c4b18;
+  }
+  .prose :global(.hljs-comment, .hljs-quote) {
+    color: var(--muted);
+  }
+  @media (min-width: 900px) {
+    .reader.with-toc {
+      grid-template-columns: minmax(0, 72ch) minmax(10rem, 1fr);
+      column-gap: clamp(2rem, 5vw, 4.5rem);
+    }
+    .toc {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 2rem;
+      align-self: start;
+      max-height: calc(100vh - 4rem);
+      overflow: auto;
+    }
+    .prose {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+</style>

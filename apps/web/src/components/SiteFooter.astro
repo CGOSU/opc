@@ -1,0 +1,36 @@
+---
+import { editorialCopy } from "../lib/editorial-site";
+import type { Locale, MenuItem } from "../lib/home";
+interface Props {
+  locale: Locale;
+  name: string;
+  menu: MenuItem[];
+  feed?: string;
+}
+const { locale, name, menu, feed } = Astro.props;
+const c = editorialCopy(locale);
+---
+
+<footer class="site-footer container">
+  <div class="footer-main">
+    <div>
+      <a class="brand" href={`/${locale}/`}>
+        <img src="/goose-placeholder.svg" width="27" height="30" alt="" />
+        {name}
+      </a>
+      <p>{c.heading.join(locale === "zh" ? "" : " ")}</p>
+    </div>
+    <nav aria-label={c.footerNav}>
+      {menu.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+      {feed && <a href={feed}>{locale === "zh" ? "RSS 订阅" : "RSS feed"}</a>}
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <p>
+      © {new Date().getUTCFullYear()} {name}. All rights reserved.
+    </p>
+    <a href="#top">{c.back} ↑</a>
+  </div>
+</footer>

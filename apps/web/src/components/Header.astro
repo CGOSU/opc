@@ -1,18 +1,21 @@
 ---
-import { type MenuItem, type HomeContent, type Locale } from "../lib/home";
+import type { MenuItem, Locale } from "../lib/home";
+import { editorialCopy } from "../lib/editorial-site";
 interface Props {
-  content: HomeContent;
+  name: string;
   locale: Locale;
   menu: MenuItem[];
+  alternate?: { locale: Locale; path: string };
 }
-const { content: c, locale, menu } = Astro.props;
+const { name, locale, menu, alternate } = Astro.props;
+const c = editorialCopy(locale);
 ---
 
 <header class="site-header" id="top">
   <div class="container header-inner">
-    <a class="brand" href={`/${locale}/`} aria-label={c.name}>
+    <a class="brand" href={`/${locale}/`} aria-label={name}>
       <img src="/goose-placeholder.svg" width="30" height="33" alt="" />
-      <span>{c.name}</span>
+      <span>{name}</span>
       <span class="brand-note">INDEPENDENT STUDIO</span>
     </a>
     <button
@@ -42,7 +45,7 @@ const { content: c, locale, menu } = Astro.props;
       aria-label={locale === "zh" ? "主导航" : "Main navigation"}
     >
       <div class="menu-primary">
-        {menu.map((item, index) => (
+        {menu.map((item) => (
           <a href={item.href}>
             <svg
               class="menu-icon"
@@ -56,14 +59,14 @@ const { content: c, locale, menu } = Astro.props;
               stroke-linejoin="round"
               aria-hidden="true"
             >
-              {index === 0 ? (
+              {item.href.endsWith("/articles/") ? (
                 <path d="M12 5v16M12 5C8 2 4 3 2 4v15c4-2 7-1 10 2 3-3 6-4 10-2V4c-2-1-6-2-10 1Z" />
-              ) : index === 1 ? (
+              ) : item.href.endsWith("/search/") ? (
                 <>
-                  <rect x="3" y="5" width="18" height="15" rx="2" />
-                  <path d="M8 5V3h8v2M3 11h18M10 11v3h4v-3" />
+                  <circle cx="10.5" cy="10.5" r="6.5" />
+                  <path d="m16 16 5 5" />
                 </>
-              ) : index === 2 ? (
+              ) : item.href.endsWith("/topics/") ? (
                 <>
                   <rect x="3" y="3" width="7" height="7" rx="1" />
                   <rect x="14" y="3" width="7" height="7" rx="1" />
@@ -81,31 +84,19 @@ const { content: c, locale, menu } = Astro.props;
           </a>
         ))}
       </div>
-      <p class="mobile-menu-label">{c.lang}</p>
-      <div class="language-switch" aria-label={c.lang}>
-        <a
-          href="/zh/"
-          lang="zh-Hans"
-          aria-current={locale === "zh" ? "page" : undefined}
-        >
-          中文
-        </a>
-        <span aria-hidden="true">/</span>
-        <a
-          href="/en/"
-          lang="en"
-          aria-current={locale === "en" ? "page" : undefined}
-        >
-          EN
-        </a>
-      </div>
-      <p class="mobile-menu-label">
-        {locale === "zh" ? "联系与合作" : "Get in touch"}
-      </p>
-      <a href="#contact" class="header-contact">
-        {c.contact}
-        <span aria-hidden="true">↗</span>
-      </a>
+      {alternate && (
+        <>
+          <p class="mobile-menu-label">{c.lang}</p>
+          <div class="language-switch">
+            <a
+              href={alternate.path}
+              lang={alternate.locale === "zh" ? "zh-Hans" : "en"}
+            >
+              {alternate.locale === "zh" ? "中文" : "English"}
+            </a>
+          </div>
+        </>
+      )}
     </nav>
   </div>
 </header>

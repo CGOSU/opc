@@ -1,0 +1,75 @@
+---
+import { articleDate } from "../lib/articles";
+import type { Locale } from "../lib/home";
+interface Props {
+  locale: Locale;
+  entries: {
+    path: string;
+    title: string;
+    summary: string;
+    first_published_at_ms?: number;
+    topic?: { path: string; title: string };
+  }[];
+}
+const { locale, entries } = Astro.props;
+---
+
+<ul class="editorial-cards">
+  {entries.map((entry) => (
+    <li>
+      <article>
+        <h3>
+          <a href={entry.path}>{entry.title}</a>
+        </h3>
+        {entry.summary && <p>{entry.summary}</p>}
+        {(entry.topic || entry.first_published_at_ms !== undefined) && (
+          <div class="card-meta">
+            {entry.first_published_at_ms !== undefined && (
+              <time
+                datetime={new Date(entry.first_published_at_ms).toISOString()}
+              >
+                {articleDate(entry.first_published_at_ms, locale)}
+              </time>
+            )}
+            {entry.topic && <a href={entry.topic.path}>{entry.topic.title}</a>}
+          </div>
+        )}
+      </article>
+    </li>
+  ))}
+</ul>
+<style>
+  .editorial-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    padding: clamp(1rem, 2vw, 1.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  h3 {
+    margin: 0;
+  }
+  p {
+    margin: 0.5rem 0;
+  }
+  h3 a:hover {
+    text-decoration: underline;
+  }
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+  .card-meta a {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+</style>

@@ -6,9 +6,37 @@ interface Props {
   locale: "zh" | "en";
   noindex?: boolean;
   skip: string;
+  feed?: string;
+  seo?: {
+    path?: string;
+    alternates?: { locale: "zh" | "en"; path: string }[];
+    type?: "article";
+    image?: URL;
+    imageAlt?: string;
+    structuredData?: object[];
+  };
 }
-const { title, description, locale, noindex = false, skip } = Astro.props;
-const canonical = Astro.site ? new URL(`/${locale}/`, Astro.site) : undefined;
+const {
+  title,
+  description,
+  locale,
+  noindex = false,
+  skip,
+  seo,
+  feed,
+} = Astro.props;
+const canonicalPath = seo ? seo.path : `/${locale}/`;
+const canonical =
+  Astro.site && canonicalPath ? new URL(canonicalPath, Astro.site) : undefined;
+const alternates = seo
+  ? (seo.alternates ?? [])
+  : [
+      { locale: "zh", path: "/zh/" },
+      { locale: "en", path: "/en/" },
+    ];
+const structuredData = seo?.structuredData?.map((entry) =>
+  JSON.stringify(entry).replace(/</g, "\\u003c"),
+);
 ---
 
 <!doctype html>
@@ -25,25 +53,51 @@ const canonical = Astro.site ? new URL(`/${locale}/`, Astro.site) : undefined;
       <meta name="robots" content="noindex, follow" />
     )}
     {canonical && <link rel="canonical" href={canonical} />}
-    {Astro.site && (
-      <>
+    {feed && (
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title="RSS"
+        href={feed}
+      />
+    )}
+    {Astro.site &&
+      (!seo || !noindex) &&
+      alternates.map((entry) => (
         <link
           rel="alternate"
-          hreflang="zh-Hans"
-          href={new URL("/zh/", Astro.site)}
+          hreflang={entry.locale === "zh" ? "zh-Hans" : "en"}
+          href={new URL(entry.path, Astro.site)}
         />
-        <link
-          rel="alternate"
-          hreflang="en"
-          href={new URL("/en/", Astro.site)}
-        />
-        <link rel="alternate" hreflang="x-default" href={Astro.site} />
-      </>
+      ))}
+    {Astro.site && !seo && (
+      <link rel="alternate" hreflang="x-default" href={Astro.site} />
     )}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={seo?.type ?? "website"} />
     {canonical && <meta property="og:url" content={canonical} />}
+    {seo?.image && <meta property="og:image" content={seo.image} />}
+    {seo?.image && seo.imageAlt && (
+      <meta property="og:image:alt" content={seo.imageAlt} />
+    )}
+    {seo?.type === "article" && (
+      <>
+        <meta
+          name="twitter:card"
+          content={seo.image ? "summary_large_image" : "summary"}
+        />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {seo.image && <meta name="twitter:image" content={seo.image} />}
+        {seo.image && seo.imageAlt && (
+          <meta name="twitter:image:alt" content={seo.imageAlt} />
+        )}
+      </>
+    )}
+    {structuredData?.map((entry) => (
+      <script is:inline type="application/ld+json" set:html={entry} />
+    ))}
   </head>
   <body>
     <a class="skip-link" href="#main">

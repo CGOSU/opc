@@ -1,0 +1,113 @@
+---
+import { env } from "cloudflare:workers";
+import ArticleBody from "../../../components/ArticleBody.astro";
+import EditorialLayout from "../../../layouts/EditorialLayout.astro";
+import { renderArticleMarkdown } from "../../../lib/article-markdown";
+import { articleLocale, articleUnavailable } from "../../../lib/articles";
+import { editorialCopy, loadEditorialSite } from "../../../lib/editorial-site";
+import { findTopic, topicMembers, topicsPath } from "../../../lib/topics";
+import "../../../styles/reading.css";
+
+export const prerender = false;
+const locale = articleLocale(Astro.params.locale);
+if (!locale) return new Response("Not found", { status: 404 });
+if (!env.CONTENT) return articleUnavailable();
+const { slug } = Astro.params;
+const c = editorialCopy(locale);
+const zh = locale === "zh";
+const archive = topicsPath(locale);
+let editorial, topic;
+let members = [];
+try {
+  topic = await findTopic(env.CONTENT, locale, slug);
+  if (topic && topic.path !== archive + slug + "/") {
+    return new Response(null, {
+      status: 308,
+      headers: { Location: topic.path, "Cache-Control": "no-store" },
+    });
+  }
+  [editorial, members] = await Promise.all([
+    loadEditorialSite(env.CONTENT, locale),
+    topic ? topicMembers(env.CONTENT, locale, topic.content_id) : [],
+  ]);
+} catch {
+  return articleUnavailable();
+}
+Astro.response.headers.set("Cache-Control", "no-store");
+if (!members.length) topic = null;
+if (!topic) Astro.response.status = 404;
+const missing = zh ? "找不到这个专题" : "Topic not found";
+const title = topic?.seo_title?.trim() || topic?.title || missing;
+const description = topic
+  ? topic.seo_description?.trim() || topic.summary || topic.title
+  : missing;
+const alternate = topic?.alternate_path
+  ? ({ locale: zh ? "en" : "zh", path: topic.alternate_path } as const)
+  : undefined;
+const seo = topic
+  ? {
+      path: topic.path,
+      alternates: [
+        { locale, path: topic.path },
+        ...(alternate && !topic.alternate_noindex ? [alternate] : []),
+      ],
+    }
+  : {};
+const body = topic?.body_markdown && renderArticleMarkdown(topic.body_markdown);
+---
+
+<EditorialLayout
+  {locale}
+  {editorial}
+  {title}
+  {description}
+  {seo}
+  {alternate}
+  noindex={!topic || topic.noindex === 1}
+>
+  <main id="main" class="container reading-page">
+    <h1>{topic?.title ?? missing}</h1>
+    {topic && (
+      <>
+        {topic.summary && <p class="reading-summary">{topic.summary}</p>}
+        {body && (
+          <div class="article-body">
+            <ArticleBody {locale} {...body} />
+          </div>
+        )}
+        <section class="section">
+          <h2>{zh ? "学习路径" : "Learning path"}</h2>
+          <ol class="learning-path">
+            {members.map((entry) => (
+              <li>
+                <h3>
+                  <a href={entry.path}>{entry.title}</a>
+                </h3>
+                {entry.summary && <p>{entry.summary}</p>}
+              </li>
+            ))}
+          </ol>
+        </section>
+        <a class="back-to-articles" href={archive}>
+          {c.topics}
+        </a>
+      </>
+    )}
+  </main>
+</EditorialLayout>
+<style>
+  .learning-path {
+    max-width: 72ch;
+    padding-inline-start: 1.5rem;
+  }
+  .learning-path li {
+    padding: 1rem;
+    border-block-end: 1px solid var(--line);
+  }
+  .learning-path h3 {
+    margin: 0;
+  }
+  .learning-path a:hover {
+    text-decoration: underline;
+  }
+</style>

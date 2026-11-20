@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "opc-web-local",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "binding": "ASSETS" },
+  "d1_databases": [
+    {
+      "binding": "CONTENT",
+      "database_name": "opc-content-local",
+      // Local-only identity. Remote resources require separate configuration.
+      "database_id": "00000000-0000-4000-8000-000000000001",
+      "migrations_dir": ".wrangler/migrations",
+      "remote": false,
+    },
+  ],
+}

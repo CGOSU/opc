@@ -1,0 +1,23 @@
+---
+import type { ComponentProps } from "astro/types";
+import Header from "../components/Header.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { editorialCopy, type loadEditorialSite } from "../lib/editorial-site";
+import SiteLayout from "./SiteLayout.astro";
+
+type Props = Omit<ComponentProps<typeof SiteLayout>, "skip"> & {
+  editorial: Awaited<ReturnType<typeof loadEditorialSite>>;
+  alternate?: { locale: "zh" | "en"; path: string };
+};
+const { editorial, alternate, ...layout } = Astro.props;
+const { locale } = layout;
+const { name, menu } = editorial;
+const c = editorialCopy(locale);
+const feed = Astro.site ? `/${locale}/rss.xml` : undefined;
+---
+
+<SiteLayout {...layout} skip={c.skip} {feed}>
+  <Header {locale} {name} {menu} {alternate} />
+  <slot />
+  <SiteFooter {locale} {name} {menu} {feed} />
+</SiteLayout>
