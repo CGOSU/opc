@@ -5,7 +5,11 @@ import { toast } from "sonner";
 import { sessionQuery, signOut } from "../auth/api";
 import { cn } from "../lib/utils";
 import { AdminHeader } from "./admin-header";
-import { AdminBrand, AdminSidebar } from "./admin-navigation";
+import {
+  AdminBrand,
+  AdminSidebar,
+  SidebarAccountCard,
+} from "./admin-navigation";
 
 const compactSidebar = "(width < 80rem)";
 
@@ -33,7 +37,7 @@ export function AdminLayout({ username }: { username: string }) {
   });
 
   return (
-    <div className="flex min-h-dvh">
+    <div className="flex min-h-dvh bg-background">
       <a
         href="#admin-main"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-control focus:bg-card focus:px-4 focus:py-2 focus:ring-2 focus:ring-ring"
@@ -50,12 +54,13 @@ export function AdminLayout({ username }: { username: string }) {
         <div
           className={cn(
             "flex h-header shrink-0 items-center border-b border-border",
-            collapsed ? "justify-center" : "px-page",
+            collapsed ? "justify-center px-2" : "px-5",
           )}
         >
           <AdminBrand compact={collapsed} />
         </div>
         <AdminSidebar collapsed={collapsed} />
+        <SidebarAccountCard username={username} collapsed={collapsed} />
       </aside>
       <div className="min-w-0 flex-1">
         <AdminHeader
@@ -68,7 +73,7 @@ export function AdminLayout({ username }: { username: string }) {
         <main
           id="admin-main"
           tabIndex={-1}
-          className="mx-auto w-full max-w-7xl px-4 py-6 outline-none sm:px-page sm:py-8"
+          className="mx-auto w-full max-w-7xl px-4 py-6 outline-none sm:px-page sm:py-7"
         >
           <Outlet />
         </main>

@@ -4,11 +4,12 @@ import {
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import { DataTable } from "../components/admin/data-table";
+import { LocaleBadge } from "../components/admin/locale-badge";
 import { PageHeader } from "../components/admin/page-header";
 import { Pagination, type PageSize } from "../components/admin/pagination";
 import { SearchInput } from "../components/admin/search-input";
@@ -18,6 +19,7 @@ import {
   LoadingState,
 } from "../components/admin/states";
 import { Button } from "../components/ui/button";
+import { Select } from "../components/ui/select";
 import {
   taxonomyKey,
   termListQuery,
@@ -77,39 +79,38 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
       {
         accessorKey: "name",
         header: "名称",
-        cell: ({ row: { original } }) => (
-          <div className="min-w-32 max-w-80 space-y-0.5 wrap-anywhere">
-            <p className="font-medium">{original.name}</p>
-            <p className="line-clamp-2 text-muted-foreground">
-              {original.translations.find((version) => version.locale === "en")
-                ?.name ?? (original.legacy ? "含历史内容" : "")}
-            </p>
-          </div>
-        ),
+        cell: ({ row: { original } }) => {
+          const enTranslation = original.translations.find(
+            (version) => version.locale === "en",
+          );
+          return (
+            <div className="min-w-36 max-w-96 space-y-0.5 wrap-anywhere">
+              <p className="font-semibold text-foreground">{original.name}</p>
+              {(enTranslation?.name || original.legacy) && (
+                <p className="line-clamp-2 text-xs text-muted-foreground">
+                  {enTranslation?.name ?? (original.legacy ? "含历史未标记内容" : "")}
+                </p>
+              )}
+            </div>
+          );
+        },
       },
       {
         id: "languages",
         header: "语言版本",
         cell: ({ row }) => (
-          <div className="flex gap-1">
+          <div className="flex items-center gap-1.5">
             {(["zh", "en"] as const).map((locale) => {
               const exists = row.original.translations.some(
                 (version) => version.locale === locale,
               );
-              const state = exists ? "已创建" : "未创建";
               return (
-                <span
+                <LocaleBadge
                   key={locale}
-                  title={state}
-                  className={
-                    exists
-                      ? "rounded-control bg-muted px-2 py-0.5 font-medium"
-                      : "rounded-control border border-dashed border-border px-2 py-0.5 text-muted-foreground"
-                  }
-                >
-                  {locale.toUpperCase()}
-                  <span className="sr-only"> {state}</span>
-                </span>
+                  locale={locale}
+                  exists={exists}
+                  variant="compact"
+                />
               );
             })}
           </div>
@@ -117,14 +118,14 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
       },
       {
         accessorKey: "articleCount",
-        header: "文章数",
+        header: "关联文章",
         cell: ({ row }) => (
           <Link
             to={`/posts?${isCategory ? "categoryId" : "tagId"}=${encodeURIComponent(row.original.id)}`}
-            className="whitespace-nowrap tabular-nums text-primary underline-offset-4 hover:underline"
+            className="inline-flex items-center rounded-md border border-border bg-background px-2 py-0.5 font-mono text-xs font-medium tabular-nums text-foreground transition-colors hover:border-input hover:bg-accent"
             aria-label={`查看 ${row.original.name} 的 ${row.original.articleCount} 篇文章`}
           >
-            {row.original.articleCount}
+            {row.original.articleCount} 篇
           </Link>
         ),
       },
@@ -134,7 +135,7 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
         accessorKey: "sortOrder",
         header: "排序值",
         cell: ({ row }) => (
-          <span className="whitespace-nowrap tabular-nums">
+          <span className="whitespace-nowrap font-mono text-xs tabular-nums text-muted-foreground">
             {row.original.sortOrder}
           </span>
         ),
@@ -148,6 +149,7 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
           <Button
             type="button"
             variant="ghost"
+            size="sm"
             aria-label={`编辑${label}：${original.name}`}
             onClick={(event) => openEditor(original, event.currentTarget)}
           >
@@ -177,14 +179,16 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const canReset = Boolean(search || language || input);
+
   return (
-    <section className="space-y-6">
+    <section className="space-y-5">
       <PageHeader
         title={`${label}管理`}
         description={
           isCategory
-            ? "每篇文章最多一个分类；有关联文章的分类不可删除。"
-            : "每篇文章可关联多个标签；删除标签仅解除关联，不删除文章。"
+            ? "统一维护中英文分类名称、SEO 描述与排序；有关联文章的分类不可删除。"
+            : "统一维护中英文标签与 SEO 描述；删除标签仅解除文章关联，不删除文章。"
         }
         actions={
           <Button
@@ -197,8 +201,9 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
           </Button>
         }
       />
+
       {list.data && (
-        <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-3.5 md:grid-cols-4">
           {[
             [`${label}总数`, list.data.counts.shared],
             ["中文版本", list.data.counts.zh],
@@ -207,39 +212,47 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
           ].map(([name, count]) => (
             <div
               key={name}
-              className="rounded-panel border border-border bg-card p-4"
+              className="rounded-panel border border-border bg-card px-4 py-3.5 shadow-[0_1px_2px_rgba(24,24,27,0.03)]"
             >
-              <dt className="text-muted-foreground">{name}</dt>
-              <dd className="mt-1 text-xl font-semibold tabular-nums">
+              <dt className="text-xs font-medium text-muted-foreground">
+                {name}
+              </dt>
+              <dd className="mt-1.5 text-2xl font-bold tracking-tight tabular-nums text-foreground">
                 {count}
               </dd>
             </div>
           ))}
         </dl>
       )}
+
       <form
         role="search"
-        className="flex flex-wrap items-center gap-2"
+        className="flex flex-wrap items-center gap-2.5"
         onSubmit={(event) => {
           event.preventDefault();
           applySearch(input);
         }}
       >
-        <SearchInput
-          label={`搜索${label}名称`}
-          name="search"
-          maxLength={100}
-          className="w-full sm:w-64"
-          placeholder={`搜索${label}名称`}
-          value={input}
-          onChange={(event) => setInput(event.currentTarget.value)}
-        />
+        <div className="min-w-44 flex-1 sm:max-w-72">
+          <SearchInput
+            label={`搜索${label}名称`}
+            name="search"
+            maxLength={100}
+            shortcutHint="/"
+            placeholder={`搜索${label}名称…`}
+            value={input}
+            onClear={() => {
+              setInput("");
+              applySearch("");
+            }}
+            onChange={(event) => setInput(event.currentTarget.value)}
+          />
+        </div>
         <Button type="submit" variant="outline">
           搜索
         </Button>
-        <select
+        <Select
           aria-label="语言状态"
-          className="h-9 rounded-control border border-input bg-card px-3"
           value={language}
           onChange={(event) => {
             const value = event.currentTarget.value;
@@ -252,23 +265,26 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
           <option value="">全部语言状态</option>
           <option value="missing-en">缺少英文版</option>
           <option value="bilingual">双语齐全</option>
-        </select>
-        {(search || language) && (
+        </Select>
+        {canReset && (
           <Button
             type="button"
             variant="ghost"
+            className="ml-auto text-muted-foreground hover:text-foreground"
             onClick={() => {
               setInput("");
               setLanguage("");
               applySearch("");
             }}
           >
+            <RotateCcw size={14} aria-hidden="true" />
             清除筛选
           </Button>
         )}
       </form>
+
       {list.isPending ? (
-        <LoadingState />
+        <LoadingState message={`正在读取${label}列表…`} />
       ) : list.isError ? (
         <ErrorState
           message={list.error.message}
@@ -276,7 +292,7 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
           retrying={list.isFetching}
         />
       ) : (
-        <div className="space-y-4" aria-busy={list.isFetching}>
+        <div aria-busy={list.isFetching}>
           <DataTable
             table={table}
             label={`${label}列表`}
@@ -293,21 +309,25 @@ export function TaxonomyPage({ kind }: { kind: TaxonomyKind }) {
                 />
               )
             }
+            footer={
+              list.data.total > 0 ? (
+                <Pagination
+                  page={page}
+                  pageSize={pageSize}
+                  total={list.data.total}
+                  showPageNumbers
+                  onPageChange={setPage}
+                  onPageSizeChange={(size) => {
+                    setPageSize(size);
+                    setPage(1);
+                  }}
+                />
+              ) : undefined
+            }
           />
-          {list.data.total > 0 && (
-            <Pagination
-              page={page}
-              pageSize={pageSize}
-              total={list.data.total}
-              onPageChange={setPage}
-              onPageSizeChange={(size) => {
-                setPageSize(size);
-                setPage(1);
-              }}
-            />
-          )}
         </div>
       )}
+
       {editor && (
         <TermEditor
           kind={kind}

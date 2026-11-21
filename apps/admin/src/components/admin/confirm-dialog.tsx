@@ -1,4 +1,5 @@
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import { AlertTriangle } from "lucide-react";
 import { useRef, type ReactElement, type RefObject } from "react";
 import { Button } from "../ui/button";
 import { ErrorState } from "./states";
@@ -39,7 +40,7 @@ export function ConfirmDialog({
     >
       {trigger && <AlertDialog.Trigger asChild>{trigger}</AlertDialog.Trigger>}
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className="fixed inset-0 z-40 bg-foreground/40" />
+        <AlertDialog.Overlay className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-[2px]" />
         <AlertDialog.Content
           onCloseAutoFocus={
             trigger
@@ -53,16 +54,29 @@ export function ConfirmDialog({
                   }
                 }
           }
-          className="fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[calc(100dvh-2rem)] max-w-md -translate-y-1/2 space-y-4 overflow-y-auto rounded-panel border border-border bg-card p-page shadow-lg outline-none"
+          className="fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[calc(100dvh-2rem)] max-w-md -translate-y-1/2 space-y-4 overflow-y-auto rounded-panel border border-border bg-card p-page shadow-xl outline-none"
         >
-          <AlertDialog.Title className="text-lg font-semibold">
-            {title}
-          </AlertDialog.Title>
-          <AlertDialog.Description className="text-muted-foreground">
-            {description}
-          </AlertDialog.Description>
+          <div className="flex items-start gap-3">
+            <span
+              aria-hidden="true"
+              className="grid size-9 shrink-0 place-items-center rounded-control border border-destructive-border bg-destructive-surface text-destructive"
+            >
+              <AlertTriangle size={18} />
+            </span>
+            <div className="min-w-0 space-y-1.5">
+              <AlertDialog.Title className="text-base font-semibold tracking-tight text-foreground">
+                {title}
+              </AlertDialog.Title>
+              <AlertDialog.Description className="text-sm text-muted-foreground">
+                {description}
+              </AlertDialog.Description>
+            </div>
+          </div>
           {error && <ErrorState message={error} />}
-          <div className="flex flex-wrap justify-end gap-2" aria-busy={pending}>
+          <div
+            className="flex flex-wrap justify-end gap-2 border-t border-border pt-4"
+            aria-busy={pending}
+          >
             <AlertDialog.Cancel asChild>
               <Button type="button" variant="outline" aria-disabled={pending}>
                 取消

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { ExternalLink } from "lucide-react";
 import { lazy, Suspense, type ReactNode } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import { Toaster } from "sonner";
@@ -6,12 +7,15 @@ import { sessionQuery } from "./auth/api";
 import { SessionPage } from "./auth/session-page";
 import { SignIn } from "./auth/sign-in";
 import { ErrorState, LoadingState } from "./components/admin/states";
+import { buttonVariants } from "./components/ui/button";
 import {
   AdminBrand,
   dashboardPath,
   sessionPath,
   settingsPath,
 } from "./layout/admin-navigation";
+import { publicSiteOrigin } from "./lib/admin-api";
+import { cn } from "./lib/utils";
 
 const DashboardPage = lazy(() => import("./dashboard/dashboard-page"));
 const SettingsPage = lazy(() => import("./settings/settings-page"));
@@ -41,11 +45,25 @@ const AdminLayout = lazy(async () => {
 
 function EntryLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="flex h-header items-center border-b border-border bg-card px-4 sm:px-page">
-        <AdminBrand />
+    <div className="admin-grid-bg flex min-h-dvh flex-col">
+      <header className="flex h-header items-center justify-between gap-3 border-b border-border bg-card/95 px-4 backdrop-blur-xs sm:px-page">
+        <div className="min-w-0">
+          <AdminBrand showStatus={false} />
+        </div>
+        <a
+          href={publicSiteOrigin}
+          target="_blank"
+          rel="noreferrer"
+          className={cn(
+            buttonVariants({ variant: "outline", size: "sm" }),
+            "h-8 rounded-[7px]",
+          )}
+        >
+          <ExternalLink size={13} aria-hidden="true" />
+          <span>访问前台</span>
+        </a>
       </header>
-      <main className="grid flex-1 place-items-start justify-items-center px-4 py-12 sm:place-items-center sm:px-page">
+      <main className="grid flex-1 place-items-center px-4 py-10 sm:px-page sm:py-12">
         {children}
       </main>
     </div>
@@ -66,11 +84,13 @@ export function App() {
   if (session.isError) {
     return (
       <EntryLayout>
-        <ErrorState
-          message="无法检查登录状态。"
-          onRetry={() => void session.refetch()}
-          retrying={session.isFetching}
-        />
+        <div className="w-full max-w-sm rounded-panel border border-border bg-card p-6 shadow-sm">
+          <ErrorState
+            message="无法检查登录状态。"
+            onRetry={() => void session.refetch()}
+            retrying={session.isFetching}
+          />
+        </div>
       </EntryLayout>
     );
   }

@@ -4,12 +4,10 @@ import { useId, useState } from "react";
 import { SearchInput } from "../components/admin/search-input";
 import { ErrorState } from "../components/admin/states";
 import { Button } from "../components/ui/button";
+import { Select } from "../components/ui/select";
 import { cn } from "../lib/utils";
 import { topicOptions } from "../topics/api";
 import { termOptions } from "./api";
-
-const selectClass =
-  "h-control min-w-0 max-w-full truncate rounded-control border border-input bg-card px-2.5 text-sm focus-visible:outline-2 focus-visible:outline-ring";
 
 export function PostFilters({
   search,
@@ -45,12 +43,14 @@ export function PostFilters({
   return (
     <>
       <div className="flex flex-wrap items-start gap-2.5 lg:items-center">
-        <div className="min-w-32 flex-1 lg:max-w-72">
+        <div className="min-w-44 flex-1 lg:max-w-76">
           <SearchInput
             label="按标题搜索"
             placeholder="搜索文章标题…"
+            shortcutHint="/"
             maxLength={200}
             value={search}
+            onClear={() => onSearch("")}
             onChange={(event) => onSearch(event.currentTarget.value)}
           />
         </div>
@@ -67,14 +67,13 @@ export function PostFilters({
         <div
           id={filtersId}
           className={cn(
-            "w-full grid-cols-2 gap-2.5 rounded-control border border-border bg-card p-3 lg:flex lg:w-auto lg:flex-wrap lg:border-0 lg:bg-transparent lg:p-0",
+            "w-full grid-cols-2 gap-2.5 rounded-panel border border-border bg-card p-3 shadow-[0_1px_2px_rgba(24,24,27,0.03)] lg:flex lg:w-auto lg:flex-wrap lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none",
             expanded ? "grid" : "hidden",
           )}
         >
           {termFilters.map(({ key, label, value, query }) => (
-            <select
+            <Select
               key={key}
-              className={selectClass}
               aria-label={label}
               value={value ?? ""}
               onChange={(event) =>
@@ -88,10 +87,9 @@ export function PostFilters({
               {query.data?.map((term) => (
                 <option key={term.id} value={term.id} label={term.name} />
               ))}
-            </select>
+            </Select>
           ))}
-          <select
-            className={selectClass}
+          <Select
             aria-label="专题"
             value={topicId ?? ""}
             onChange={(event) =>
@@ -107,9 +105,8 @@ export function PostFilters({
                 {title}
               </option>
             ))}
-          </select>
-          <select
-            className={selectClass}
+          </Select>
+          <Select
             aria-label="语言"
             value={locale ?? ""}
             onChange={(event) =>
@@ -119,27 +116,27 @@ export function PostFilters({
             <option value="">全部语言</option>
             <option value="zh">中文</option>
             <option value="en">English</option>
-          </select>
-          <select
-            className={selectClass}
+          </Select>
+          <Select
             aria-label="时间排序"
             value={`${sort}:${order}`}
             onChange={(event) => {
-              const [sort, order] = event.currentTarget.value.split(":");
-              onChange({ sort, order });
+              const [nextSort, nextOrder] =
+                event.currentTarget.value.split(":");
+              onChange({ sort: nextSort, order: nextOrder });
             }}
           >
             <option value="updated:desc">更新：最新优先</option>
             <option value="updated:asc">更新：最早优先</option>
             <option value="created:desc">创建：最新优先</option>
             <option value="created:asc">创建：最早优先</option>
-          </select>
+          </Select>
         </div>
         {onReset && (
           <Button
             type="button"
             variant="ghost"
-            className="ml-auto text-muted-foreground"
+            className="ml-auto text-muted-foreground hover:text-foreground"
             onClick={onReset}
           >
             <RotateCcw size={14} aria-hidden="true" /> 重置筛选

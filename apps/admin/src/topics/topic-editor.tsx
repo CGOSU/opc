@@ -1,12 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ChevronDown } from "lucide-react";
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { LocaleBadge } from "../components/admin/locale-badge";
 import { PageHeader } from "../components/admin/page-header";
 import { ErrorState, LoadingState } from "../components/admin/states";
 import { Button, buttonVariants } from "../components/ui/button";
 import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { cn } from "../lib/utils";
 import { postsKey } from "../posts/api";
 import {
   createTopic,
@@ -19,13 +23,12 @@ import {
 } from "./api";
 import { TopicArticles } from "./topic-articles";
 
-const languages = { zh: "中文", en: "English" } as const;
+const languages = { zh: "中文 · ZH", en: "English · EN" } as const;
 const locales = ["zh", "en"] as const;
 type Locale = TopicInput["locale"];
 type Translation = TopicDetail["translations"][number];
-const textarea =
-  "w-full rounded-lg border border-input bg-background p-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
-const panel = "min-w-0 space-y-4 rounded-lg border border-border p-4 sm:p-5";
+const panel =
+  "min-w-0 space-y-5 rounded-panel border border-border bg-card p-5 shadow-[0_1px_3px_rgba(24,24,27,0.04)] sm:p-6";
 
 function useRefreshTopics() {
   const cache = useQueryClient();
@@ -50,6 +53,7 @@ function TranslationForm({
   const heading = useId();
   const {
     register,
+    watch,
     handleSubmit,
     reset,
     formState: { errors, isDirty },
@@ -79,22 +83,26 @@ function TranslationForm({
       if (!topicId) void navigate(`/topics/${id}`, { replace: true });
     },
   });
+
+  const seoTitleValue = watch("seoTitle") ?? "";
+  const seoDescValue = watch("seoDescription") ?? "";
+
   return (
     <form
       aria-labelledby={heading}
       className={panel}
       onSubmit={handleSubmit((values) => save.mutate(values))}
     >
-      <div>
-        <h2 id={heading} className="text-lg font-semibold">
-          {languages[locale]}专题信息
+      <div className="border-b border-border pb-4">
+        <h2 id={heading} className="text-base font-semibold text-foreground">
+          {languages[locale]} 专题信息
         </h2>
-        <p className="text-muted-foreground">
-          保存即发布当前语言，不修改其他语言或文章关系。
+        <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
+          保存即发布当前语言，不修改其他语言或已关联文章的顺序。
         </p>
       </div>
       <fieldset disabled={save.isPending} className="grid gap-4 sm:grid-cols-2">
-        <label className="block min-w-0 space-y-1.5">
+        <label className="block min-w-0 space-y-1.5 text-sm font-medium text-foreground">
           <span>专题名称</span>
           <Input
             required
@@ -104,55 +112,88 @@ function TranslationForm({
             })}
           />
           {errors.title && (
-            <span role="alert" className="text-destructive">
+            <span role="alert" className="block text-xs text-destructive">
               {errors.title.message}
             </span>
           )}
         </label>
-        <label className="block min-w-0 space-y-1.5">
+        <label className="block min-w-0 space-y-1.5 text-sm font-medium text-foreground">
           <span>Slug</span>
           <Input
             required
             maxLength={120}
             pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+            className="font-mono text-xs sm:text-sm"
             {...register("slug")}
           />
-          <small className="block text-muted-foreground">
+          <small className="block text-xs font-normal text-muted-foreground">
             /{locale}/topics/ · 使用小写字母、数字和连字符。
           </small>
         </label>
-        <label className="block min-w-0 space-y-1.5 sm:col-span-2">
+        <label className="block min-w-0 space-y-1.5 text-sm font-medium text-foreground sm:col-span-2">
           <span>专题描述</span>
-          <textarea
+          <Textarea
             maxLength={2000}
             rows={3}
-            className={textarea}
+            placeholder="介绍专题涵盖的技术方向、适用读者或推荐阅读顺序…"
             {...register("description")}
           />
         </label>
-        <details className="min-w-0 space-y-3 rounded-md border border-border p-3 sm:col-span-2">
-          <summary className="cursor-pointer font-medium">
-            当前语言的 SEO 设置
-          </summary>
-          <label className="block space-y-1.5">
-            <span>SEO 标题</span>
-            <Input maxLength={160} {...register("seoTitle")} />
-          </label>
-          <label className="block space-y-1.5">
-            <span>SEO 描述</span>
-            <textarea
-              maxLength={320}
-              rows={2}
-              className={textarea}
-              {...register("seoDescription")}
+        <details className="group min-w-0 overflow-hidden rounded-panel border border-border bg-background/50 sm:col-span-2">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 text-sm font-semibold text-foreground select-none hover:bg-accent/50">
+            <span>当前语言的 SEO 设置</span>
+            <ChevronDown
+              size={15}
+              aria-hidden="true"
+              className="text-muted-foreground transition-transform duration-150 group-open:rotate-180"
             />
-          </label>
+          </summary>
+          <div className="space-y-3.5 border-t border-border bg-card p-4">
+            <label className="block space-y-1.5">
+              <span className="flex items-center justify-between gap-2 text-sm font-medium text-foreground">
+                <span>SEO 标题</span>
+                <span className="font-mono text-[11px] font-normal tabular-nums text-muted-foreground">
+                  {seoTitleValue.length} / 160
+                </span>
+              </span>
+              <Input
+                maxLength={160}
+                placeholder="留空时自动沿用专题名称"
+                {...register("seoTitle")}
+              />
+            </label>
+            <label className="block space-y-1.5">
+              <span className="flex items-center justify-between gap-2 text-sm font-medium text-foreground">
+                <span>SEO 描述</span>
+                <span className="font-mono text-[11px] font-normal tabular-nums text-muted-foreground">
+                  {seoDescValue.length} / 320
+                </span>
+              </span>
+              <Textarea
+                maxLength={320}
+                rows={2}
+                placeholder="留空时回退至专题描述或站点默认 SEO 描述"
+                {...register("seoDescription")}
+              />
+            </label>
+          </div>
         </details>
       </fieldset>
       {save.error && <ErrorState message={save.error.message} />}
-      <Button disabled={!isDirty || save.isPending}>
-        {save.isPending ? "正在保存…" : topicId ? "保存当前语言" : "创建专题"}
-      </Button>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+        <Button disabled={!isDirty || save.isPending}>
+          {save.isPending ? "正在保存…" : topicId ? "保存当前语言" : "创建专题"}
+        </Button>
+        {isDirty && (
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-warning-border bg-warning-surface px-2.5 py-0.5 text-xs font-medium text-warning">
+            <span
+              aria-hidden="true"
+              className="size-1.5 rounded-full bg-warning"
+            />
+            当前语言有未保存的修改
+          </span>
+        )}
+      </div>
     </form>
   );
 }
@@ -169,8 +210,10 @@ function formValues(values: {
 
 function SharedSettings({ topic }: { topic: TopicDetail }) {
   const refresh = useRefreshTopics();
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const {
     register,
+    watch,
     handleSubmit,
     reset,
     formState: { dirtyFields, isDirty },
@@ -194,24 +237,62 @@ function SharedSettings({ topic }: { topic: TopicDetail }) {
       toast.success("共享设置已保存");
     },
   });
+
+  const coverValue = (watch("coverImage") ?? "").trim();
+  const parsedCover = URL.parse(coverValue);
+  const validCoverUrl =
+    parsedCover && /^https?:$/.test(parsedCover.protocol)
+      ? parsedCover.href
+      : null;
+  const coverRegister = register("coverImage");
+
   return (
     <form
       className={panel}
       aria-labelledby="topic-settings"
       onSubmit={handleSubmit((values) => save.mutate(values))}
     >
-      <div>
-        <h2 className="text-lg font-semibold" id="topic-settings">
+      <div className="border-b border-border pb-4">
+        <h2 className="text-base font-semibold text-foreground" id="topic-settings">
           全语言共享设置
         </h2>
-        <p className="text-muted-foreground">封面和展示顺序对所有语言生效。</p>
+        <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
+          封面图和展示顺序对中英文专题统一生效。
+        </p>
       </div>
       <fieldset className="grid gap-4 sm:grid-cols-2" disabled={save.isPending}>
-        <label className="block min-w-0 space-y-1.5">
-          <span>专题封面 URL</span>
-          <Input type="url" maxLength={2048} {...register("coverImage")} />
-        </label>
-        <label className="block min-w-0 space-y-1.5">
+        <div className="min-w-0 space-y-2">
+          <label
+            htmlFor="topic-cover-image"
+            className="block text-sm font-medium text-foreground"
+          >
+            专题封面 URL
+          </label>
+          <Input
+            id="topic-cover-image"
+            type="url"
+            maxLength={2048}
+            placeholder="https://example.com/topic-cover.png"
+            {...coverRegister}
+            onChange={(event) => {
+              setFailedUrl(null);
+              void coverRegister.onChange(event);
+            }}
+          />
+          {validCoverUrl && failedUrl !== validCoverUrl && (
+            <div className="overflow-hidden rounded-control border border-border bg-background">
+              <img
+                src={validCoverUrl}
+                alt="专题封面预览"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className="aspect-video max-h-40 w-full object-cover"
+                onError={() => setFailedUrl(validCoverUrl)}
+              />
+            </div>
+          )}
+        </div>
+        <label className="block min-w-0 space-y-1.5 text-sm font-medium text-foreground">
           <span>专题展示顺序</span>
           <Input
             required
@@ -219,17 +300,20 @@ function SharedSettings({ topic }: { topic: TopicDetail }) {
             step={1}
             min={-2147483648}
             max={2147483647}
+            className="font-mono"
             {...register("sortOrder", { valueAsNumber: true })}
           />
-          <small className="block text-muted-foreground">
-            数值越小，专题越靠前。
+          <small className="block text-xs font-normal text-muted-foreground">
+            数值越小，专题在前台越靠前展示。
           </small>
         </label>
       </fieldset>
       {save.error && <ErrorState message={save.error.message} />}
-      <Button variant="outline" disabled={!isDirty || save.isPending}>
-        保存共享设置
-      </Button>
+      <div className="border-t border-border pt-4">
+        <Button variant="outline" disabled={!isDirty || save.isPending}>
+          {save.isPending ? "正在保存…" : "保存共享设置"}
+        </Button>
+      </div>
     </form>
   );
 }
@@ -238,30 +322,42 @@ function TopicForms({ topic }: { topic?: TopicDetail }) {
   const [locale, setLocale] = useState<Locale>(topic?.locales[0] ?? "zh");
   return (
     <div className="space-y-5">
-      <div aria-label="专题语言" role="group" className="flex flex-wrap gap-2">
-        {locales.map((item) => (
-          <Button
-            type="button"
-            key={item}
-            aria-pressed={locale === item}
-            variant={locale === item ? "default" : "ghost"}
-            onClick={() => setLocale(item)}
-          >
-            {languages[item]} · {item.toUpperCase()}
-            {topic && (
-              <span className="text-xs text-muted-foreground">
-                {topic.locales.includes(item) ? "已发布" : "未创建"}
-              </span>
-            )}
-          </Button>
-        ))}
+      <div
+        aria-label="专题语言"
+        role="group"
+        className="inline-flex flex-wrap gap-1 rounded-control border border-border bg-card p-1 shadow-[0_1px_2px_rgba(24,24,27,0.03)]"
+      >
+        {locales.map((item) => {
+          const active = locale === item;
+          const exists = topic?.locales.includes(item) ?? false;
+          return (
+            <button
+              type="button"
+              key={item}
+              aria-pressed={active}
+              onClick={() => setLocale(item)}
+              className={cn(
+                "inline-flex cursor-pointer items-center gap-2 rounded-[6px] px-3 py-1.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                active
+                  ? "bg-accent font-semibold text-foreground shadow-[inset_0_0_0_1px_var(--color-border)]"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <span>{languages[item]}</span>
+              {topic && (
+                <LocaleBadge locale={item} exists={exists} variant="compact" />
+              )}
+            </button>
+          );
+        })}
       </div>
+
       {topic?.legacy && !topic.locales.includes(locale) && (
-        <p className="rounded-lg border border-border p-3 text-muted-foreground">
-          旧专题「{topic.legacy.title}
-          」仍可从原地址访问；旧文案不是当前语言的译文。
+        <p className="rounded-panel border border-border bg-card px-4 py-3 text-xs text-muted-foreground sm:text-sm">
+          旧专题「{topic.legacy.title}」仍可从原地址访问；旧文案不作为当前语言的译文。
         </p>
       )}
+
       {locales.map((item) => (
         <div key={item} hidden={locale !== item}>
           <TranslationForm
@@ -271,6 +367,7 @@ function TopicForms({ topic }: { topic?: TopicDetail }) {
           />
         </div>
       ))}
+
       {topic && (
         <>
           <SharedSettings topic={topic} />
@@ -287,10 +384,10 @@ export function TopicEditor() {
   const { id } = useParams();
   const topic = useQuery(topicDetail(id));
   return (
-    <div className="max-w-5xl space-y-6">
+    <div className="max-w-5xl space-y-5">
       <PageHeader
         title={id ? "编辑专题" : "新建专题"}
-        description="分别管理中文与英文专题；封面、文章关联和顺序对所有语言共享。"
+        description="分别维护中文与英文专题信息；封面、文章关联及排序对所有语言共享。"
         actions={
           <Link to="/topics" className={buttonVariants({ variant: "outline" })}>
             返回专题管理
@@ -298,7 +395,7 @@ export function TopicEditor() {
         }
       />
       {id && topic.isPending ? (
-        <LoadingState />
+        <LoadingState message="正在读取专题详情…" />
       ) : id && topic.isError ? (
         <ErrorState
           message={topic.error.message}

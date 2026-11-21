@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { FileText, Plus, Search } from "lucide-react";
+import { ExternalLink, FileText, Plus, Search } from "lucide-react";
 import { useEffect, useEffectEvent, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { DataTable } from "../components/admin/data-table";
@@ -8,6 +8,7 @@ import { PageHeader } from "../components/admin/page-header";
 import { Pagination } from "../components/admin/pagination";
 import { EmptyState, ErrorState } from "../components/admin/states";
 import { Button, buttonVariants } from "../components/ui/button";
+import { publicSiteOrigin } from "../lib/admin-api";
 import { postList, type PostRow } from "./api";
 import { postColumnClass, postColumns } from "./post-columns";
 import { PostFilters } from "./post-filters";
@@ -19,24 +20,24 @@ function PostListSkeleton() {
   return (
     <div
       role="status"
-      className="overflow-hidden rounded-panel border border-border bg-card"
+      className="overflow-hidden rounded-panel border border-border bg-card shadow-[0_1px_3px_rgba(24,24,27,0.04)]"
     >
       <p className="sr-only">正在读取文章…</p>
       <div
         aria-hidden="true"
         className="divide-y divide-border motion-safe:animate-pulse"
       >
-        <div className="h-table-row bg-accent" />
+        <div className="h-10.5 bg-background/90" />
         {skeletonRows.map((row) => (
           <div
             key={row}
             className="flex h-[4.5rem] items-center justify-between gap-8 px-4"
           >
             <div className="w-2/3 max-w-72 space-y-2">
-              <div className="h-3 w-3/4 rounded bg-accent" />
-              <div className="h-2 w-full rounded bg-accent" />
+              <div className="h-3.5 w-3/4 rounded bg-accent" />
+              <div className="h-2.5 w-full rounded bg-accent" />
             </div>
-            <div className="h-3 w-16 rounded bg-accent" />
+            <div className="h-3.5 w-20 rounded bg-accent" />
           </div>
         ))}
       </div>
@@ -135,18 +136,27 @@ export default function PostsPage() {
       if (next) change({ sort: "updated", order: next.desc ? "desc" : "asc" });
     },
   });
-  const newPost = (
-    <Link to="/posts/new" className={buttonVariants()}>
-      <Plus size={16} aria-hidden="true" /> 新建文章
-    </Link>
-  );
 
   return (
     <div className="space-y-5">
       <PageHeader
         title="文章管理"
-        description="管理网站文章和语言版本。保存即发布。"
-        actions={newPost}
+        description="集中管理中英文技术文章、专题关联与 SEO 元信息，保存后即时生效。"
+        actions={
+          <>
+            <a
+              href={publicSiteOrigin}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({ variant: "outline" })}
+            >
+              <ExternalLink size={15} aria-hidden="true" /> 访问前台
+            </a>
+            <Link to="/posts/new" className={buttonVariants()}>
+              <Plus size={16} aria-hidden="true" /> 新建文章
+            </Link>
+          </>
+        }
       />
       <PostFilters
         search={draft}
@@ -174,21 +184,21 @@ export default function PostsPage() {
               title={filtered ? "没有符合条件的文章" : "暂无文章"}
               description={
                 filtered
-                  ? "试试其他关键词，或重置筛选。"
+                  ? "试试其他关键词，或重置筛选条件。"
                   : "新建文章后会在这里显示。"
               }
               action={
                 <div className="space-y-3">
                   {filtered ? (
                     <Button type="button" variant="outline" onClick={reset}>
-                      <Search size={16} aria-hidden="true" /> 清除筛选条件
+                      <Search size={15} aria-hidden="true" /> 清除筛选条件
                     </Button>
                   ) : (
                     <Link
                       to="/posts/new"
                       className={buttonVariants({ variant: "outline" })}
                     >
-                      <FileText size={16} aria-hidden="true" /> 新建第一篇文章
+                      <FileText size={15} aria-hidden="true" /> 新建第一篇文章
                     </Link>
                   )}
                 </div>

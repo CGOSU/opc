@@ -25,7 +25,9 @@ export function DeleteTerm({
   });
 
   if (kind === "categories" && term.articleCount > 0) {
-    return <span className="px-2 text-muted-foreground">关联中，不可删除</span>;
+    return (
+      <span className="px-2 text-xs text-muted-foreground">关联中，不可删</span>
+    );
   }
 
   const effect =
@@ -38,6 +40,8 @@ export function DeleteTerm({
         <Button
           type="button"
           variant="ghost"
+          size="sm"
+          className="text-destructive hover:bg-destructive-surface hover:text-destructive"
           aria-label={`删除${label}：${term.name}`}
         >
           删除

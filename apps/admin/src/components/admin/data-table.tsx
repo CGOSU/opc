@@ -22,16 +22,16 @@ export function DataTable<T>({
 }) {
   const rows = table.getRowModel().rows;
   return (
-    <div className="rounded-panel border border-border bg-card">
+    <div className="overflow-hidden rounded-panel border border-border bg-card shadow-[0_1px_3px_rgba(24,24,27,0.04)]">
       <div
-        className="overflow-x-auto rounded-panel focus-visible:outline-2 focus-visible:outline-ring"
+        className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-ring"
         role="region"
         aria-label={label}
         tabIndex={0}
       >
         <table className="w-full border-collapse text-left text-sm">
           <caption className="sr-only">{label}</caption>
-          <thead className="bg-background text-muted-foreground">
+          <thead className="border-b border-border bg-background/90 text-xs font-semibold text-muted-foreground">
             {table.getHeaderGroups().map((group) => (
               <tr key={group.id}>
                 {group.headers.map((header) => {
@@ -59,7 +59,7 @@ export function DataTable<T>({
                             : undefined
                       }
                       className={cn(
-                        "h-table-row whitespace-nowrap px-4 py-1 font-medium",
+                        "h-10.5 whitespace-nowrap px-4 py-1 font-semibold",
                         columnClassName?.(header.column.id),
                       )}
                     >
@@ -67,11 +67,12 @@ export function DataTable<T>({
                         <Button
                           type="button"
                           variant="ghost"
-                          className="-ml-2 px-2"
+                          size="sm"
+                          className="-ml-2 px-2 text-xs font-semibold text-muted-foreground hover:text-foreground"
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           {text}
-                          <Icon size={14} aria-hidden="true" />
+                          <Icon size={13} aria-hidden="true" />
                         </Button>
                       ) : (
                         text
@@ -82,24 +83,24 @@ export function DataTable<T>({
               </tr>
             ))}
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border">
             {rows.length === 0 ? (
               <tr>
-                <td
-                  colSpan={Math.max(1, table.getVisibleLeafColumns().length)}
-                  className="border-t border-border"
-                >
+                <td colSpan={Math.max(1, table.getVisibleLeafColumns().length)}>
                   {empty}
                 </td>
               </tr>
             ) : (
               rows.map((row) => (
-                <tr key={row.id} className="border-t border-border">
+                <tr
+                  key={row.id}
+                  className="transition-colors duration-100 hover:bg-background/80"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
                       className={cn(
-                        "h-table-row px-4 py-2",
+                        "h-table-row px-4 py-2.5",
                         rowClassName,
                         columnClassName?.(cell.column.id),
                       )}
@@ -117,7 +118,9 @@ export function DataTable<T>({
         </table>
       </div>
       {footer && (
-        <div className="border-t border-border p-3 sm:px-4">{footer}</div>
+        <div className="border-t border-border bg-background/60 px-4 py-3">
+          {footer}
+        </div>
       )}
     </div>
   );

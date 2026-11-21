@@ -6,7 +6,9 @@ import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import { ConfirmDialog } from "../components/admin/confirm-dialog";
+import { LocaleBadge } from "../components/admin/locale-badge";
 import { Button } from "../components/ui/button";
+import { publicSiteOrigin } from "../lib/admin-api";
 import { cn } from "../lib/utils";
 import { taxonomyKey } from "../taxonomy/api";
 import { topicsKey } from "../topics/api";
@@ -18,10 +20,8 @@ const date = new Intl.DateTimeFormat("zh-CN", {
 });
 const language = { zh: "中文", en: "English" };
 const locales = ["zh", "en"] as const;
-const webOrigin =
-  import.meta.env.VITE_PUBLIC_SITE_ORIGIN || "http://localhost:4321";
 const menuItem =
-  "flex min-h-control cursor-default items-center gap-2 rounded-control px-2 outline-none data-highlighted:bg-accent";
+  "flex min-h-control cursor-pointer items-center gap-2 rounded-control px-2.5 text-sm outline-none data-highlighted:bg-accent";
 
 function editPath(id: string) {
   return `/posts/${encodeURIComponent(id)}/edit`;
@@ -31,7 +31,7 @@ function UpdatedAt({ value }: { value: string }) {
   return (
     <time
       dateTime={value}
-      className="whitespace-nowrap text-muted-foreground tabular-nums"
+      className="whitespace-nowrap font-mono text-xs text-muted-foreground tabular-nums"
     >
       {date.format(new Date(value))}
     </time>
@@ -63,16 +63,17 @@ function PostActions({ post }: { post: PostRow }) {
             type="button"
             variant="ghost"
             size="icon"
+            className="size-8"
             aria-label={`${post.title}：更多操作`}
           >
-            <Ellipsis size={18} aria-hidden="true" />
+            <Ellipsis size={17} aria-hidden="true" />
           </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
             align="end"
             sideOffset={4}
-            className="z-20 min-w-36 rounded-control border border-border bg-card p-1 shadow-md"
+            className="z-20 min-w-36 rounded-control border border-border bg-card p-1 shadow-lg"
             onCloseAutoFocus={(event) => {
               if (openingConfirmation.current) event.preventDefault();
               openingConfirmation.current = false;
@@ -85,7 +86,7 @@ function PostActions({ post }: { post: PostRow }) {
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild className={menuItem}>
               <a
-                href={new URL(post.path, webOrigin).href}
+                href={new URL(post.path, publicSiteOrigin).href}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -94,7 +95,10 @@ function PostActions({ post }: { post: PostRow }) {
             </DropdownMenu.Item>
             <DropdownMenu.Separator className="my-1 h-px bg-border" />
             <DropdownMenu.Item
-              className={cn(menuItem, "text-destructive")}
+              className={cn(
+                menuItem,
+                "text-destructive data-highlighted:bg-destructive-surface",
+              )}
               onSelect={() => {
                 openingConfirmation.current = true;
                 setOpen(true);
@@ -131,11 +135,11 @@ export const postColumns: ColumnDef<PostRow>[] = [
       <div className="min-w-0 max-w-md lg:min-w-44">
         <Link
           to={editPath(post.id)}
-          className="block font-semibold wrap-anywhere underline-offset-4 hover:underline focus-visible:underline"
+          className="block font-semibold text-foreground wrap-anywhere underline-offset-4 hover:underline focus-visible:underline"
         >
           {post.title}
         </Link>
-        <p className="mt-1 text-xs lg:hidden">
+        <p className="mt-1 text-xs text-muted-foreground lg:hidden">
           <UpdatedAt value={post.updatedAt} /> · {language[post.locale]}
         </p>
         <p
@@ -150,11 +154,14 @@ export const postColumns: ColumnDef<PostRow>[] = [
   {
     id: "category",
     header: "分类",
-    cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {row.original.category ?? "—"}
-      </span>
-    ),
+    cell: ({ row }) =>
+      row.original.category ? (
+        <span className="font-medium text-foreground">
+          {row.original.category}
+        </span>
+      ) : (
+        <span className="text-muted-foreground">—</span>
+      ),
   },
   {
     id: "tags",
@@ -165,7 +172,7 @@ export const postColumns: ColumnDef<PostRow>[] = [
           {row.original.tags.map(({ id, name }) => (
             <li
               key={id}
-              className="max-w-full truncate rounded-control border border-border px-2 py-0.5 text-xs"
+              className="max-w-full truncate rounded-md border border-border bg-background px-2 py-0.5 text-xs text-muted-foreground"
               title={name}
             >
               {name}
@@ -173,7 +180,7 @@ export const postColumns: ColumnDef<PostRow>[] = [
           ))}
         </ul>
       ) : (
-        "—"
+        <span className="text-muted-foreground">—</span>
       ),
   },
   {
@@ -181,7 +188,7 @@ export const postColumns: ColumnDef<PostRow>[] = [
     header: "专题",
     cell: ({ row }) => (
       <span
-        className="whitespace-nowrap text-muted-foreground"
+        className="whitespace-nowrap text-xs tabular-nums text-muted-foreground"
         title={
           row.original.topics.map(({ title }) => title).join("、") || undefined
         }
@@ -195,30 +202,31 @@ export const postColumns: ColumnDef<PostRow>[] = [
   {
     id: "translations",
     header: "语言版本",
-    cell: ({ row }) => (
-      <div className="flex gap-1">
+    cell: ({ row: { original: post } }) => (
+      <div className="flex items-center gap-1.5">
         {locales.map((locale) => {
-          const exists =
-            row.original.locale === locale ||
-            row.original.translations.some((entry) => entry.locale === locale);
+          const translationId =
+            post.locale === locale
+              ? post.id
+              : post.translations.find((entry) => entry.locale === locale)?.id;
+          const exists = Boolean(translationId);
           return (
-            <span
+            <Link
               key={locale}
-              className={cn(
-                "whitespace-nowrap rounded-control border px-1.5 py-0.5 text-xs",
+              to={
+                translationId
+                  ? editPath(translationId)
+                  : `/posts/new?from=${encodeURIComponent(post.id)}`
+              }
+              aria-label={
                 exists
-                  ? "border-transparent bg-accent"
-                  : "border-dashed border-input text-muted-foreground",
-              )}
+                  ? `编辑${post.title}的${language[locale]}版本`
+                  : `为${post.title}添加${language[locale]}版本`
+              }
+              className="rounded-md outline-none hover:opacity-85 focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span aria-hidden="true">
-                {locale.toUpperCase()} {exists ? "✓" : "–"}
-              </span>
-              <span className="sr-only">
-                {language[locale]}
-                {exists ? "已发布" : "未创建"}
-              </span>
-            </span>
+              <LocaleBadge locale={locale} exists={exists} variant="compact" />
+            </Link>
           );
         })}
       </div>
@@ -243,7 +251,7 @@ export function postColumnClass(column: string) {
     case "title":
       return "w-full sm:w-auto";
     case "actions":
-      return "w-12 text-center";
+      return "w-14 text-right";
     default:
       return "hidden lg:table-cell";
   }
