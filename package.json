@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "dev": "bun run dev:web",
+    "dev:all": "node scripts/run-local.mjs dev",
     "dev:web": "bun run --filter @opc/web dev",
     "dev:api": "bun run --filter @opc/api dev",
     "dev:admin": "bun run --filter @opc/admin dev",
@@ -18,6 +19,7 @@
     "build:api": "bun run --filter @opc/api build",
     "build:admin": "bun run --filter @opc/admin build",
     "build:admin-worker": "bun run build:admin && bun run --filter @opc/api build:admin-worker",
+    "preview:all": "node scripts/run-local.mjs preview",
     "preview:admin": "bun run --filter @opc/api preview:admin",
     "preview": "bun run --filter @opc/web preview",
     "db:seed": "node scripts/seed.mjs",

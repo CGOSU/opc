@@ -12,8 +12,16 @@
 ```sh
 bun install --frozen-lockfile
 bun run db:migrate:local # 初始化本地 D1
-bun run dev:web          # Astro 网站，默认 http://localhost:4321
-bun run dev:api          # Elysia Worker，默认 http://127.0.0.1:3001
+bun run dev:all          # 单终端同时启动前台(4321)、API(3001)、管理后台(5173)
+bun run dev:web          # 仅启动 Astro 网站，默认 http://localhost:4321
+bun run dev:api          # 仅启动 Elysia Worker，默认 http://127.0.0.1:3001
+bun run dev:admin        # 仅启动 React 后台，默认 http://localhost:5173
+```
+
+如需单终端同时预览构建产物，可运行：
+
+```sh
+bun run preview:all      # 缺产物时自动构建，随后启动前台(4321)与同源后台/API(3002)
 ```
 
 `bun run db:seed` 是旧的 SQLite 示例快照工具；目标已存在时拒绝覆盖。SQLite 示例数据不会进入 D1，也不再是网站构建或运行的输入。数据库和 SQLite WAL/SHM 文件不得放入 `public/`、静态产物或版本库。
