@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { demo } from "../apps/web/src/data/demo.mjs";
 
 const root = new URL("../", import.meta.url);
+const migrationsDir = new URL("packages/db/migrations/", root);
 const path = fileURLToPath(new URL("data/content.sqlite", root));
 if (existsSync(path))
   throw new Error(
@@ -14,7 +15,7 @@ const db = new DatabaseSync(path);
 try {
   db.exec("PRAGMA foreign_keys = ON");
   for (const file of ["astro_content_schema.sql", "astro_site_schema_0002.sql"])
-    db.exec(readFileSync(new URL(file, root), "utf8"));
+    db.exec(readFileSync(new URL(file, migrationsDir), "utf8"));
   db.exec("BEGIN");
   const now = Date.now();
   db.prepare(

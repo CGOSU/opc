@@ -92,8 +92,8 @@ bun run dev:web
 - `apps/admin`：React 管理后台，通过 Eden Treaty 和 TanStack Query 消费同源管理 API。
 - `apps/api`：Elysia Worker，提供 `/health`、`/api/admin` 管理接口及 `/api/public` 公开内容查询。
 - `packages/db`：Drizzle D1 连接与服务端数据访问，不进入浏览器产物。
-- 根目录 `scripts/seed.mjs`：仅供本地示例环境使用，依次应用根目录 SQL schema，并创建中英文示例首页及站点导航。它不会覆盖已有数据库。
-- 根目录 `astro_content_schema.sql` 与 `astro_*_schema_000*.sql`：SQLite 初始 schema 与增量迁移。D1 迁移顺序由 `apps/web/scripts/prepare-d1.mjs` 显式注册。
+- 根目录 `scripts/seed.mjs`：仅供本地示例环境使用，依次应用 `packages/db/migrations/` 下的基础 SQL schema，并创建中英文示例首页及站点导航。它不会覆盖已有数据库。
+- `packages/db/migrations/` 下的 `astro_content_schema.sql` 与 `astro_*_schema_000*.sql`：SQLite 初始 schema 与增量迁移。D1 迁移顺序由 `apps/web/scripts/prepare-d1.mjs` 显式注册。
 
 Astro 与 API Worker 可独立构建和运行。Astro 现有公开页面仍在服务端直接读取 D1，不经管理 API。
 
@@ -114,7 +114,7 @@ Astro 与 API Worker 可独立构建和运行。Astro 现有公开页面仍在�
 - 没有已确认的联系方式、项目、工具或隐私政策时，不生成对应目录页。旧首页锚点保留，关于入口指向双语首页的 `#about`。
 - `SITE_URL` 是**构建配置**，仅接受无路径、查询或凭据的 HTTP(S) origin。预览不设置它：页面输出 `noindex, follow`，省略绝对 canonical/hreflang，Sitemap 和 RSS 返回 404；`robots.txt` 不禁止抓取，以便爬虫读取 noindex。只在准备公开索引的环境配置真实站点 origin。
 - 配置 `SITE_URL` 后，`/sitemap.xml` 和 `/{locale}/rss.xml` 按请求从 D1 生成。文章和专题的 Sitemap `lastmod` 取已发布记录的 `modified_at_ms`，归档/首页没有合适的统一更新时间时不输出 `lastmod`；RSS 按语言最多列 30 篇，`pubDate` 取首次发布日期。不收录草稿、撤稿、别名及 noindex 内容。
-- 本仓库的 Wrangler 配置仅用于本地开发；未配置远端 D1、生产密钥或 CI/CD。根目录 [`设计.md`](设计.md) 与 [`架构.md`](架构.md) 说明设计方向及后续目标；尚未实现的规划不能当成现有能力。
+- 本仓库的 Wrangler 配置仅用于本地开发；未配置远端 D1、生产密钥或 CI/CD。[docs/设计.md](docs/设计.md) 与 [docs/架构.md](docs/架构.md) 说明设计方向及后续目标；尚未实现的规划不能当成现有能力。
 
 ## 页面与搜索意图
 
@@ -131,7 +131,7 @@ Astro 与 API Worker 可独立构建和运行。Astro 现有公开页面仍在�
 
 ## D1 数据与发布约定
 
-- 本地迁移按顺序应用根目录登记的 SQL；已应用的迁移不回写，后续变化用独立增量迁移。保留旧 SQLite 文件和一致性备份。正式数据若来自旧 SQLite，先核对备份的约束、模式、语言、路由和发布指针，再在隔离库演练导入与计数比对；本项目不会自动导入或双写。
+- 本地迁移按顺序应用 `packages/db/migrations/` 中登记的 SQL；已应用的迁移不回写，后续变化用独立增量迁移。保留旧 SQLite 文件和一致性备份。正式数据若来自旧 SQLite，先核对备份的约束、模式、语言、路由和发布指针，再在隔离库演练导入与计数比对；本项目不会自动导入或双写。
 - 文章由 `posts`、`post_translations` 和关联表管理。迁移从现有发布指针（包括撤下的版本）提取当前内容；从未发布的语言保留已有草稿，不生成空翻译。旧封存修订仅归档，保存不再生成完整快照。撤稿和回退不在后台编辑范围。
 - `GET /api/admin/posts/:postId/translations/:locale` 回传 `revision`；`PUT` 必须带该字段，只更新指定语言。译文已变更或不存在时返回 `409`，不会覆盖或隐式创建；添加语言请用该路径的 `POST`。冲突时后台保留当前草稿，由编辑者决定是否放弃它并读取最新版本。`PATCH /api/admin/posts/:postId/settings` 仅更新请求中给出的共享字段，整次写入成功或回滚。
 - 迁移 `0008` 到 `0010` 分别拆分文章、分类/标签和专题的主表、翻译与关系。旧的无语言分类、标签和专题保留原地址及公共文案，但不当作中英文译文。
@@ -139,4 +139,4 @@ Astro 与 API Worker 可独立构建和运行。Astro 现有公开页面仍在�
 
 ## 视觉设计
 
-首页依照 [`设计.md`](设计.md) 实现：明亮克制的青灰配色、像素鹅占位、桌面内容网格、适配手机的布局和导航。插画表达属于概念视觉，不代表真实作品。
+首页依照 [docs/设计.md](docs/设计.md) 实现：明亮克制的青灰配色、像素鹅占位、桌面内容网格、适配手机的布局和导航。插画表达属于概念视觉，不代表真实作品。

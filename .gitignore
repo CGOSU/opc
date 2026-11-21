@@ -8,5 +8,6 @@ data/*.sqlite*
 .dev.vars*
 .DS_Store
 .pi/diagnostics/
+.pi-graph/
 *.log
 *.tsbuildinfo

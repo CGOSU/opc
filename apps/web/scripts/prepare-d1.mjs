@@ -1,6 +1,9 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
-const project = new URL("../../../", import.meta.url);
+const migrationsDir = new URL(
+  "../../../packages/db/migrations/",
+  import.meta.url,
+);
 const output = new URL("../.wrangler/migrations/", import.meta.url);
 mkdirSync(output, { recursive: true });
 
@@ -21,7 +24,7 @@ const migrations = [
 ];
 
 for (const [name, source] of migrations) {
-  const sql = readFileSync(new URL(source, project), "utf8");
+  const sql = readFileSync(new URL(source, migrationsDir), "utf8");
   // Wrangler owns the transaction; D1 enforces FKs. Keep trigger bodies intact.
   const migration = sql.replace(
     /^(?:BEGIN;|COMMIT;|PRAGMA foreign_keys = ON;|PRAGMA foreign_key_check;)[ \t]*\r?\n/gm,
