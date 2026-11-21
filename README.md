@@ -102,10 +102,10 @@ Astro 与 API Worker 可独立构建和运行。Astro 现有公开页面仍在�
 - [`.env.example`](.env.example) 列出公开构建变量。从仓库根目录执行 `cp .env.example .env`，按环境编辑后执行 `set -a; . ./.env; set +a`，再运行构建；不复制真实凭据。改动 `SITE_URL` 或 `VITE_PUBLIC_SITE_ORIGIN` 后须重新构建对应应用。
 - 本地构建使用 `bun run build`。Astro 产物在 `apps/web/dist/`，React 静态资源在 `apps/admin/dist/`，Elysia dry-run 产物在 `apps/api/dist/`。使用 `bun run preview` 与 `bun run preview:admin` 分别预览；管理后台与管理 API 必须同源。
 - 发布配置应从 `apps/web/wrangler.jsonc` 和 `apps/api/wrangler.jsonc` 单独派生。Web 与 Admin Worker 的 `CONTENT` 必须指向同一个经核实的环境 D1；Admin 使用 `admin-preview` 的资产路由规则作为模板，将 `ADMIN_ORIGIN` 设为实际管理后台 HTTPS origin（无末尾斜杠）。不要把示例数据库 ID、localhost 配置或本地账户用于远端。
-- 在目标环境接入前，备份并核对旧库和迁移记录；先执行 `node apps/web/scripts/prepare-d1.mjs` 生成迁移，再在隔离目标库验证依序应用 `0001`–`0009`。仓库的管理员初始化命令仅支持本地；远端账户初始化、迁移或部署须另行获准。可选 `CONTENT_ASSET_BASE_URL` 是 Astro Worker 的运行时变量，不是后台上传配置。
+- 在目标环境接入前，备份并核对旧库和迁移记录；先执行 `node apps/web/scripts/prepare-d1.mjs` 生成迁移，再在隔离目标库验证依序应用 `0001`–`0009`。仓库的管理员初始化命令仅支持本地；远端账户初始化、迁移或部署须另行获准。可选 `CONTENT_ASSET_BASE_URL` 是 Astro Worker 读取历史 `cover_key` 资源的运行时变量。后台文章与专题封面图支持外部 URL 与本地图片上传（通过 API Worker 的 R2 `MEDIA` 绑定存储，本地开发绑定 `opc-media-local` 并随 `--persist-to` 持久化在 `apps/web/.wrangler/state`；生产可配置公开资源域名变量 `MEDIA_PUBLIC_BASE_URL`，未配置时回退至同源 `/api/public/media/covers/...` 读取接口）。
 - 本地验收命令：`bun run check`、`WRANGLER_SEND_METRICS=false bun run test`、`WRANGLER_SEND_METRICS=false bun run --filter @opc/web test:worker` 和 `WRANGLER_SEND_METRICS=false bun run build`。Vitest 和 Astro Worker 集成使用独立的迁移状态；不要用日常开发库复用测试数据。
 - 本次本地浏览器验收使用两个 Worker 共享同一隔离 D1：登录后新建分类、标签及双语文章，检查保存失败后保留输入、刷新筛选、历史地址跳转、专题键盘/鼠标排序，以及永久删除一个语言版本后另一版本仍公开可读。检查了桌面与 375px 窄屏、抽屉的键盘打开/关闭和焦点恢复；不等同完整无障碍或多浏览器认证。
-- 已知边界：生产 D1、Cloudflare 免费套餐 CPU 和真实域名/缓存尚未验证；旧站导航与已封存的历史专题不在本期编辑范围。不提供草稿、回收站、发布回退或上传服务。
+- 已知边界：生产 D1/R2 绑定、Cloudflare 免费套餐 CPU 和真实域名/缓存尚未验证；旧站导航与已封存的历史专题不在本期编辑范围。不提供草稿、回收站或发布回退。
 
 ## 内容与上线约定
 

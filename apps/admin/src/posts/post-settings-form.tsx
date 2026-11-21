@@ -1,12 +1,11 @@
-import { useState } from "react";
 import {
   Controller,
   type SubmitHandler,
   type UseFormReturn,
 } from "react-hook-form";
+import { CoverImageField } from "../components/admin/cover-image-field";
 import { ErrorState } from "../components/admin/states";
 import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
 import { Select } from "../components/ui/select";
 import { cn } from "../lib/utils";
 import type { Term } from "../taxonomy/api";
@@ -34,13 +33,6 @@ export function PostSettingsForm({
   error?: string;
 }) {
   const { errors: settingsErrors, isDirty } = settings.formState;
-  const coverValue = settings.watch("coverImage")?.trim() ?? "";
-  const parsedCover = URL.parse(coverValue);
-  const validCoverUrl =
-    parsedCover && /^https?:$/.test(parsedCover.protocol)
-      ? parsedCover.href
-      : null;
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
 
   return (
     <form
@@ -61,59 +53,33 @@ export function PostSettingsForm({
         </p>
       </header>
       <fieldset disabled={pending} className="space-y-5 p-5">
-        <div className="grid gap-1.5">
-          <label
-            htmlFor="post-cover-image"
-            className="text-sm font-medium text-foreground"
-          >
-            封面 URL
-          </label>
-          <Controller
-            control={settings.control}
-            name="coverImage"
-            rules={{
-              validate: (value) =>
-                !value?.trim() ||
-                /^https?:\/\//.test(URL.parse(value.trim())?.href ?? "") ||
-                "请输入有效的 HTTP 或 HTTPS URL。",
-            }}
-            render={({ field }) => (
-              <Input
-                id="post-cover-image"
-                type="url"
-                placeholder="https://example.com/cover.png"
-                value={field.value ?? ""}
-                maxLength={2048}
-                aria-invalid={!!settingsErrors.coverImage}
-                onChange={(event) => {
-                  setFailedUrl(null);
-                  field.onChange(event);
-                }}
-              />
-            )}
-          />
-          {settingsErrors.coverImage && (
-            <span role="alert" className="text-xs text-destructive">
-              {settingsErrors.coverImage.message}
-            </span>
+        <Controller
+          control={settings.control}
+          name="coverImage"
+          rules={{
+            validate: (value) =>
+              !value?.trim() ||
+              /^https?:\/\//.test(URL.parse(value.trim())?.href ?? "") ||
+              "请输入有效的 HTTP 或 HTTPS URL。",
+          }}
+          render={({ field }) => (
+            <CoverImageField
+              id="post-cover-image"
+              label="封面图"
+              value={field.value ?? ""}
+              onChange={(next) => field.onChange(next)}
+              disabled={pending}
+              previewAlt="文章共享封面预览"
+              error={settingsErrors.coverImage?.message}
+            />
           )}
-          {validCoverUrl && failedUrl !== validCoverUrl && (
-            <div className="mt-1.5 overflow-hidden rounded-control border border-border bg-background">
-              <img
-                src={validCoverUrl}
-                alt="共享封面预览"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                className="aspect-video w-full object-cover"
-                onError={() => setFailedUrl(validCoverUrl)}
-              />
-            </div>
-          )}
-        </div>
+        />
 
         {usesLegacyCover && (
           <div className="space-y-2 rounded-control border border-border bg-background/70 p-3 text-xs text-muted-foreground">
-            <p>当前保留各语言的历史封面。填写共享封面后，它将用于所有语言。</p>
+            <p>
+              当前保留各语言的历史封面。上传或填写共享封面后，它将用于所有语言。
+            </p>
             <Button
               type="button"
               variant="outline"

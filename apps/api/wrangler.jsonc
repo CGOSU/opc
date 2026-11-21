@@ -14,6 +14,12 @@
       "remote": false,
     },
   ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "opc-media-local",
+    },
+  ],
   "env": {
     "admin-preview": {
       "name": "opc-admin-local",
@@ -30,6 +36,12 @@
           "database_id": "00000000-0000-4000-8000-000000000001",
           "migrations_dir": "../web/.wrangler/migrations",
           "remote": false,
+        },
+      ],
+      "r2_buckets": [
+        {
+          "binding": "MEDIA",
+          "bucket_name": "opc-media-local",
         },
       ],
     },

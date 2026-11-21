@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { useId, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { CoverImageField } from "../components/admin/cover-image-field";
 import { LocaleBadge } from "../components/admin/locale-badge";
 import { PageHeader } from "../components/admin/page-header";
 import { ErrorState, LoadingState } from "../components/admin/states";
@@ -210,13 +211,12 @@ function formValues(values: {
 
 function SharedSettings({ topic }: { topic: TopicDetail }) {
   const refresh = useRefreshTopics();
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const {
+    control,
     register,
-    watch,
     handleSubmit,
     reset,
-    formState: { dirtyFields, isDirty },
+    formState: { dirtyFields, isDirty, errors },
   } = useForm({
     defaultValues: {
       coverImage: topic.coverImage ?? "",
@@ -238,60 +238,50 @@ function SharedSettings({ topic }: { topic: TopicDetail }) {
     },
   });
 
-  const coverValue = (watch("coverImage") ?? "").trim();
-  const parsedCover = URL.parse(coverValue);
-  const validCoverUrl =
-    parsedCover && /^https?:$/.test(parsedCover.protocol)
-      ? parsedCover.href
-      : null;
-  const coverRegister = register("coverImage");
-
   return (
     <form
+      noValidate
       className={panel}
       aria-labelledby="topic-settings"
       onSubmit={handleSubmit((values) => save.mutate(values))}
     >
       <div className="border-b border-border pb-4">
-        <h2 className="text-base font-semibold text-foreground" id="topic-settings">
+        <h2
+          className="text-base font-semibold text-foreground"
+          id="topic-settings"
+        >
           全语言共享设置
         </h2>
         <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
           封面图和展示顺序对中英文专题统一生效。
         </p>
       </div>
-      <fieldset className="grid gap-4 sm:grid-cols-2" disabled={save.isPending}>
-        <div className="min-w-0 space-y-2">
-          <label
-            htmlFor="topic-cover-image"
-            className="block text-sm font-medium text-foreground"
-          >
-            专题封面 URL
-          </label>
-          <Input
-            id="topic-cover-image"
-            type="url"
-            maxLength={2048}
-            placeholder="https://example.com/topic-cover.png"
-            {...coverRegister}
-            onChange={(event) => {
-              setFailedUrl(null);
-              void coverRegister.onChange(event);
-            }}
-          />
-          {validCoverUrl && failedUrl !== validCoverUrl && (
-            <div className="overflow-hidden rounded-control border border-border bg-background">
-              <img
-                src={validCoverUrl}
-                alt="专题封面预览"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                className="aspect-video max-h-40 w-full object-cover"
-                onError={() => setFailedUrl(validCoverUrl)}
-              />
-            </div>
+      <fieldset
+        className="grid items-start gap-5 sm:grid-cols-2"
+        disabled={save.isPending}
+      >
+        <Controller
+          control={control}
+          name="coverImage"
+          rules={{
+            validate: (value) =>
+              !value?.trim() ||
+              /^https?:\/\//.test(URL.parse(value.trim())?.href ?? "") ||
+              "请输入有效的 HTTP 或 HTTPS URL。",
+          }}
+          render={({ field }) => (
+            <CoverImageField
+              id="topic-cover-image"
+              label="专题封面图"
+              placeholder="https://example.com/topic-cover.png"
+              value={field.value}
+              onChange={field.onChange}
+              disabled={save.isPending}
+              previewAlt="专题封面预览"
+              error={errors.coverImage?.message}
+            />
           )}
-        </div>
+        />
         <label className="block min-w-0 space-y-1.5 text-sm font-medium text-foreground">
           <span>专题展示顺序</span>
           <Input
