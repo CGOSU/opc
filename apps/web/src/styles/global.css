@@ -33,42 +33,41 @@
 
 @layer base {
   :root {
-    --paper: #f5f7fa;
-    --paper-dim: #e5ebf2;
-    --card: #ffffff;
-    --ink: #17263b;
-    --ink-soft: #4d5d72;
-    --sun: #d4e3f6;
-    --sun-soft: #edf3fa;
-    --coral: #ba8074;
-    --coral-soft: #f3ebe9;
-    --sky: #285996;
-    --sky-soft: #e3ecf8;
-    --mint: #5a877b;
-    --mint-soft: #e6efed;
-    --grape: #7b7e9e;
-    --grape-soft: #ececf4;
-    --leaf: #7b8964;
-    --leaf-soft: #edf0e6;
-    --stroke: #ced9e6;
-    --line: 1px solid var(--stroke);
-    --line-thin: var(--line);
+    --paper: #fff6e9;
+    --paper-dim: #fbe8cd;
+    --card: #fffdf8;
+    --ink: #1b2432;
+    --ink-soft: #556072;
+    --sun: #ffc94d;
+    --sun-soft: #ffe9c0;
+    --coral: #ff6b6b;
+    --coral-soft: #ffd9d4;
+    --sky: #4d96ff;
+    --sky-soft: #d3e5ff;
+    --mint: #54c07a;
+    --mint-soft: #d4f0dd;
+    --grape: #9b5de5;
+    --grape-soft: #e9dcfb;
+    --leaf: #7cb342;
+    --leaf-soft: #e3f0d2;
+    --line: 2.5px solid var(--ink);
+    --line-thin: 2px solid var(--ink);
     --radius: 20px;
     --radius-lg: 28px;
     --radius-card: 16px;
     --radius-btn: 14px;
     --radius-icon: 12px;
     --radius-sm: 10px;
-    --shadow-pop: 0 6px 20px rgb(23 38 59 / 9%);
-    --shadow-pop-lg: 0 12px 28px rgb(23 38 59 / 12%);
-    --shadow-btn: 0 1px 3px rgb(23 38 59 / 9%);
-    --shadow-card: 0 2px 8px rgb(23 38 59 / 6%);
-    --shadow-badge: none;
-    --spring: cubic-bezier(0.22, 0.82, 0.35, 1);
+    --shadow-pop: 5px 5px 0 var(--ink);
+    --shadow-pop-lg: 8px 8px 0 var(--ink);
+    --shadow-btn: 4px 4px 0 var(--ink);
+    --shadow-card: 3px 3px 0 var(--ink);
+    --shadow-badge: 2.5px 2.5px 0 var(--ink);
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    --font-sans:
-      system-ui, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-      sans-serif;
+    --font-round:
+      "Yuanti SC", "YouYuan", "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", system-ui, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
     --shell: 1120px;
     --nav-h: 68px;
@@ -87,12 +86,14 @@
   body {
     min-height: 100vh;
     overflow-x: clip;
-    font-family: var(--font-sans);
+    font-family: var(--font-round);
     font-weight: 500;
     font-size: 16px;
     line-height: 1.7;
     color: var(--ink);
     background-color: var(--paper);
+    background-image: radial-gradient(var(--paper-dim) 1.6px, transparent 2px);
+    background-size: 26px 26px;
     -webkit-font-smoothing: antialiased;
     display: flex;
     flex-direction: column;
@@ -228,7 +229,7 @@
   }
 
   .site-nav.is-scrolled .site-nav__bar {
-    box-shadow: var(--shadow-pop);
+    box-shadow: 6px 6px 0 var(--ink);
     transform: translateY(-2px);
   }
 
@@ -288,8 +289,8 @@
     left: 0;
     right: 0;
     bottom: 2px;
-    height: 2px;
-    background: var(--sky);
+    height: 3px;
+    background: var(--sun);
     border-radius: 2px;
     transform: scaleX(0);
     transform-origin: left;
@@ -322,7 +323,7 @@
     background: var(--card);
     border: var(--line);
     border-radius: var(--radius-icon);
-    box-shadow: var(--shadow-btn);
+    box-shadow: 2.5px 2.5px 0 var(--ink);
     transition:
       transform 180ms var(--spring),
       box-shadow 180ms var(--spring),
@@ -334,8 +335,8 @@
   }
 
   .site-nav__more-btn:active {
-    transform: translateY(1px);
-    box-shadow: none;
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--ink);
   }
 
   .site-nav__more-btn .icon-close {
@@ -395,19 +396,19 @@
     font-weight: 800;
     line-height: 1;
     white-space: nowrap;
-    background: var(--sun-soft);
-    color: var(--sky);
+    background: var(--sun);
+    color: var(--ink);
     border: var(--line);
     border-radius: 999px;
-    box-shadow: var(--shadow-btn);
+    box-shadow: var(--shadow-pop);
     transition:
       transform 200ms var(--spring),
       box-shadow 200ms var(--spring);
   }
 
   .site-nav__cta-btn:active {
-    transform: translateY(1px);
-    box-shadow: none;
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0 var(--ink);
   }
 
   /* =========================================================
@@ -434,13 +435,7 @@
   }
 
   .pop-btn--solid {
-    background: var(--sky);
-    color: var(--card);
-    border-color: transparent;
-  }
-
-  .pop-btn--solid:hover {
-    background: #204a80;
+    background: var(--sun);
   }
 
   .pop-btn--paper {
@@ -453,13 +448,13 @@
   }
 
   .pop-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-pop);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink);
   }
 
   .pop-btn:active {
-    transform: translateY(1px);
-    box-shadow: none;
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 var(--ink);
   }
 
   .nh-btn {
@@ -489,13 +484,13 @@
   }
 
   .nh-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-pop);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--ink);
   }
 
   .nh-btn:active {
-    transform: translateY(1px);
-    box-shadow: none;
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--ink);
   }
 
   .pop-badge {
@@ -702,7 +697,7 @@
   }
 
   /* =========================================================
-     Section 2: Marquee Strip
+     Section 2: Tilted Marquee Strip
      ========================================================= */
   .marquee-wrap {
     padding: 14px 0;
@@ -711,9 +706,13 @@
   }
 
   .marquee {
+    width: calc(100% + 24px);
+    margin-left: -12px;
     overflow: hidden;
-    background: var(--sun-soft);
-    border-block: var(--line);
+    background: var(--sun);
+    border-top: var(--line);
+    border-bottom: var(--line);
+    transform: rotate(-1.2deg);
   }
 
   .marquee__track {
@@ -836,7 +835,7 @@
     width: 100%;
     height: 100%;
     transition: transform 600ms var(--ease-out);
-    filter: drop-shadow(0 2px 4px rgb(23 38 59 / 10%));
+    filter: drop-shadow(3px 3px 0 rgb(27 36 50 / 18%));
   }
 
   .ann-card:hover .ann-card__cover-art {
@@ -1159,7 +1158,7 @@
     color: var(--ink);
     border: var(--line);
     border-radius: var(--radius-btn);
-    box-shadow: var(--shadow-btn);
+    box-shadow: 3.5px 3.5px 0 var(--ink);
     transition:
       transform 200ms var(--spring),
       box-shadow 200ms var(--spring);
@@ -1171,8 +1170,8 @@
   }
 
   .plan__cta:active {
-    transform: translateY(1px);
-    box-shadow: none;
+    transform: translate(2.5px, 2.5px);
+    box-shadow: 1px 1px 0 var(--ink);
   }
 
   /* =========================================================
@@ -1263,7 +1262,7 @@
     background: var(--sun-soft);
     border: var(--line-thin);
     border-radius: var(--radius-btn);
-    box-shadow: var(--shadow-btn);
+    box-shadow: 2px 2px 0 var(--ink);
     display: grid;
     place-items: center;
     flex-shrink: 0;
@@ -1415,7 +1414,7 @@
   .site-footer__tagline {
     font-size: 14px;
     line-height: 1.7;
-    color: rgb(245 247 250 / 80%);
+    color: rgb(255 246 233 / 78%);
     max-width: 320px;
   }
 
@@ -1474,7 +1473,7 @@
     flex-wrap: wrap;
     gap: 12px;
     font-size: 12.5px;
-    color: rgb(245 247 250 / 70%);
+    color: rgb(255 246 233 / 68%);
   }
 
   .site-footer__top-link {
@@ -1500,8 +1499,8 @@
     font-size: 15px;
     font-weight: 800;
     line-height: 1;
-    background: var(--card);
-    color: var(--sky);
+    background: var(--sun);
+    color: var(--ink);
     border: var(--line);
     border-radius: 999px;
     box-shadow: var(--shadow-pop);
@@ -1518,8 +1517,8 @@
   }
 
   .support-bubble:active {
-    transform: translateY(1px);
-    box-shadow: var(--shadow-btn);
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0 var(--ink);
   }
 
   .support-bubble.is-away {
