@@ -2,7 +2,7 @@ import type { D1Database } from "@cloudflare/workers-types/index.ts";
 import { articlesPath, publicSlugRoute } from "./articles";
 import {
   editorialCopy,
-  editorialSiteName,
+  editorialMetadata,
   publishedHomeIndexPolicy,
 } from "./editorial-site";
 import type { Locale } from "./home";
@@ -86,8 +86,8 @@ export async function sitemap(db: D1Database, site: URL) {
 }
 
 export async function articleFeed(db: D1Database, site: URL, locale: Locale) {
-  const [name, { results }] = await Promise.all([
-    editorialSiteName(db, locale),
+  const [{ name, defaultDescription }, { results }] = await Promise.all([
+    editorialMetadata(db, locale),
     db
       .prepare(
         `
@@ -117,7 +117,7 @@ export async function articleFeed(db: D1Database, site: URL, locale: Locale) {
   <channel>
     <title>${escapeXml(name)}</title>
     <link>${archive}</link>
-    <description>${escapeXml(editorialCopy(locale).description)}</description>
+    <description>${escapeXml(defaultDescription ?? editorialCopy(locale).description)}</description>
     <language>${locale === "zh" ? "zh-CN" : "en"}</language>
     <atom:link rel="self" type="application/rss+xml" href="${self}" />
 ${items.join("\n")}

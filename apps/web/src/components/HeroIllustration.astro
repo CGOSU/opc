@@ -1,0 +1,269 @@
+---
+interface Props {
+  stickers: readonly { value: string; label: string }[];
+}
+
+const { stickers } = Astro.props;
+const variants = ["hero__sticker--a", "hero__sticker--b", "hero__sticker--c"];
+---
+
+<div class="hero__art" data-hero-parallax>
+  <svg class="hero__svg" viewBox="0 0 400 380" fill="none" aria-hidden="true">
+    <circle cx="200" cy="180" r="158" fill="var(--sun-soft)" />
+    <circle cx="200" cy="180" r="118" fill="var(--paper)" opacity="0.6" />
+
+    <g class="beam">
+      <path d="M200 106 L38 56 L58 148 Z" fill="var(--sun)" opacity="0.34" />
+      <path d="M200 106 L362 56 L342 148 Z" fill="var(--sun)" opacity="0.34" />
+    </g>
+
+    <path
+      class="star star--1"
+      d="M84 68 L88 79 L99 83 L88 87 L84 98 L80 87 L69 83 L80 79 Z"
+      fill="var(--sun)"
+      stroke="var(--ink)"
+      stroke-width="2.5"
+      stroke-linejoin="round"
+    />
+    <path
+      class="star star--2"
+      d="M312 64 L315 73 L324 76 L315 79 L312 88 L309 79 L300 76 L309 73 Z"
+      fill="var(--sky)"
+      stroke="var(--ink)"
+      stroke-width="2.5"
+      stroke-linejoin="round"
+    />
+    <path
+      class="star star--3"
+      d="M332 184 L335 192 L343 195 L335 198 L332 206 L329 198 L321 195 L329 192 Z"
+      fill="var(--coral)"
+      stroke="var(--ink)"
+      stroke-width="2.5"
+      stroke-linejoin="round"
+    />
+
+    <g class="cloud">
+      <path
+        d="M54 146 H112 C121 146 127 140 127 132 C127 125 121 119 114 119 C112 109 103 102 92 102 C82 102 74 108 71 117 C62 117 54 124 54 133 C54 140 54 146 54 146 Z"
+        fill="var(--card)"
+        stroke="var(--ink)"
+        stroke-width="3"
+        stroke-linejoin="round"
+      />
+    </g>
+    <g class="cloud cloud--slow">
+      <path
+        d="M276 138 H330 C338 138 344 132 344 125 C344 118 338 113 331 113 C329 104 321 98 311 98 C302 98 294 104 291 112 C283 112 276 118 276 126 Z"
+        fill="var(--card)"
+        stroke="var(--ink)"
+        stroke-width="3"
+        stroke-linejoin="round"
+      />
+    </g>
+
+    <g class="tower">
+      <path
+        d="M174 88 Q200 54 226 88 Z"
+        fill="var(--coral)"
+        stroke="var(--ink)"
+        stroke-width="3.5"
+        stroke-linejoin="round"
+      />
+      <circle
+        cx="200"
+        cy="61"
+        r="6"
+        fill="var(--sun)"
+        stroke="var(--ink)"
+        stroke-width="3"
+      />
+
+      <rect
+        x="178"
+        y="88"
+        width="44"
+        height="36"
+        rx="4"
+        fill="var(--sun-soft)"
+        stroke="var(--ink)"
+        stroke-width="3.5"
+      />
+      <circle
+        class="lamp"
+        cx="200"
+        cy="106"
+        r="20"
+        fill="var(--sun)"
+        opacity="0.35"
+      />
+      <circle class="lamp" cx="200" cy="106" r="11" fill="#ffffff" />
+
+      <rect
+        x="166"
+        y="124"
+        width="68"
+        height="12"
+        rx="6"
+        fill="var(--card)"
+        stroke="var(--ink)"
+        stroke-width="3.5"
+      />
+
+      <path
+        d="M174 136 H226 L242 292 H158 Z"
+        fill="var(--card)"
+        stroke="var(--ink)"
+        stroke-width="3.5"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M170 174 H230 L234 210 H166 Z"
+        fill="var(--coral)"
+        stroke="var(--ink)"
+        stroke-width="3"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M163 242 H237 L240 272 H160 Z"
+        fill="var(--sky-soft)"
+        stroke="var(--ink)"
+        stroke-width="3"
+        stroke-linejoin="round"
+      />
+
+      <rect x="186" y="148" width="28" height="18" rx="5" fill="var(--ink)" />
+      <path
+        d="M194 157 L197 154 M194 157 L197 160 M206 157 L203 154 M206 157 L203 160"
+        stroke="var(--sun)"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+
+      <path
+        d="M188 292 V264 C188 257 193 252 200 252 C207 252 212 257 212 264 V292 Z"
+        fill="var(--sun)"
+        stroke="var(--ink)"
+        stroke-width="3"
+      />
+
+      <image
+        href="/goose-placeholder.svg"
+        x="244"
+        y="220"
+        width="64"
+        height="72"
+      />
+    </g>
+
+    <path
+      d="M78 318 C96 286 138 282 162 290 C186 280 220 280 242 290 C268 282 308 288 324 318 Z"
+      fill="#9aa7bd"
+      stroke="var(--ink)"
+      stroke-width="4"
+      stroke-linejoin="round"
+    />
+
+    <path
+      class="wave"
+      d="M44 334 Q78 320 112 334 T180 334 T248 334 T316 334 T358 334"
+      stroke="var(--sky)"
+      stroke-width="4.5"
+      stroke-linecap="round"
+      stroke-dasharray="26 14"
+    />
+    <path
+      class="wave wave--late"
+      d="M62 352 Q96 340 130 352 T198 352 T266 352 T338 352"
+      stroke="var(--ink)"
+      stroke-width="3.5"
+      stroke-linecap="round"
+      stroke-dasharray="26 14"
+      opacity="0.72"
+    />
+  </svg>
+
+  {stickers.slice(0, 3).map((item, i) => (
+    <div class:list={["hero__sticker", variants[i]]}>
+      <strong>{item.value}</strong>
+      <span>{item.label}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .beam {
+    transform-origin: 200px 106px;
+    animation: beam-sweep 5000ms ease-in-out infinite;
+  }
+
+  .star {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: twinkle 2600ms ease-in-out infinite;
+  }
+
+  .star--1 {
+    animation-delay: 0ms;
+  }
+
+  .star--2 {
+    animation-delay: 900ms;
+  }
+
+  .star--3 {
+    animation-delay: 1700ms;
+  }
+
+  .cloud {
+    animation: drift 7000ms ease-in-out 400ms infinite;
+  }
+
+  .cloud--slow {
+    animation: drift 9500ms ease-in-out 0ms infinite;
+  }
+
+  .tower {
+    animation: float-y 6000ms ease-in-out infinite;
+  }
+
+  .lamp {
+    animation: glow-pulse 2400ms ease-in-out infinite;
+  }
+
+  .wave {
+    animation: dash-shift 3200ms linear infinite;
+  }
+
+  .wave--late {
+    animation-duration: 4600ms;
+  }
+</style>
+
+<script>
+  const art = document.querySelector<HTMLElement>("[data-hero-parallax]");
+  if (
+    art &&
+    matchMedia("(pointer: fine)").matches &&
+    !matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    let raf = 0;
+    let mx = 0;
+    let my = 0;
+    const apply = () => {
+      raf = 0;
+      const dx = ((mx / window.innerWidth - 0.5) * 14).toFixed(1);
+      const dy = ((my / window.innerHeight - 0.5) * 10).toFixed(1);
+      art.style.transform = `translate(${dx}px, ${dy}px)`;
+    };
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        if (event.pointerType !== "mouse") return;
+        mx = event.clientX;
+        my = event.clientY;
+        if (!raf) raf = requestAnimationFrame(apply);
+      },
+      { passive: true },
+    );
+  }
+</script>

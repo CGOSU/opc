@@ -1,36 +1,75 @@
 ---
 import { editorialCopy } from "../lib/editorial-site";
 import type { Locale, MenuItem } from "../lib/home";
+
 interface Props {
   locale: Locale;
   name: string;
   menu: MenuItem[];
   feed?: string;
+  alternate?: { locale: Locale; path: string };
 }
-const { locale, name, menu, feed } = Astro.props;
+
+const { locale, name, menu, feed, alternate } = Astro.props;
 const c = editorialCopy(locale);
 ---
 
-<footer class="site-footer container">
-  <div class="footer-main">
-    <div>
-      <a class="brand" href={`/${locale}/`}>
-        <img src="/goose-placeholder.svg" width="27" height="30" alt="" />
-        {name}
-      </a>
-      <p>{c.heading.join(locale === "zh" ? "" : " ")}</p>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <a class="site-footer__brand-link" href={`/${locale}/`}>
+          <span class="site-footer__logo-wrap">
+            <img src="/goose-placeholder.svg" width="26" height="29" alt="" />
+          </span>
+          <span class="site-footer__brand-title">{name}</span>
+        </a>
+        <p class="site-footer__tagline">
+          {c.heading.join(locale === "zh" ? "" : " ")}
+        </p>
+      </div>
+
+      <nav class="site-footer__col" aria-label={c.footerNav}>
+        <p class="site-footer__heading">{c.footerContentHeading}</p>
+        <div class="site-footer__links">
+          <a href={`/${locale}/`}>{c.home}</a>
+          {menu.map((item) => (
+            <a href={item.href}>{item.label}</a>
+          ))}
+        </div>
+      </nav>
+
+      <div class="site-footer__col">
+        <p class="site-footer__heading">{c.footerResourceHeading}</p>
+        <div class="site-footer__links">
+          {alternate && (
+            <a
+              href={alternate.path}
+              lang={alternate.locale === "zh" ? "zh-Hans" : "en"}
+            >
+              {alternate.locale === "zh" ? "切换至中文" : "Switch to English"}
+            </a>
+          )}
+          {feed && (
+            <a href={feed}>{locale === "zh" ? "RSS 订阅" : "RSS feed"}</a>
+          )}
+          <a href="#top">{c.back} ↑</a>
+        </div>
+      </div>
+
+      <div class="site-footer__contact">
+        <p class="site-footer__heading">{c.footerNoteHeading}</p>
+        <p class="site-footer__note">{c.footerNote}</p>
+      </div>
     </div>
-    <nav aria-label={c.footerNav}>
-      {menu.map((item) => (
-        <a href={item.href}>{item.label}</a>
-      ))}
-      {feed && <a href={feed}>{locale === "zh" ? "RSS 订阅" : "RSS feed"}</a>}
-    </nav>
-  </div>
-  <div class="footer-bottom">
-    <p>
-      © {new Date().getUTCFullYear()} {name}. All rights reserved.
-    </p>
-    <a href="#top">{c.back} ↑</a>
+
+    <div class="site-footer__bottom">
+      <p>
+        © {new Date().getUTCFullYear()} {name}. All rights reserved.
+      </p>
+      <a class="site-footer__top-link" href="#top">
+        {c.back} ↑
+      </a>
+    </div>
   </div>
 </footer>

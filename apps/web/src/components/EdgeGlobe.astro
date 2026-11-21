@@ -1,0 +1,302 @@
+---
+import {
+  buildArcPaths,
+  buildGraticulePath,
+  buildLandPath,
+  GLOBE_CENTER,
+  GLOBE_RADIUS,
+  INITIAL_PITCH,
+  INITIAL_YAW,
+  projectNodes,
+} from "../lib/globe-math";
+import type { Locale } from "../lib/home";
+
+interface Props {
+  locale: Locale;
+  hint: string;
+}
+
+const { locale, hint } = Astro.props;
+const initialLand = buildLandPath(INITIAL_YAW, INITIAL_PITCH);
+const initialGrat = buildGraticulePath(INITIAL_YAW, INITIAL_PITCH);
+const initialArcs = buildArcPaths(INITIAL_YAW, INITIAL_PITCH);
+const initialNodes = projectNodes(INITIAL_YAW, INITIAL_PITCH);
+---
+
+<div class="globe" data-edge-globe data-locale={locale}>
+  <div class="globe__glow" aria-hidden="true"></div>
+  <svg
+    class="globe__svg"
+    viewBox="0 0 600 600"
+    fill="none"
+    role="img"
+    aria-label={
+      locale === "zh"
+        ? "交互式边缘节点地球示意"
+        : "Interactive orthographic edge globe illustration"
+    }
+  >
+    <defs>
+      <clipPath id="globe-sphere-clip">
+        <circle cx={GLOBE_CENTER} cy={GLOBE_CENTER} r={GLOBE_RADIUS} />
+      </clipPath>
+    </defs>
+
+    <circle
+      cx={GLOBE_CENTER}
+      cy={GLOBE_CENTER}
+      r={GLOBE_RADIUS}
+      fill="#f7faff"
+      stroke="var(--ink)"
+      stroke-width="3"
+    />
+
+    <g clip-path="url(#globe-sphere-clip)">
+      <path
+        data-globe-grat
+        d={initialGrat}
+        stroke="#d8e6f2"
+        stroke-width="1"
+        fill="none"
+      />
+      <path
+        data-globe-land
+        d={initialLand}
+        fill="#b9d9c8"
+        stroke="#8fbfa8"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+    </g>
+
+    <circle
+      cx={GLOBE_CENTER}
+      cy={GLOBE_CENTER}
+      r={GLOBE_RADIUS}
+      fill="none"
+      stroke="var(--ink)"
+      stroke-width="3"
+      pointer-events="none"
+    />
+
+    <g data-globe-arcs>
+      {initialArcs.map((d) => (
+        <path class="arc" d={d} />
+      ))}
+    </g>
+
+    <g data-globe-nodes>
+      {initialNodes.map((node) => (
+        <g
+          class:list={["node-marker", { "is-hidden": !node.visible }]}
+          data-node-id={node.id}
+          transform={`translate(${node.sx.toFixed(1)}, ${node.sy.toFixed(1)})`}
+        >
+          {node.hub && <circle class="hub-pulse" cx="0" cy="0" r="15" />}
+          <circle
+            class:list={["dot", { "dot--hub": node.hub }]}
+            cx="0"
+            cy="0"
+            r={node.r.toFixed(1)}
+          />
+          <text
+            class="node-label"
+            x={node.labelSide === "left" ? -12 : 12}
+            y="5"
+            text-anchor={node.labelSide === "left" ? "end" : "start"}
+          >
+            {locale === "zh" ? node.labelZh : node.labelEn}
+          </text>
+        </g>
+      ))}
+    </g>
+  </svg>
+  <span class="pop-badge pop-badge--sun globe__hint">{hint}</span>
+</div>
+
+<style>
+  .globe :global(.arc) {
+    fill: none;
+    stroke: var(--sky);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-dasharray: 5 7;
+    animation: arc-flow 1600ms linear infinite;
+  }
+
+  .dot {
+    fill: var(--coral);
+    stroke: var(--ink);
+    stroke-width: 2.5;
+  }
+
+  .dot--hub {
+    fill: var(--sun);
+    stroke-width: 3;
+  }
+
+  .hub-pulse {
+    fill: none;
+    stroke: var(--sun);
+    stroke-width: 2.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hub-ring 2000ms ease-out infinite;
+  }
+
+  .node-label {
+    font-size: 13.5px;
+    font-weight: 800;
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: var(--card);
+    stroke-width: 4.5px;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+
+  .node-marker.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  import {
+    buildArcPaths,
+    buildGraticulePath,
+    buildLandPath,
+    INITIAL_PITCH,
+    INITIAL_YAW,
+    projectNodes,
+  } from "../lib/globe-math";
+
+  const root = document.querySelector<HTMLElement>("[data-edge-globe]");
+  const svg = root?.querySelector<SVGSVGElement>(".globe__svg");
+  const landEl = root?.querySelector<SVGPathElement>("[data-globe-land]");
+  const gratEl = root?.querySelector<SVGPathElement>("[data-globe-grat]");
+  const arcsGroup = root?.querySelector<SVGGElement>("[data-globe-arcs]");
+  const nodesGroup = root?.querySelector<SVGGElement>("[data-globe-nodes]");
+
+  if (root && svg && landEl && gratEl && arcsGroup && nodesGroup) {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const markerMap = new Map<string, SVGGElement>();
+    for (const el of nodesGroup.querySelectorAll<SVGGElement>(
+      "[data-node-id]",
+    )) {
+      markerMap.set(el.dataset.nodeId!, el);
+    }
+
+    let yaw = INITIAL_YAW;
+    let pitch = INITIAL_PITCH;
+    let velocity = 0;
+    let dragging = false;
+    let activePointer = -1;
+    let lastX = 0;
+    let lastY = 0;
+    let lastInteractAt = performance.now() - 2000;
+    let inView = true;
+    let prevTime = performance.now();
+
+    const clamp = (v: number, min: number, max: number) =>
+      Math.max(min, Math.min(max, v));
+
+    const render = () => {
+      landEl.setAttribute("d", buildLandPath(yaw, pitch));
+      gratEl.setAttribute("d", buildGraticulePath(yaw, pitch));
+
+      const arcDs = buildArcPaths(yaw, pitch);
+      while (arcsGroup.children.length > arcDs.length) {
+        arcsGroup.lastElementChild?.remove();
+      }
+      arcDs.forEach((d, i) => {
+        let path = arcsGroup.children[i] as SVGPathElement | undefined;
+        if (!path) {
+          path = document.createElementNS(svgNS, "path");
+          path.setAttribute("class", "arc");
+          arcsGroup.appendChild(path);
+        }
+        path.setAttribute("d", d);
+      });
+
+      for (const node of projectNodes(yaw, pitch)) {
+        const g = markerMap.get(node.id);
+        if (!g) continue;
+        g.classList.toggle("is-hidden", !node.visible);
+        if (node.visible) {
+          g.setAttribute(
+            "transform",
+            `translate(${node.sx.toFixed(1)}, ${node.sy.toFixed(1)})`,
+          );
+        }
+      }
+    };
+
+    svg.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      activePointer = e.pointerId;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      velocity = 0;
+      lastInteractAt = performance.now();
+      svg.classList.add("is-dragging");
+      svg.setPointerCapture(e.pointerId);
+    });
+
+    svg.addEventListener("pointermove", (e) => {
+      if (!dragging || e.pointerId !== activePointer) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      yaw += dx * 0.35;
+      pitch = clamp(pitch - dy * 0.25, -35, 35);
+      velocity = dx * 0.35;
+      lastInteractAt = performance.now();
+      render();
+    });
+
+    const endDrag = (e: PointerEvent) => {
+      if (!dragging || e.pointerId !== activePointer) return;
+      dragging = false;
+      activePointer = -1;
+      lastInteractAt = performance.now();
+      svg.classList.remove("is-dragging");
+      if (svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId);
+      }
+    };
+
+    svg.addEventListener("pointerup", endDrag);
+    svg.addEventListener("pointercancel", endDrag);
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(
+        (entries) => {
+          inView = entries[0]?.isIntersecting ?? true;
+        },
+        { threshold: 0.05 },
+      ).observe(root);
+    }
+
+    const tick = (now: number) => {
+      const dt = Math.min(50, Math.max(0, now - prevTime)) / 16.7;
+      prevTime = now;
+
+      if (inView && !dragging) {
+        if (Math.abs(velocity) > 0.02) {
+          yaw += velocity;
+          velocity *= 0.94;
+          render();
+        } else if (!reduced.matches && now - lastInteractAt > 1600) {
+          yaw += 0.055 * dt;
+          render();
+        }
+      }
+      requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  }
+</script>

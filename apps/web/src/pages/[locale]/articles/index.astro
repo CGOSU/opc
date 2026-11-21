@@ -1,7 +1,6 @@
 ---
 import { env } from "cloudflare:workers";
 import EditorialLayout from "../../../layouts/EditorialLayout.astro";
-import { loadEditorialSite } from "../../../lib/editorial-site";
 import {
   articleDate,
   articleLocale,
@@ -9,6 +8,7 @@ import {
   articleUnavailable,
   listArticles,
 } from "../../../lib/articles";
+import { editorialCopy, loadEditorialSite } from "../../../lib/editorial-site";
 import "../../../styles/reading.css";
 
 export const prerender = false;
@@ -28,6 +28,7 @@ try {
 Astro.response.headers.set("Cache-Control", "no-store");
 
 const zh = locale === "zh";
+const c = editorialCopy(locale);
 const title = zh ? "技术文章" : "Technical Articles";
 const description = zh
   ? "按发布日期浏览技术教程与工程实践。"
@@ -51,8 +52,21 @@ const seo = {
   alternate={{ locale: other, path: articlesPath(other) }}
 >
   <main id="main" class="container reading-page">
-    <h1>{title}</h1>
-    <p class="reading-summary">{description}</p>
+    <header class="reading-head">
+      <div class="reading-head__copy">
+        <span class="pop-badge pop-badge--sun">
+          {zh ? "文章归档" : "ARCHIVE"}
+        </span>
+        <h1>
+          <span class="marker">{title}</span>
+        </h1>
+        <p class="reading-summary">{description}</p>
+      </div>
+      <a class="nh-btn" href={`/${locale}/search/`}>
+        {c.search} <span aria-hidden="true">→</span>
+      </a>
+    </header>
+
     {articles.length > 0 ? (
       <ul class="archive">
         {articles.map((article) => (
@@ -70,42 +84,20 @@ const seo = {
         ))}
       </ul>
     ) : (
-      <p class="empty-archive">
-        {zh ? "暂时没有已发布的文章。" : "No articles have been published yet."}
-      </p>
+      <div class="empty-state pop-card">
+        <img
+          class="empty-state__goose"
+          src="/goose-placeholder.svg"
+          width="64"
+          height="70"
+          alt=""
+        />
+        <p>
+          {zh
+            ? "暂时没有已发布的文章。"
+            : "No articles have been published yet."}
+        </p>
+      </div>
     )}
   </main>
 </EditorialLayout>
-
-<style>
-  .archive,
-  .empty-archive {
-    margin-block-start: 2rem;
-    max-width: 72ch;
-  }
-  .archive {
-    list-style: none;
-    padding: 0;
-    border-block-start: 1px solid var(--line);
-  }
-  .archive li {
-    padding-block: 1.35rem;
-    border-block-end: 1px solid var(--line);
-  }
-  .archive h2 {
-    font-size: clamp(1.25rem, 3vw, 1.6rem);
-    margin-block: 0.3rem;
-  }
-  .archive h2 a:hover {
-    color: var(--teal);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-  .archive time,
-  .archive p {
-    color: var(--muted);
-  }
-  .archive time {
-    font-size: 0.9rem;
-  }
-</style>

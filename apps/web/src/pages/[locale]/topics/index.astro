@@ -51,13 +51,40 @@ const title = available
   noindex={!available}
 >
   <main id="main" class="container reading-page">
-    <h1>{title}</h1>
-    {available && (
-      <section>
-        <h2>{locale === "zh" ? "专题目录" : "Topic directory"}</h2>
-        <p>{c.topicIntro}</p>
-        <EditorialCards {locale} entries={topics} />
-      </section>
+    {available ? (
+      <>
+        <header class="reading-head">
+          <div class="reading-head__copy">
+            <span class="pop-badge pop-badge--mint">
+              {locale === "zh" ? "专题目录" : "TOPIC DIRECTORY"}
+            </span>
+            <h1>
+              <span class="marker">{title}</span>
+            </h1>
+            <p class="reading-summary">{c.topicIntro}</p>
+          </div>
+        </header>
+        <section aria-label={locale === "zh" ? "专题目录" : "Topic directory"}>
+          <EditorialCards
+            variant="grid"
+            {locale}
+            entries={topics}
+            badgeLabel={c.topicBadge}
+            ctaLabel={c.openTopic}
+          />
+        </section>
+      </>
+    ) : (
+      <div class="empty-state pop-card">
+        <img
+          class="empty-state__goose"
+          src="/goose-placeholder.svg"
+          width="64"
+          height="70"
+          alt=""
+        />
+        <h1>{title}</h1>
+      </div>
     )}
   </main>
 </EditorialLayout>

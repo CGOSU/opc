@@ -14,10 +14,65 @@ const { locale } = layout;
 const { name, menu } = editorial;
 const c = editorialCopy(locale);
 const feed = Astro.site ? `/${locale}/rss.xml` : undefined;
+const currentPath = Astro.url.pathname;
+const onSearch = currentPath === `/${locale}/search/`;
 ---
 
 <SiteLayout {...layout} skip={c.skip} {feed}>
-  <Header {locale} {name} {menu} {alternate} />
+  <Header {locale} {name} {menu} {alternate} {currentPath} />
   <slot />
-  <SiteFooter {locale} {name} {menu} {feed} />
+  <SiteFooter {locale} {name} {menu} {feed} {alternate} />
+  <a
+    class="support-bubble"
+    href={onSearch ? "#top" : `/${locale}/search/`}
+    aria-label={onSearch ? c.back : c.quickSearch}
+  >
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      {onSearch ? (
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      ) : (
+        <>
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </>
+      )}
+    </svg>
+    <span class="support-bubble__label">
+      {onSearch ? c.back : c.quickSearch}
+    </span>
+  </a>
+  <script>
+    const bubble = document.querySelector<HTMLElement>(".support-bubble");
+    const footer = document.querySelector<HTMLElement>("footer.site-footer");
+    if (bubble) {
+      let footerInView = false;
+      const mobile = matchMedia("(max-width: 640px)");
+      const sync = () => {
+        const hideAtMobileTop = mobile.matches && window.scrollY < 160;
+        bubble.classList.toggle("is-away", footerInView || hideAtMobileTop);
+      };
+      if (footer && "IntersectionObserver" in window) {
+        new IntersectionObserver(
+          (entries) => {
+            footerInView = entries[0]?.isIntersecting ?? false;
+            sync();
+          },
+          { threshold: 0.05 },
+        ).observe(footer);
+      }
+      sync();
+      window.addEventListener("scroll", sync, { passive: true });
+      mobile.addEventListener("change", sync);
+    }
+  </script>
 </SiteLayout>

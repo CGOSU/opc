@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
+import { upgradeLegacyD1 } from "./legacy-d1.mjs";
 
 const require = createRequire(import.meta.url);
 const app = fileURLToPath(new URL("../", import.meta.url));
@@ -106,32 +107,21 @@ function jsonLd(html) {
 }
 
 test(
-  "local D1 article routes read only the current sealed publication",
+  "local D1 upgrade preserves publications and article routes read the current language",
   { timeout: 90_000 },
   async (t) => {
     const temp = mkdtempSync(join(tmpdir(), "opc-article-test-"));
     const state = join(temp, "published");
     t.after(() => rmSync(temp, { recursive: true, force: true }));
     run("scripts/prepare-d1.mjs", []);
-    run(wrangler, [
-      "d1",
-      "migrations",
-      "apply",
-      "CONTENT",
-      "--local",
-      "--persist-to",
+    upgradeLegacyD1(
       state,
-    ]);
-    run(wrangler, [
-      "d1",
-      "execute",
-      "CONTENT",
-      "--local",
-      "--persist-to",
-      state,
-      "--file",
-      "integration/articles.sql",
-    ]);
+      [
+        join(app, "integration/articles.sql"),
+        join(app, "integration/taxonomy-0007.sql"),
+      ],
+      (...args) => run(wrangler, ["d1", ...args]),
+    );
     await t.test(
       "preview exposes no index or absolute discovery URLs",
       async (preview) => {
@@ -151,6 +141,64 @@ test(
 
     run(astro, ["build"], { SITE_URL: site });
     const request = await worker(t, state);
+
+    await t.test(
+      "taxonomy uses real localized labels and keeps historical routes",
+      async () => {
+        for (const locale of ["zh", "en"]) {
+          for (const [kind, label, slug] of [
+            ["categories", "Legacy cloud guide", "legacy-cloud"],
+            ["tags", "Legacy edge tag", "legacy-edge"],
+          ]) {
+            const response = await request(`/${locale}/${kind}/${slug}/`);
+            assert.equal(response.status, 200);
+            const html = await response.text();
+            assert.ok(html.includes(label));
+            assert.ok(html.includes(locale === "zh" ? zh : en));
+          }
+        }
+
+        run(wrangler, [
+          "d1",
+          "execute",
+          "CONTENT",
+          "--local",
+          "--persist-to",
+          state,
+          "--command",
+          [
+            "INSERT INTO category_translations (category_id, locale, name, slug, seo_title) VALUES ('fixture-category', 'zh', '云服务指南', 'cloud-zh', '云服务 SEO'), ('fixture-category', 'en', 'Cloud guides', 'cloud-en', 'Cloud SEO');",
+            "INSERT INTO tag_translations (tag_id, locale, name, slug) VALUES ('fixture-tag', 'en', 'Edge notes', 'edge-en');",
+          ].join(" "),
+        ]);
+        assert.match(
+          await (await request("/zh/categories/cloud-zh/")).text(),
+          /云服务 SEO/,
+        );
+        assert.match(
+          await (await request("/en/categories/cloud-en/")).text(),
+          /Cloud SEO/,
+        );
+        assert.match(
+          await (await request("/en/tags/edge-en/")).text(),
+          /Edge notes/,
+        );
+        assert.equal((await request("/zh/tags/edge-en/")).status, 404);
+        assert.equal((await request("/en/categories/cloud-zh/")).status, 404);
+        assert.match(
+          await (await request("/en/categories/legacy-cloud/")).text(),
+          /Historical description/,
+        );
+        assert.match(
+          await (await request(en)).text(),
+          /href="\/en\/categories\/cloud-en\/"[^>]*>\s*Cloud guides/,
+        );
+        assert.match(
+          await (await request(zh)).text(),
+          /href="\/zh\/tags\/legacy-edge\/"[^>]*>\s*#Legacy edge tag/,
+        );
+      },
+    );
 
     async function discovery(path, mime) {
       const response = await request(path);
@@ -208,6 +256,60 @@ test(
     assert.match(
       await (await request("/zh/articles/unlisted/")).text(),
       /name="robots" content="noindex, follow"/,
+    );
+    await t.test(
+      "editable metadata is locale-specific and does not replace article SEO",
+      async (metadata) => {
+        const configure = (command) =>
+          run(wrangler, [
+            "d1",
+            "execute",
+            "CONTENT",
+            "--local",
+            "--persist-to",
+            state,
+            "--command",
+            command,
+          ]);
+        metadata.after(() => configure("DELETE FROM site_settings"));
+        configure(`INSERT INTO site_settings VALUES
+        ('zh', '技术设置测试', '中文默认描述'),
+        ('en', 'English settings test', 'English default description')`);
+        for (const [locale, name, description] of [
+          ["zh", "技术设置测试", "中文默认描述"],
+          ["en", "English settings test", "English default description"],
+        ]) {
+          const home = await request(`/${locale}/`);
+          assert.equal(home.status, 200);
+          assert.equal(home.headers.get("cache-control"), "no-store");
+          const html = await home.text();
+          assert.ok(html.includes(` — ${name}</title>`));
+          assert.ok(
+            html.includes(`name="description" content="${description}"`),
+          );
+          assert.ok(
+            html.includes(`property="og:description" content="${description}"`),
+          );
+          assert.ok((await getFeed(locale)).includes(`<title>${name}</title>`));
+        }
+        assert.match(
+          await (await request(zh)).text(),
+          /name="description" content="Workers 与 D1 整合测试摘要"/,
+        );
+        assert.match(
+          await (await request("/zh/articles/unlisted/")).text(),
+          /name="description" content="中文默认描述"/,
+        );
+        configure(
+          "UPDATE site_settings SET site_name = '', default_description = '' WHERE locale = 'zh'",
+        );
+        const reverted = await (await request("/zh/")).text();
+        assert.doesNotMatch(reverted, /技术设置测试|中文默认描述/);
+        assert.match(
+          await (await request("/en/")).text(),
+          /English default description/,
+        );
+      },
     );
     const zhFeed = await getFeed("zh");
     const enFeed = await getFeed("en");
@@ -366,7 +468,7 @@ test(
       "--persist-to",
       state,
       "--command",
-      "UPDATE content_publications SET is_live = 0 WHERE translation_id = 'guide-en';",
+      "UPDATE post_translations SET published_at = NULL WHERE id = 'guide-en';",
     ]);
     const refreshed = await request(zh);
     assert.match(await refreshed.text(), /原始 HTML 中可读取这段正文/);
@@ -390,28 +492,24 @@ test(
       "--persist-to",
       state,
       "--command",
-      "INSERT INTO content_revision_seals VALUES ('r-draft-edit', 2); UPDATE content_publications SET revision_id = 'r-draft-edit', modified_at_ms = 1704240000000 WHERE translation_id = 'guide-zh';",
+      "UPDATE post_translations SET title = 'Updated article', content = 'Updated public body.', revision = revision + 1, updated_at_ms = 1704240000000 WHERE id = 'guide-zh';",
     ]);
-    assert.match(await (await request(zh)).text(), /Never expose draft edits/);
+    assert.match(await (await request(zh)).text(), /Updated public body/);
     assert.ok(
       (await getSitemap()).includes(
         `<loc>${site}${zh}</loc><lastmod>2024-01-03T00:00:00.000Z</lastmod>`,
       ),
     );
-    assert.match(await getFeed("zh"), /<title>Unpublished edit<\/title>/);
+    assert.match(await getFeed("zh"), /<title>Updated article<\/title>/);
     assert.doesNotMatch(await getFeed("en"), /<item>/);
     assert.ok(!(await getSitemap()).includes(`${site}${otherTopic}`));
     for (const path of [
       "/zh/",
       "/zh/articles/",
       topic,
-      "/zh/search/?q=Unpublished",
+      "/zh/search/?q=Updated",
     ]) {
-      assert.match(
-        await (await request(path)).text(),
-        /Unpublished edit/,
-        path,
-      );
+      assert.match(await (await request(path)).text(), /Updated article/, path);
     }
     run(wrangler, [
       "d1",
@@ -421,7 +519,7 @@ test(
       "--persist-to",
       state,
       "--command",
-      "UPDATE content_publications SET is_live = 0 WHERE translation_id = 'guide-zh';",
+      "UPDATE post_translations SET published_at = NULL WHERE id = 'guide-zh';",
     ]);
     assert.equal((await request(zh)).status, 404);
     assert.ok(!(await getSitemap()).includes(`${site}${zh}`));
@@ -432,7 +530,7 @@ test(
       /href="\/zh\/articles\/workers-guide\/"/,
     );
 
-    for (const path of ["/zh/", topic, "/zh/search/?q=Unpublished"]) {
+    for (const path of ["/zh/", topic, "/zh/search/?q=Updated"]) {
       assert.doesNotMatch(
         await (await request(path)).text(),
         /href="\/zh\/articles\/workers-guide\/"/,
@@ -447,7 +545,7 @@ test(
       "--persist-to",
       state,
       "--command",
-      "INSERT INTO content_publications VALUES ('draft-zh', 'r-draft', 1, 1704326400000, 1704326400000);",
+      "UPDATE post_translations SET published_at = 1704326400000, first_published_at_ms = 1704326400000, updated_at_ms = 1704326400000 WHERE id = 'draft-zh';",
     ]);
     const newlyLive = "/zh/articles/draft/";
     assert.equal((await request(newlyLive)).status, 200);
@@ -465,6 +563,64 @@ test(
       assert.ok((await response.text()).includes(`href="${newlyLive}"`), path);
     }
     assert.equal((await request("/topics/empty/")).status, 308);
+
+    await t.test(
+      "managed topic upgrade preserves old URLs and serves real localized SEO and members",
+      async (managed) => {
+        const topicState = join(temp, "managed-topics");
+        upgradeLegacyD1(
+          topicState,
+          [
+            join(app, "integration/articles.sql"),
+            join(app, "integration/topics-0007.sql"),
+          ],
+          (...args) => run(wrangler, ["d1", ...args]),
+        );
+        const visit = await worker(managed, topicState);
+        const legacyZh = "/zh/topics/legacy-runtime/";
+        const legacyEn = "/en/topics/legacy-runtime/";
+        for (const path of [legacyZh, legacyEn]) {
+          const page = await visit(path);
+          assert.equal(page.status, 200);
+          assert.match(await page.text(), /Historical runtime notes/);
+        }
+        run(wrangler, [
+          "d1",
+          "execute",
+          "CONTENT",
+          "--local",
+          "--persist-to",
+          topicState,
+          "--command",
+          [
+            "INSERT INTO topic_translations (topic_id, locale, title, slug, description, seo_title, seo_description, published_at, updated_at_ms) VALUES ('legacy-topic-id', 'en', 'English runtime guide', 'runtime-en', 'Localized description.', 'English runtime SEO', 'English runtime meta', 1704326400000, 1704326400000);",
+            "INSERT INTO topics VALUES ('new-managed', NULL, 0, 1704326400000, 1704326400000);",
+            "INSERT INTO topic_translations (topic_id, locale, title, slug, published_at, updated_at_ms) VALUES ('new-managed', 'zh', '新专题', 'new-managed', 1704326400000, 1704326400000);",
+          ].join(" "),
+        ]);
+        const newEn = "/en/topics/runtime-en/";
+        const oldEn = await visit(legacyEn);
+        assert.equal(oldEn.status, 308);
+        assert.equal(oldEn.headers.get("location"), newEn);
+        const html = await (await visit(newEn)).text();
+        assert.match(html, /<title>English runtime SEO<\/title>/);
+        assert.match(html, /English runtime meta/);
+        assert.match(html, /English runtime guide/);
+        assert.match(html, /href="\/en\/articles\/worker-notes\//);
+        assert.doesNotMatch(html, /lesson-2/);
+        const zhHtml = await (await visit(legacyZh)).text();
+        assert.ok(zhHtml.indexOf("/zh/articles/lesson-2/") >= 0);
+        assert.ok(
+          zhHtml.indexOf("/zh/articles/lesson-2/") < zhHtml.indexOf(zh),
+        );
+        assert.equal((await visit("/zh/topics/new-managed/")).status, 200);
+        assert.equal((await visit("/en/topics/new-managed/")).status, 404);
+        assert.match(
+          await (await visit("/en/topics/")).text(),
+          /English runtime guide/,
+        );
+      },
+    );
 
     await t.test(
       "unmigrated D1 is a service failure, not a public 404",

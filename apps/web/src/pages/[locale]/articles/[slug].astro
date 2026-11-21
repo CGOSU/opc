@@ -2,19 +2,20 @@
 import { env } from "cloudflare:workers";
 import ArticleBody from "../../../components/ArticleBody.astro";
 import EditorialLayout from "../../../layouts/EditorialLayout.astro";
-import { loadEditorialSite } from "../../../lib/editorial-site";
-import { articleTopic, topicMembers } from "../../../lib/topics";
+import { renderArticleMarkdown } from "../../../lib/article-markdown";
 import {
   articleAlternate,
   articleCover,
   articleDate,
   articleLocale,
+  articleRemoteCover,
   articlesPath,
   articleUnavailable,
   findArticle,
   nearbyArticles,
 } from "../../../lib/articles";
-import { renderArticleMarkdown } from "../../../lib/article-markdown";
+import { loadEditorialSite } from "../../../lib/editorial-site";
+import { articleTopic, topicMembers } from "../../../lib/topics";
 import "../../../styles/reading.css";
 
 export const prerender = false;
@@ -46,7 +47,7 @@ try {
   if (article) {
     topic = await articleTopic(env.CONTENT, locale, article.content_id);
     if (topic) {
-      const members = await topicMembers(env.CONTENT, locale, topic.content_id);
+      const members = await topicMembers(env.CONTENT, locale, topic);
       const current = members.findIndex(({ path }) => path === article.path);
       if (current >= 0) {
         previous = members[current - 1];
@@ -72,14 +73,17 @@ const homeLabel = zh ? "首页" : "Home";
 const articlesLabel = zh ? "技术文章" : "Articles";
 const back = zh ? "返回技术文章" : "Back to articles";
 const title = article?.seo_title?.trim() || article?.title || notFound;
-const description =
-  article?.seo_description?.trim() ||
-  article?.summary ||
-  article?.title ||
-  notFound;
+const description = article
+  ? article.seo_description?.trim() || article.summary.trim() || editorial.defaultDescription || article.title
+  : notFound;
 const alternate = article && articleAlternate(article, locale);
 const cover =
-  article && articleCover(env.CONTENT_ASSET_BASE_URL, article.cover_key);
+  article &&
+  (articleRemoteCover(article.cover_url) ??
+    articleCover(env.CONTENT_ASSET_BASE_URL, article.cover_key));
+const articleTags: { slug: string; name: string }[] = article
+  ? JSON.parse(article.tags_json)
+  : [];
 const coverAlt = article?.cover_alt?.trim() || undefined;
 const published =
   article && new Date(article.first_published_at_ms).toISOString();
@@ -160,7 +164,7 @@ const seo = article
             </li>
           </ol>
         </nav>
-        <header>
+        <header class="reading-hero">
           <h1>{article.title}</h1>
           {article.summary && <p class="reading-summary">{article.summary}</p>}
           <div class="reading-meta">
@@ -185,6 +189,21 @@ const seo = article
               </span>
             )}
           </div>
+          {(article.category_slug || articleTags.length > 0) && (
+            <nav
+              class="article-taxonomy"
+              aria-label={zh ? "文章分类与标签" : "Article category and tags"}
+            >
+              {article.category_slug && (
+                <a href={`${root}categories/${article.category_slug}/`}>
+                  {article.category_name}
+                </a>
+              )}
+              {articleTags.map(({ slug, name }) => (
+                <a href={`${root}tags/${slug}/`}>#{name}</a>
+              ))}
+            </nav>
+          )}
           {cover && (
             <img
               class="reading-cover"
@@ -199,11 +218,21 @@ const seo = article
         </div>
       </article>
     ) : (
-      <h1>{notFound}</h1>
+      <div class="empty-state pop-card">
+        <img
+          class="empty-state__goose"
+          src="/goose-placeholder.svg"
+          width="64"
+          height="70"
+          alt=""
+        />
+        <h1>{notFound}</h1>
+      </div>
     )}
+
     {article && (previous || next) && (
       <nav
-        class="reading-more"
+        class="reading-more reading-pager"
         aria-label={zh ? "前后篇" : "Previous and next articles"}
       >
         {previous && (
@@ -218,8 +247,9 @@ const seo = article
         )}
       </nav>
     )}
+
     {related.length > 0 && (
-      <section class="reading-more">
+      <section class="reading-more reading-related">
         <h2>{zh ? "相关文章" : "Related articles"}</h2>
         <ul>
           {related.map((entry) => (
@@ -230,6 +260,7 @@ const seo = article
         </ul>
       </section>
     )}
+
     <div class="reading-links">
       {topic && (
         <a class="back-to-articles" href={topic.path}>
@@ -237,24 +268,16 @@ const seo = article
         </a>
       )}
       <a class="back-to-articles" href={archive}>
-        {back}
+        ← {back}
       </a>
     </div>
   </main>
 </EditorialLayout>
+
 <style>
-  .reading-more {
-    margin-block-start: 2rem;
-    max-width: 72ch;
-  }
-  nav.reading-more,
-  .reading-links {
+  .article-taxonomy {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem 2rem;
-  }
-  .reading-more a {
-    text-decoration: underline;
-    text-underline-offset: 0.18em;
+    gap: 0.4rem 1rem;
   }
 </style>

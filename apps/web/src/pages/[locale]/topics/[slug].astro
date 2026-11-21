@@ -3,7 +3,11 @@ import { env } from "cloudflare:workers";
 import ArticleBody from "../../../components/ArticleBody.astro";
 import EditorialLayout from "../../../layouts/EditorialLayout.astro";
 import { renderArticleMarkdown } from "../../../lib/article-markdown";
-import { articleLocale, articleUnavailable } from "../../../lib/articles";
+import {
+  articleLocale,
+  articleRemoteCover,
+  articleUnavailable,
+} from "../../../lib/articles";
 import { editorialCopy, loadEditorialSite } from "../../../lib/editorial-site";
 import { findTopic, topicMembers, topicsPath } from "../../../lib/topics";
 import "../../../styles/reading.css";
@@ -28,25 +32,32 @@ try {
   }
   [editorial, members] = await Promise.all([
     loadEditorialSite(env.CONTENT, locale),
-    topic ? topicMembers(env.CONTENT, locale, topic.content_id) : [],
+    topic ? topicMembers(env.CONTENT, locale, topic) : [],
   ]);
 } catch {
   return articleUnavailable();
 }
 Astro.response.headers.set("Cache-Control", "no-store");
-if (!members.length) topic = null;
 if (!topic) Astro.response.status = 404;
 const missing = zh ? "找不到这个专题" : "Topic not found";
-const title = topic?.seo_title?.trim() || topic?.title || missing;
+const title =
+  topic?.seo_title?.trim() ||
+  (topic?.managed
+    ? zh
+      ? `专题：${topic.title}`
+      : `Topic: ${topic.title}`
+    : topic?.title || missing);
 const description = topic
-  ? topic.seo_description?.trim() || topic.summary || topic.title
+  ? topic.seo_description?.trim() || topic.summary.trim() || editorial.defaultDescription || topic.title
   : missing;
 const alternate = topic?.alternate_path
   ? ({ locale: zh ? "en" : "zh", path: topic.alternate_path } as const)
   : undefined;
+const cover = articleRemoteCover(topic?.cover_image ?? null);
 const seo = topic
   ? {
       path: topic.path,
+      image: cover,
       alternates: [
         { locale, path: topic.path },
         ...(alternate && !topic.alternate_noindex ? [alternate] : []),
@@ -66,48 +77,66 @@ const body = topic?.body_markdown && renderArticleMarkdown(topic.body_markdown);
   noindex={!topic || topic.noindex === 1}
 >
   <main id="main" class="container reading-page">
-    <h1>{topic?.title ?? missing}</h1>
-    {topic && (
+    {topic ? (
       <>
-        {topic.summary && <p class="reading-summary">{topic.summary}</p>}
+        <header class="reading-hero">
+          <span class="pop-badge pop-badge--mint">{c.topicBadge}</span>
+          <h1 style="margin-top: 12px;">{topic.title}</h1>
+          {topic.summary && <p class="reading-summary">{topic.summary}</p>}
+        </header>
+        {cover && (
+          <img
+            src={cover.href}
+            alt=""
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            class="article-cover"
+          />
+        )}
         {body && (
           <div class="article-body">
             <ArticleBody {locale} {...body} />
           </div>
         )}
-        <section class="section">
+        <section class="topic-path-section">
           <h2>{zh ? "学习路径" : "Learning path"}</h2>
+          {!members.length && (
+            <p>
+              {zh
+                ? "该语言版本暂未收录文章。"
+                : "No articles in this language yet."}
+            </p>
+          )}
           <ol class="learning-path">
             {members.map((entry) => (
               <li>
-                <h3>
-                  <a href={entry.path}>{entry.title}</a>
-                </h3>
-                {entry.summary && <p>{entry.summary}</p>}
+                <div>
+                  <h3>
+                    <a href={entry.path}>{entry.title}</a>
+                  </h3>
+                  {entry.summary && <p>{entry.summary}</p>}
+                </div>
               </li>
             ))}
           </ol>
         </section>
-        <a class="back-to-articles" href={archive}>
-          {c.topics}
-        </a>
+        <div class="reading-links">
+          <a class="back-to-articles" href={archive}>
+            ← {c.topics}
+          </a>
+        </div>
       </>
+    ) : (
+      <div class="empty-state pop-card">
+        <img
+          class="empty-state__goose"
+          src="/goose-placeholder.svg"
+          width="64"
+          height="70"
+          alt=""
+        />
+        <h1>{missing}</h1>
+      </div>
     )}
   </main>
 </EditorialLayout>
-<style>
-  .learning-path {
-    max-width: 72ch;
-    padding-inline-start: 1.5rem;
-  }
-  .learning-path li {
-    padding: 1rem;
-    border-block-end: 1px solid var(--line);
-  }
-  .learning-path h3 {
-    margin: 0;
-  }
-  .learning-path a:hover {
-    text-decoration: underline;
-  }
-</style>

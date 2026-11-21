@@ -1,7 +1,9 @@
 ---
 import { env } from "cloudflare:workers";
+import EdgeGlobe from "../components/EdgeGlobe.astro";
 import EditorialCards from "../components/EditorialCards.astro";
-import StudioIllustration from "../components/StudioIllustration.astro";
+import FeaturePointIcon from "../components/FeaturePointIcon.astro";
+import HeroIllustration from "../components/HeroIllustration.astro";
 import EditorialLayout from "../layouts/EditorialLayout.astro";
 import {
   articleLocale,
@@ -44,86 +46,370 @@ try {
 Astro.response.headers.set("Cache-Control", "no-store");
 const archive = articlesPath(locale);
 const topics = topicsPath(locale);
+const searchPath = `/${locale}/search/`;
+const marqueeLoop = [...c.marquee, ...c.marquee];
 ---
 
 <EditorialLayout
   title={editorial.name === c.name ? c.title : `${c.title} — ${editorial.name}`}
-  description={c.description}
+  description={editorial.defaultDescription ?? c.description}
   {locale}
   {editorial}
   noindex={home === 1}
   alternate={{ locale: other, path: `/${other}/` }}
 >
-  <main id="main" class="container">
+  <main id="main">
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow">
-          <span class="tiny-square"></span> DEVELOPMENT · ENGINEERING · OPEN
-          SOURCE
-        </p>
-        <h1 id="hero-title">
-          {c.heading[0]}
-          <br />
-          <span>{c.heading[1]}</span>
-        </h1>
-        <p class="hero-intro">{c.description}</p>
-        <div class="hero-actions">
-          <a class="button primary" href={archive}>
-            {c.archive} <span aria-hidden="true">↗</span>
-          </a>
-          {editorial.topics.length > 0 && (
-            <a class="button secondary" href={topics}>
-              {c.topics} <span aria-hidden="true">→</span>
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <p class="pop-badge pop-badge--sun">{c.eyebrow}</p>
+          <h1 id="hero-title" class="hero__title">
+            {c.heading[0]}
+            <br />
+            <span class="marker">{c.heading[1]}</span>
+          </h1>
+          <p class="hero__subtitle">{c.description}</p>
+          <div class="hero__actions">
+            <a class="pop-btn pop-btn--solid" href={archive}>
+              {c.archive} <span aria-hidden="true">↗</span>
             </a>
-          )}
+            {editorial.topics.length > 0 ? (
+              <a class="pop-btn pop-btn--paper" href={topics}>
+                {c.topics} <span aria-hidden="true">→</span>
+              </a>
+            ) : (
+              <a class="pop-btn pop-btn--paper" href="#about">
+                {c.about} <span aria-hidden="true">→</span>
+              </a>
+            )}
+          </div>
+        </div>
+        <HeroIllustration stickers={c.heroStickers} />
+      </div>
+    </section>
+
+    <div class="marquee-wrap" aria-hidden="true">
+      <div class="marquee">
+        <div class="marquee__track">
+          {marqueeLoop.map((label) => (
+            <span class="marquee__item">
+              <svg
+                class="marquee__star"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 2 14.9 8.6 22 9.3 16.6 14 18.2 21 12 17.3 5.8 21 7.4 14 2 9.3 9.1 8.6 12 2Z" />
+              </svg>
+              <span>{label}</span>
+            </span>
+          ))}
         </div>
       </div>
-      <figure class="studio-art">
-        <StudioIllustration hero />
-      </figure>
-    </section>
-    <section id="notes" class="section notes-section">
-      <div class="section-heading">
-        <h2>{c.latest}</h2>
-      </div>
+    </div>
+
+    <section id="notes" class="news-home">
+      <header class="news-home__head reveal">
+        <div class="news-home__intro">
+          <h2 class="news-home__title">{c.latest}</h2>
+          <p class="news-home__sub">{c.latestSub}</p>
+        </div>
+        <div class="news-home__actions">
+          <a class="nh-btn" href={searchPath}>
+            {c.search}
+          </a>
+          <a class="nh-btn is-dark" href={archive}>
+            {c.allArticles} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </header>
       {latest.length ? (
-        <EditorialCards
-          {locale}
-          entries={latest.map((entry) => ({
-            ...entry,
-            topic: labels.get(entry.content_id),
-          }))}
-        />
+        <div class="reveal" style="--reveal-delay: 80ms;">
+          <EditorialCards
+            variant="track"
+            {locale}
+            entries={latest.map((entry) => ({
+              ...entry,
+              topic: labels.get(entry.content_id),
+            }))}
+          />
+        </div>
       ) : (
-        <p>{c.empty}</p>
+        <div class="empty-state pop-card reveal">
+          <img
+            class="empty-state__goose"
+            src="/goose-placeholder.svg"
+            width="64"
+            height="70"
+            alt=""
+          />
+          <p>{c.empty}</p>
+        </div>
       )}
     </section>
+
+    <div class="home-duo">
+      <section class="pop-section is-center is-fluid">
+        <header class="pop-section__head reveal">
+          <h2 class="pop-section__title">{c.focusTitle}</h2>
+          <p class="pop-section__sub">{c.focusSub}</p>
+        </header>
+        <div class="points reveal" style="--reveal-delay: 80ms;">
+          {c.focusPoints.map((item) => (
+            <article class="point pop-card is-hoverable">
+              <div class="point__top">
+                <span class:list={["point__art", `point__art--${item.tone}`]}>
+                  <FeaturePointIcon kind={item.icon} />
+                </span>
+                <div>
+                  <span class="point__tag">{item.tag}</span>
+                  <h3 class="point__title">{item.title}</h3>
+                </div>
+              </div>
+              <p class="point__desc">{item.desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="nodes" class="pop-section is-center is-fluid">
+        <header class="pop-section__head reveal">
+          <h2 class="pop-section__title">{c.globeTitle}</h2>
+          <p class="pop-section__sub">{c.globeSub}</p>
+        </header>
+        <div class="globe-section__body reveal" style="--reveal-delay: 120ms;">
+          <EdgeGlobe {locale} hint={c.globeHint} />
+        </div>
+      </section>
+    </div>
+
     {editorial.topics.length > 0 && (
-      <section class="section">
-        <div class="section-heading">
-          <h2>{c.topicHeading}</h2>
+      <section class="pop-section is-center">
+        <header class="pop-section__head reveal">
+          <h2 class="pop-section__title">{c.topicHeading}</h2>
+          <p class="pop-section__sub">{c.topicIntro}</p>
+          <div class="pop-section__action">
+            <a class="nh-btn" href={topics}>
+              {c.allTopics} <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </header>
+        <div class="reveal" style="--reveal-delay: 80ms;">
+          <EditorialCards
+            variant="grid"
+            {locale}
+            entries={editorial.topics}
+            badgeLabel={c.topicBadge}
+            ctaLabel={c.openTopic}
+          />
         </div>
-        <p>{c.topicIntro}</p>
-        <EditorialCards {locale} entries={editorial.topics} />
       </section>
     )}
+
     {practice.length > 0 && (
-      <section class="section">
-        <div class="section-heading">
-          <h2>{c.practice}</h2>
+      <section class="pop-section is-center">
+        <header class="pop-section__head reveal">
+          <h2 class="pop-section__title">{c.practice}</h2>
+          <p class="pop-section__sub">{c.practiceIntro}</p>
+        </header>
+        <div class="reveal" style="--reveal-delay: 80ms;">
+          <EditorialCards
+            variant="grid"
+            {locale}
+            entries={practice}
+            badgeLabel={c.practiceBadge}
+            ctaLabel={c.readMore}
+          />
         </div>
-        <p>{c.practiceIntro}</p>
-        <EditorialCards {locale} entries={practice} />
       </section>
     )}
-    <section id="about" class="section about-section">
-      <div id="services">
-        <h2>{c.about}</h2>
-      </div>
-      <div id="contact">
-        <p>{c.aboutIntro}</p>
-        <p id="work">{c.emptyWork}</p>
+
+    <section id="about" class="pop-section is-center">
+      <header class="pop-section__head reveal">
+        <h2 class="pop-section__title">{c.about}</h2>
+      </header>
+      <div class="dl reveal" data-studio-tabs style="--reveal-delay: 80ms;">
+        <div
+          class="dl-tabs"
+          role="tablist"
+          aria-label={
+            locale === "zh" ? "站点信息切换" : "Site information tabs"
+          }
+        >
+          <button
+            type="button"
+            class="dl-tab is-on"
+            role="tab"
+            id="tab-about"
+            aria-selected="true"
+            aria-controls="pane-about"
+            data-tab="about"
+          >
+            {c.aboutTabs.about}
+          </button>
+          <button
+            type="button"
+            class="dl-tab"
+            role="tab"
+            id="tab-scope"
+            aria-selected="false"
+            aria-controls="services"
+            data-tab="services"
+          >
+            {c.aboutTabs.scope}
+          </button>
+          <button
+            type="button"
+            class="dl-tab"
+            role="tab"
+            id="tab-work"
+            aria-selected="false"
+            aria-controls="contact"
+            data-tab="work"
+          >
+            {c.aboutTabs.work}
+          </button>
+        </div>
+
+        <div class="dl-panel pop-card">
+          <div
+            id="pane-about"
+            class="dl-pane"
+            role="tabpanel"
+            aria-labelledby="tab-about"
+            data-pane="about"
+          >
+            <div class="dl-pane__head">
+              <span class="dl-chip">
+                <img
+                  src="/goose-placeholder.svg"
+                  width="30"
+                  height="33"
+                  alt=""
+                />
+              </span>
+              <h3 class="dl-pane__title">{c.about}</h3>
+            </div>
+            <p class="dl-pane__text">{c.aboutIntro}</p>
+            <div class="dl-options">
+              <a class="dl-option" href={archive}>
+                <span>{c.archive}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a class="dl-option" href={searchPath}>
+                <span>{c.search}</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <div
+            id="services"
+            class="dl-pane"
+            role="tabpanel"
+            aria-labelledby="tab-scope"
+            data-pane="services"
+          >
+            <div class="dl-pane__head">
+              <span class="dl-chip dl-chip--sky" aria-hidden="true">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m16 18 6-6-6-6M8 6l-6 6 6 6" />
+                </svg>
+              </span>
+              <h3 class="dl-pane__title">{c.aboutTabs.scope}</h3>
+            </div>
+            <p class="dl-pane__text">{c.aboutScopeLead}</p>
+            <ul class="plan-desc">
+              {c.aboutScopeItems.map((line) => (
+                <li>{line}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div
+            id="contact"
+            class="dl-pane"
+            role="tabpanel"
+            aria-labelledby="tab-work"
+            data-pane="work"
+          >
+            <div class="dl-pane__head">
+              <span class="dl-chip dl-chip--mint" aria-hidden="true">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="16" rx="3" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
+              </span>
+              <h3 class="dl-pane__title">{c.aboutTabs.work}</h3>
+            </div>
+            <p id="work" class="dl-pane__text">
+              {c.emptyWork}
+            </p>
+            <p class="dl-pane__text">{c.contactEmptyNote}</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 </EditorialLayout>
+
+<script>
+  const container = document.querySelector<HTMLElement>("[data-studio-tabs]");
+  if (container) {
+    const tabs = [
+      ...container.querySelectorAll<HTMLButtonElement>("[data-tab]"),
+    ];
+    const panes = [...container.querySelectorAll<HTMLElement>("[data-pane]")];
+
+    const activate = (key: string) => {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.tab === key;
+        tab.classList.toggle("is-on", active);
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      panes.forEach((pane) => {
+        pane.hidden = pane.dataset.pane !== key;
+      });
+    };
+
+    const syncFromHash = () => {
+      const hash = location.hash.slice(1);
+      if (hash === "services") activate("services");
+      else if (hash === "work" || hash === "contact") activate("work");
+      else activate("about");
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => activate(tab.dataset.tab!));
+      tab.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+        event.preventDefault();
+        const delta = event.key === "ArrowRight" ? 1 : -1;
+        const next = tabs[(index + delta + tabs.length) % tabs.length];
+        activate(next.dataset.tab!);
+        next.focus();
+      });
+    });
+
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+  }
+</script>

@@ -47,8 +47,11 @@ const structuredData = seo?.structuredData?.map((entry) =>
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#F8FAFA" />
+    <meta name="theme-color" content="#fff6e9" />
     <link rel="icon" href="/goose-placeholder.svg" type="image/svg+xml" />
+    <script is:inline>
+      document.documentElement.classList.add("has-js");
+    </script>
     {(noindex || !Astro.site) && (
       <meta name="robots" content="noindex, follow" />
     )}
@@ -100,9 +103,32 @@ const structuredData = seo?.structuredData?.map((entry) =>
     ))}
   </head>
   <body>
+    <div id="top" class="page-top" aria-hidden="true"></div>
     <a class="skip-link" href="#main">
       {skip}
     </a>
     <slot />
+    <script>
+      const items = document.querySelectorAll<HTMLElement>(".reveal");
+      if (items.length) {
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduced || !("IntersectionObserver" in window)) {
+          items.forEach((el) => el.classList.add("is-revealed"));
+        } else {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("is-revealed");
+                  observer.unobserve(entry.target);
+                }
+              }
+            },
+            { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+          );
+          items.forEach((el) => observer.observe(el));
+        }
+      }
+    </script>
   </body>
 </html>

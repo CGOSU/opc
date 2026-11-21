@@ -1,75 +1,330 @@
 ---
 import { articleDate } from "../lib/articles";
+import { editorialCopy } from "../lib/editorial-site";
 import type { Locale } from "../lib/home";
+
+interface Entry {
+  path: string;
+  title: string;
+  summary: string;
+  first_published_at_ms?: number;
+  topic?: { path: string; title: string };
+}
+
 interface Props {
   locale: Locale;
-  entries: {
-    path: string;
-    title: string;
-    summary: string;
-    first_published_at_ms?: number;
-    topic?: { path: string; title: string };
-  }[];
+  entries: Entry[];
+  variant?: "track" | "grid";
+  badgeLabel?: string;
+  ctaLabel?: string;
 }
-const { locale, entries } = Astro.props;
+
+const { locale, entries, variant = "grid", badgeLabel, ctaLabel } = Astro.props;
+const c = editorialCopy(locale);
+
+const tones = [
+  { bg: "var(--sky-soft)", accent: "var(--sky)", iconTone: "plan__icon--sky" },
+  {
+    bg: "var(--mint-soft)",
+    accent: "var(--mint)",
+    iconTone: "plan__icon--mint",
+  },
+  { bg: "var(--sun-soft)", accent: "var(--sun)", iconTone: "plan__icon--sun" },
+  {
+    bg: "var(--grape-soft)",
+    accent: "var(--grape)",
+    iconTone: "plan__icon--grape",
+  },
+  {
+    bg: "var(--coral-soft)",
+    accent: "var(--coral)",
+    iconTone: "plan__icon--coral",
+  },
+  {
+    bg: "var(--leaf-soft)",
+    accent: "var(--leaf)",
+    iconTone: "plan__icon--mint",
+  },
+];
+
+const actionText = ctaLabel ?? c.readMore;
+const fallbackBadge = badgeLabel ?? c.articleBadge;
 ---
 
-<ul class="editorial-cards">
-  {entries.map((entry) => (
-    <li>
-      <article>
-        <h3>
-          <a href={entry.path}>{entry.title}</a>
-        </h3>
-        {entry.summary && <p>{entry.summary}</p>}
-        {(entry.topic || entry.first_published_at_ms !== undefined) && (
-          <div class="card-meta">
-            {entry.first_published_at_ms !== undefined && (
-              <time
-                datetime={new Date(entry.first_published_at_ms).toISOString()}
+{variant === "track" ? (
+  <ul class="news-home__track">
+    {entries.map((entry, idx) => {
+      const tone = tones[idx % tones.length];
+      const pattern = idx % 4;
+      return (
+        <li class="news-home__slot">
+          <a class="ann-card" href={entry.path}>
+            <div class="ann-card__cover" style={`background: ${tone.bg};`}>
+              <svg
+                class="ann-card__cover-art"
+                viewBox="0 0 260 130"
+                fill="none"
+                aria-hidden="true"
               >
-                {articleDate(entry.first_published_at_ms, locale)}
-              </time>
-            )}
-            {entry.topic && <a href={entry.topic.path}>{entry.topic.title}</a>}
+                {pattern === 0 && (
+                  <>
+                    <rect
+                      x="26"
+                      y="22"
+                      width="148"
+                      height="86"
+                      rx="12"
+                      fill="var(--card)"
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <path
+                      d="M26 44 H174"
+                      stroke="var(--ink)"
+                      stroke-width="2.5"
+                    />
+                    <circle cx="42" cy="33" r="4" fill="var(--coral)" />
+                    <circle cx="55" cy="33" r="4" fill="var(--sun)" />
+                    <circle cx="68" cy="33" r="4" fill="var(--mint)" />
+                    <path
+                      d="M44 64 H126 M44 79 H104 M44 94 H140"
+                      stroke="var(--ink)"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                    />
+                    <circle
+                      cx="206"
+                      cy="66"
+                      r="26"
+                      fill={tone.accent}
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <path
+                      d="M196 66 L203 73 L217 58"
+                      stroke="var(--card)"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </>
+                )}
+                {pattern === 1 && (
+                  <>
+                    <circle
+                      cx="74"
+                      cy="65"
+                      r="34"
+                      fill="var(--card)"
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <circle
+                      cx="74"
+                      cy="65"
+                      r="14"
+                      fill={tone.accent}
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <rect
+                      x="128"
+                      y="28"
+                      width="102"
+                      height="32"
+                      rx="10"
+                      fill="var(--card)"
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <rect
+                      x="128"
+                      y="72"
+                      width="84"
+                      height="30"
+                      rx="10"
+                      fill="var(--sun)"
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <path
+                      d="M144 44 H210 M144 87 H194"
+                      stroke="var(--ink)"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                    />
+                  </>
+                )}
+                {pattern === 2 && (
+                  <>
+                    <path
+                      d="M36 96 L82 48 L126 76 L176 34 L224 62"
+                      stroke="var(--ink)"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    {[
+                      [36, 96],
+                      [82, 48],
+                      [126, 76],
+                      [176, 34],
+                      [224, 62],
+                    ].map(([cx, cy], dotIdx) => (
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r="8"
+                        fill={dotIdx === 3 ? "var(--coral)" : "var(--card)"}
+                        stroke="var(--ink)"
+                        stroke-width="3"
+                      />
+                    ))}
+                  </>
+                )}
+                {pattern === 3 && (
+                  <>
+                    <rect
+                      x="38"
+                      y="24"
+                      width="72"
+                      height="82"
+                      rx="12"
+                      fill="var(--card)"
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <rect
+                      x="130"
+                      y="24"
+                      width="92"
+                      height="36"
+                      rx="12"
+                      fill={tone.accent}
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <rect
+                      x="130"
+                      y="70"
+                      width="92"
+                      height="36"
+                      rx="12"
+                      fill="var(--card)"
+                      stroke="var(--ink)"
+                      stroke-width="3"
+                    />
+                    <path
+                      d="M54 52 H94 M54 68 H86 M54 84 H90 M148 88 H202"
+                      stroke="var(--ink)"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                    />
+                  </>
+                )}
+              </svg>
+            </div>
+            <div class="ann-card__body">
+              <div class="ann-card__meta">
+                <span
+                  class="ann-card__dot"
+                  style={`background: ${tone.accent};`}
+                />
+                <span>{entry.topic?.title ?? fallbackBadge}</span>
+                {entry.first_published_at_ms !== undefined && (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <time
+                      datetime={new Date(
+                        entry.first_published_at_ms,
+                      ).toISOString()}
+                    >
+                      {articleDate(entry.first_published_at_ms, locale)}
+                    </time>
+                  </>
+                )}
+              </div>
+              <h3 class="ann-card__title">{entry.title}</h3>
+              {entry.summary && (
+                <p class="ann-card__summary">{entry.summary}</p>
+              )}
+              <span class="ann-card__more">
+                {actionText} <span aria-hidden="true">→</span>
+              </span>
+            </div>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+) : (
+  <ul class:list={["plans", { "is-few": entries.length <= 2 }]}>
+    {entries.map((entry, idx) => {
+      const tone = tones[idx % tones.length];
+      return (
+        <li class="plan plan--clickable">
+          <div class="plan__head">
+            <span class:list={["plan__icon", tone.iconTone]} aria-hidden="true">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                {idx % 3 === 0 ? (
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                ) : idx % 3 === 1 ? (
+                  <>
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                  </>
+                ) : (
+                  <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+                )}
+              </svg>
+            </span>
+            <h3 class="plan__name">{entry.title}</h3>
           </div>
-        )}
-      </article>
-    </li>
-  ))}
-</ul>
+
+          <div class="plan__specs">
+            <span class="pop-badge">{entry.topic?.title ?? fallbackBadge}</span>
+            {entry.first_published_at_ms !== undefined && (
+              <span class="pop-badge pop-badge--sun">
+                <time
+                  datetime={new Date(entry.first_published_at_ms).toISOString()}
+                >
+                  {articleDate(entry.first_published_at_ms, locale)}
+                </time>
+              </span>
+            )}
+          </div>
+
+          {entry.summary && <p class="plan__summary">{entry.summary}</p>}
+
+          <a class="plan__cta" href={entry.path}>
+            {actionText} <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+)}
+
 <style>
-  .editorial-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-    gap: 1rem;
-    padding: 0;
-    list-style: none;
+  .plan--clickable {
+    position: relative;
   }
-  li {
-    padding: clamp(1rem, 2vw, 1.5rem);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-  }
-  h3 {
-    margin: 0;
-  }
-  p {
-    margin: 0.5rem 0;
-  }
-  h3 a:hover {
-    text-decoration: underline;
-  }
-  .card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-    margin-top: 0.75rem;
-    color: var(--muted);
-    font-size: 0.875rem;
-  }
-  .card-meta a {
-    text-decoration: underline;
-    text-underline-offset: 0.18em;
+
+  .plan--clickable .plan__cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
   }
 </style>

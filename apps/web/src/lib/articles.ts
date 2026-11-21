@@ -16,6 +16,10 @@ type Article = ArticleSummary & {
   seo_description: string | null;
   cover_key: string | null;
   cover_alt: string | null;
+  cover_url: string | null;
+  category_slug: string | null;
+  category_name: string | null;
+  tags_json: string;
   source_author: string | null;
   noindex: 0 | 1;
   alternate_path: string | null;
@@ -139,9 +143,15 @@ export async function findArticle(
     SELECT a.path, a.content_id, a.title, a.summary, a.body_markdown, a.first_published_at_ms,
            a.modified_at_ms, a.seo_title, a.seo_description, a.cover_key, a.cover_alt,
            a.source_author, a.noindex, alt.path AS alternate_path,
-           alt.noindex AS alternate_noindex
-    FROM content_routes AS requested
+           alt.noindex AS alternate_noindex, a.cover_url,
+           cat.slug AS category_slug, cat.name AS category_name,
+           (SELECT json_group_array(json_object('slug', tag.slug, 'name', tag.name))
+             FROM post_tags pt JOIN localized_tags tag ON tag.id = pt.tag_id AND tag.locale = a.locale
+             WHERE pt.post_id = a.content_id) AS tags_json
+    FROM post_routes AS requested
     JOIN published_articles AS a ON a.translation_id = requested.translation_id
+    JOIN posts p ON p.id = a.content_id
+    LEFT JOIN localized_categories cat ON cat.id = p.category_id AND cat.locale = a.locale
     LEFT JOIN published_articles AS alt
       ON alt.content_id = a.content_id AND alt.locale = ?
     WHERE requested.locale = ? AND requested.route_path = ?
@@ -157,6 +167,16 @@ export function articleAlternate(article: Article, locale: Locale) {
   const path = article.alternate_path;
   if (!path || !isArticlePath(path, other)) return undefined;
   return { locale: other, path, noindex: article.alternate_noindex === 1 };
+}
+
+export function articleRemoteCover(value: string | null) {
+  const url = value && URL.parse(value);
+  return url &&
+    (url.protocol === "http:" || url.protocol === "https:") &&
+    !url.username &&
+    !url.password
+    ? url
+    : undefined;
 }
 
 export function articleCover(base: string | undefined, key: string | null) {

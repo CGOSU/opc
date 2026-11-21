@@ -1,0 +1,59 @@
+---
+import { articlesPath } from "../lib/articles";
+import type { Locale } from "../lib/home";
+
+interface Props {
+  locale: Locale;
+  alternate?: { locale: Locale; path: string };
+}
+const { locale, alternate } = Astro.props;
+const zh = locale === "zh";
+---
+
+<header class="reading-header">
+  <nav class="container" aria-label={zh ? "主导航" : "Main navigation"}>
+    <a class="home-link" href={`/${locale}/`}>
+      <img src="/goose-placeholder.svg" width="30" height="33" alt="" />
+      {zh ? "首页" : "Home"}
+    </a>
+    <a href={articlesPath(locale)}>{zh ? "技术文章" : "Articles"}</a>
+    {alternate && (
+      <a
+        class="alternate"
+        href={alternate.path}
+        lang={alternate.locale === "zh" ? "zh-Hans" : "en"}
+      >
+        {alternate.locale === "zh" ? "中文" : "English"}
+      </a>
+    )}
+  </nav>
+</header>
+
+<style>
+  .reading-header {
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  nav,
+  .home-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  nav {
+    gap: clamp(1rem, 4vw, 2rem);
+    padding-block: 0.8rem;
+  }
+  .home-link {
+    font-weight: 700;
+  }
+  nav a:hover {
+    color: var(--teal);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .alternate {
+    margin-inline-start: auto;
+    color: var(--teal);
+  }
+</style>

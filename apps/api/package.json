@@ -2,20 +2,32 @@
   "name": "@opc/api",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc -p tsconfig.build.json",
-    "start": "node dist/server.js",
-    "check": "tsc --noEmit",
-    "test": "tsx --test test/*.test.ts"
+  "exports": {
+    ".": {
+      "types": "./src/app.ts"
+    },
+    "./credential-rules": "./src/modules/auth/credentials.ts"
   },
-  "devDependencies": {
-    "@types/node": "^26.6.6",
-    "tsx": "^4.23.15",
-    "typescript": "^5.9.3"
+  "scripts": {
+    "dev": "wrangler dev --local --ip 127.0.0.1 --port 3001 --persist-to ../web/.wrangler/state",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "build:admin-worker": "wrangler deploy --env admin-preview --dry-run --outdir dist/admin-preview",
+    "preview:admin": "wrangler dev --env admin-preview --local --ip localhost --port 3002 --persist-to ../web/.wrangler/state",
+    "check": "tsc --noEmit",
+    "test": "node ../web/scripts/prepare-d1.mjs && vitest run",
+    "admin:create:local": "node scripts/create-admin.ts"
   },
   "dependencies": {
-    "@elysia/node": "2.0.0-beta.3",
-    "elysia": "2.0.0-rc.1"
+    "@opc/db": "workspace:*",
+    "elysia": "1.4.32"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261119.1",
+    "@elysiajs/eden": "1.4.9",
+    "@inquirer/password": "5.3.0",
+    "@types/node": "26.6.6",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1",
+    "wrangler": "4.165.0"
   }
 }

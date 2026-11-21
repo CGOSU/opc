@@ -2,26 +2,39 @@
   "name": "opc",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@12.14.0",
+  "packageManager": "bun@1.4.4",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "pnpm run dev:web",
-    "dev:web": "pnpm --filter @opc/web run dev",
-    "dev:api": "pnpm --filter @opc/api run dev",
-    "build": "pnpm run build:web && pnpm run build:api",
-    "build:web": "pnpm --filter @opc/web run build",
-    "build:api": "pnpm --filter @opc/api run build",
-    "preview": "pnpm --filter @opc/web run preview",
-    "start:api": "pnpm --filter @opc/api run start",
+    "dev": "bun run dev:web",
+    "dev:web": "bun run --filter @opc/web dev",
+    "dev:api": "bun run --filter @opc/api dev",
+    "dev:admin": "bun run --filter @opc/admin dev",
+    "admin:create:local": "node apps/api/scripts/create-admin.ts",
+    "build": "bun run build:web && bun run build:api && bun run build:admin-worker",
+    "build:web": "bun run --filter @opc/web build",
+    "build:api": "bun run --filter @opc/api build",
+    "build:admin": "bun run --filter @opc/admin build",
+    "build:admin-worker": "bun run build:admin && bun run --filter @opc/api build:admin-worker",
+    "preview:admin": "bun run --filter @opc/api preview:admin",
+    "preview": "bun run --filter @opc/web preview",
     "db:seed": "node scripts/seed.mjs",
-    "check": "pnpm -r run check",
-    "test": "pnpm -r run test"
+    "db:migrate:local": "bun run --filter @opc/web db:migrate:local",
+    "check": "bun run --filter '@opc/*' check",
+    "test": "bun run --filter '@opc/*' test"
   },
   "engines": {
     "node": ">=22.23.4",
-    "pnpm": ">=12.14.0"
+    "bun": ">=1.4.4"
   },
   "devDependencies": {
-    "prettier": "^3.9.10",
-    "prettier-plugin-astro": "^1.1.2"
-  }
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.2"
+  },
+  "trustedDependencies": [
+    "esbuild",
+    "workerd"
+  ]
 }

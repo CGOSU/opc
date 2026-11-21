@@ -1,0 +1,25 @@
+{
+  "name": "@opc/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./locales": "./src/locales.ts",
+    "./auth": "./src/auth.ts",
+    "./taxonomy": "./src/taxonomy.ts",
+    "./posts": "./src/posts.ts",
+    "./topics": "./src/topics.ts",
+    "./dashboard": "./src/dashboard.ts",
+    "./site-settings": "./src/site-settings.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261119.1",
+    "typescript": "5.9.3"
+  }
+}

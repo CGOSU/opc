@@ -1,0 +1,258 @@
+---
+interface Props {
+  kind: "rocket" | "shield" | "gauge" | "uptime";
+}
+
+const { kind } = Astro.props;
+---
+
+<svg class="point-icon" viewBox="0 0 140 140" fill="none" aria-hidden="true">
+  {kind === "rocket" && (
+    <>
+      <line
+        class="speed speed--1"
+        x1="20"
+        y1="42"
+        x2="44"
+        y2="42"
+        stroke="var(--ink)"
+        stroke-width="6"
+        stroke-linecap="round"
+      />
+      <line
+        class="speed speed--2"
+        x1="14"
+        y1="70"
+        x2="38"
+        y2="70"
+        stroke="var(--sky)"
+        stroke-width="6"
+        stroke-linecap="round"
+      />
+      <line
+        class="speed speed--3"
+        x1="24"
+        y1="96"
+        x2="46"
+        y2="96"
+        stroke="var(--ink)"
+        stroke-width="6"
+        stroke-linecap="round"
+      />
+      <g class="ship">
+        <g class="flame">
+          <path
+            d="M56 102 C60 124 72 124 76 102 Z"
+            fill="var(--sun)"
+            stroke="var(--ink)"
+            stroke-width="5"
+            stroke-linejoin="round"
+          />
+        </g>
+        <path
+          d="M44 82 L58 68 V96 H44 Z"
+          fill="var(--coral)"
+          stroke="var(--ink)"
+          stroke-width="5.5"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M88 82 L74 68 V96 H88 Z"
+          fill="var(--coral)"
+          stroke="var(--ink)"
+          stroke-width="5.5"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M66 20 C84 36 86 68 82 98 H50 C46 68 48 36 66 20 Z"
+          fill="var(--card)"
+          stroke="var(--ink)"
+          stroke-width="6"
+          stroke-linejoin="round"
+        />
+        <circle
+          cx="66"
+          cy="58"
+          r="11"
+          fill="var(--sky)"
+          stroke="var(--ink)"
+          stroke-width="5"
+        />
+      </g>
+    </>
+  )}
+
+  {kind === "shield" && (
+    <>
+      <path
+        class="ring"
+        d="M70 20 L114 36 V70 C114 98 94 116 70 124 C46 116 26 98 26 70 V36 Z"
+        stroke="var(--mint)"
+        stroke-width="7"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M70 26 L108 40 V70 C108 94 91 110 70 118 C49 110 32 94 32 70 V40 Z"
+        fill="var(--card)"
+        stroke="var(--ink)"
+        stroke-width="6"
+        stroke-linejoin="round"
+      />
+      <circle
+        class="keyhole"
+        cx="70"
+        cy="66"
+        r="12"
+        fill="var(--sun)"
+        stroke="var(--ink)"
+        stroke-width="5"
+      />
+      <path d="M64 76 L70 96 L76 76 Z" fill="var(--ink)" />
+    </>
+  )}
+
+  {kind === "gauge" && (
+    <>
+      <path
+        d="M24 98 A50 50 0 1 1 116 98"
+        stroke="var(--ink)"
+        stroke-width="9"
+        stroke-linecap="round"
+      />
+      <path
+        d="M32 92 A42 42 0 0 1 108 92"
+        stroke="var(--sun)"
+        stroke-width="8"
+        stroke-linecap="round"
+        stroke-dasharray="28 14"
+      />
+      <g class="needle">
+        <path
+          d="M70 92 L70 42"
+          stroke="var(--coral)"
+          stroke-width="8"
+          stroke-linecap="round"
+        />
+      </g>
+      <circle
+        cx="70"
+        cy="92"
+        r="11"
+        fill="var(--card)"
+        stroke="var(--ink)"
+        stroke-width="6"
+      />
+    </>
+  )}
+
+  {kind === "uptime" && (
+    <>
+      <circle
+        class="bubble bubble--1"
+        cx="32"
+        cy="34"
+        r="8"
+        fill="var(--sun)"
+        stroke="var(--ink)"
+        stroke-width="4"
+      />
+      <circle
+        class="bubble bubble--2"
+        cx="110"
+        cy="30"
+        r="6"
+        fill="var(--sky)"
+        stroke="var(--ink)"
+        stroke-width="4"
+      />
+      <path
+        class="pulse-line"
+        d="M16 62 H42 L54 34 L70 84 L86 48 L96 62 H124"
+        stroke="var(--grape)"
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g class="anchor">
+        <path
+          d="M70 80 V116 M52 96 H88 M44 102 C46 118 58 124 70 124 C82 124 94 118 96 102"
+          stroke="var(--ink)"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+    </>
+  )}
+</svg>
+
+<style>
+  .point-icon {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .ship {
+    transform-origin: 66px 64px;
+    animation: bob 3400ms ease-in-out infinite;
+  }
+
+  .flame {
+    transform-origin: 66px 102px;
+    animation: flame 500ms ease-in-out infinite;
+  }
+
+  .speed {
+    animation: speed-line 1100ms ease-out infinite;
+  }
+
+  .speed--1 {
+    animation-delay: 0ms;
+  }
+
+  .speed--2 {
+    animation-delay: 350ms;
+  }
+
+  .speed--3 {
+    animation-delay: 700ms;
+  }
+
+  .ring {
+    transform-origin: 70px 70px;
+    animation: pulse-ring 2200ms ease-out infinite;
+  }
+
+  .keyhole {
+    animation: glow-pulse 2200ms ease-in-out infinite;
+  }
+
+  .needle {
+    transform-origin: 70px 92px;
+    animation: needle 2600ms var(--spring) infinite;
+  }
+
+  .pulse-line {
+    stroke-dasharray: 160;
+    stroke-dashoffset: 160;
+    animation: dash-draw 2800ms var(--ease-out) infinite;
+  }
+
+  .anchor {
+    transform-origin: 70px 98px;
+    animation: bob 4000ms ease-in-out infinite;
+  }
+
+  .bubble {
+    animation: float-y 3000ms ease-in-out infinite;
+  }
+
+  .bubble--1 {
+    animation-delay: 0ms;
+  }
+
+  .bubble--2 {
+    animation-delay: 600ms;
+  }
+</style>

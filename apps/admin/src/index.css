@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-background: #fafafa;
+  --color-foreground: #18181b;
+  --color-card: #ffffff;
+  --color-muted-foreground: #71717a;
+  --color-border: #e4e4e7;
+  --color-input: #a1a1aa;
+  --color-primary: #18181b;
+  --color-primary-foreground: #ffffff;
+  --color-accent: #f4f4f5;
+  --color-destructive: #b91c1c;
+  --color-destructive-surface: #fef2f2;
+  --color-ring: #71717a;
+  --radius-control: 0.5rem;
+  --radius-panel: 0.75rem;
+  --spacing-control: 2.25rem;
+  --spacing-header: 3.5rem;
+  --spacing-page: 1.5rem;
+  --spacing-sidebar: 15.5rem;
+  --spacing-sidebar-collapsed: 4rem;
+  --spacing-table-row: 2.75rem;
+}
+
+.admin-toaster[data-sonner-toaster] {
+  --normal-bg: var(--color-card);
+  --normal-text: var(--color-foreground);
+  --normal-border: var(--color-border);
+  --border-radius: var(--radius-control);
+}
+
+@layer base {
+  body {
+    @apply bg-background font-sans text-sm text-foreground antialiased;
+  }
+}

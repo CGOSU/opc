@@ -1,0 +1,98 @@
+---
+import { env } from "cloudflare:workers";
+import { connectDb } from "@opc/db";
+import { listPosts } from "@opc/db/posts";
+import { getPublicTerm } from "@opc/db/taxonomy";
+import EditorialLayout from "../../../layouts/EditorialLayout.astro";
+import {
+  articleLocale,
+  articlesPath,
+  articleUnavailable,
+  slugPattern,
+} from "../../../lib/articles";
+import { loadEditorialSite } from "../../../lib/editorial-site";
+
+export const prerender = false;
+const locale = articleLocale(Astro.params.locale);
+const { taxonomy, slug } = Astro.params;
+if (
+  !locale ||
+  (taxonomy !== "categories" && taxonomy !== "tags") ||
+  !slug ||
+  !slugPattern.test(slug)
+) {
+  return new Response("Not found", { status: 404 });
+}
+if (!env.CONTENT) return articleUnavailable();
+const db = connectDb(env.CONTENT);
+const rawPage = Number(Astro.url.searchParams.get("page") ?? 1);
+const page =
+  Number.isSafeInteger(rawPage) && rawPage > 0 && rawPage <= 100_000
+    ? rawPage
+    : 1;
+let term, results, editorial;
+try {
+  term = await getPublicTerm(db, taxonomy, slug, locale);
+  if (!term) return new Response("Not found", { status: 404 });
+  [results, editorial] = await Promise.all([
+    listPosts(db, { locale, term: { kind: taxonomy, slug }, page }),
+    loadEditorialSite(env.CONTENT, locale),
+  ]);
+} catch {
+  return articleUnavailable();
+}
+Astro.response.headers.set("Cache-Control", "no-store");
+const zh = locale === "zh";
+const kindLabel =
+  taxonomy === "categories" ? (zh ? "分类" : "Category") : zh ? "标签" : "Tag";
+const path = `/${locale}/${taxonomy}/${slug}/`;
+const pagePath = (value: number) =>
+  value === 1 ? path : `${path}?page=${value}`;
+const title = `${term.name} · ${kindLabel}`;
+---
+
+<EditorialLayout
+  {locale}
+  title={term.seoTitle || title}
+  description={term.seoDescription || term.description || title}
+  {editorial}
+  seo={{ path: pagePath(page) }}
+>
+  <main id="main" class="container archive-page">
+    <p>
+      <a href={articlesPath(locale)}>
+        {zh ? "返回技术文章" : "Back to articles"}
+      </a>
+    </p>
+    <h1>{title}</h1>
+    {term.description && <p>{term.description}</p>}
+    {results.items.length ? (
+      <ul>
+        {results.items.map((post) => (
+          <li>
+            <h2>
+              <a href={post.path}>{post.title}</a>
+            </h2>
+            {post.summary && <p>{post.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p>{zh ? "此页暂无文章。" : "There are no articles on this page."}</p>
+    )}
+    {(page > 1 || page * results.pageSize < results.total) && (
+      <nav aria-label={zh ? "分页" : "Pagination"}>
+        {page > 1 && (
+          <a href={pagePath(page - 1)} rel="prev">
+            {zh ? "上一页" : "Previous"}
+          </a>
+        )}
+        {page * results.pageSize < results.total && (
+          <a href={pagePath(page + 1)} rel="next">
+            {zh ? "下一页" : "Next"}
+          </a>
+        )}
+      </nav>
+    )}
+  </main>
+</EditorialLayout>

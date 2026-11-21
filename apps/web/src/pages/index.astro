@@ -17,30 +17,36 @@ import "../styles/global.css";
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fff6e9" />
     <meta name="robots" content="noindex, follow" />
+    <link rel="icon" href="/goose-placeholder.svg" type="image/svg+xml" />
     <title>选择语言 / Choose your language</title>
   </head>
   <body class="language-page">
-    <main>
-      <img
-        src="/goose-placeholder.svg"
-        width="80"
-        height="88"
-        alt="鹅形象占位 / Goose placeholder"
-      />
-      <p class="eyebrow">INDEPENDENT STUDIO</p>
+    <main class="language-card">
+      <div class="language-card__emblem">
+        <img
+          src="/goose-placeholder.svg"
+          width="48"
+          height="53"
+          alt="鹅形象占位 / Goose placeholder"
+        />
+      </div>
+      <p class="pop-badge pop-badge--sun">BILINGUAL ENGINEERING STUDIO</p>
       <h1>
         欢迎来坐坐。
         <br />
-        <span lang="en">Make yourself at home.</span>
+        <span class="marker" lang="en">
+          Make yourself at home.
+        </span>
       </h1>
-      <p>选择语言 / Choose your language</p>
-      <div class="hero-actions">
-        <a class="button primary" href="/zh/" lang="zh-Hans">
-          中文 →
+      <p class="language-card__sub">选择语言 / Choose your language</p>
+      <div class="hero__actions">
+        <a class="pop-btn pop-btn--solid" href="/zh/" lang="zh-Hans">
+          中文 <span aria-hidden="true">→</span>
         </a>
-        <a class="button secondary" href="/en/" lang="en">
-          English →
+        <a class="pop-btn pop-btn--paper" href="/en/" lang="en">
+          English <span aria-hidden="true">→</span>
         </a>
       </div>
     </main>
