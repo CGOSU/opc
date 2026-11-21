@@ -162,24 +162,24 @@ const tocLabel = zh ? "文章目录" : "On this page";
   }
 
   .prose :global(a) {
-    color: var(--ink);
+    color: var(--sky);
     font-weight: 700;
     text-decoration: underline;
-    text-decoration-color: var(--sun);
-    text-decoration-thickness: 3px;
+    text-decoration-thickness: 1px;
     text-underline-offset: 3px;
     transition: color 150ms;
   }
 
   .prose :global(a:hover) {
-    color: var(--sky);
+    color: var(--ink);
+    text-decoration-thickness: 2px;
   }
 
   .prose :global(blockquote) {
     padding: 14px 18px;
     background: var(--paper);
     border: var(--line-thin);
-    border-inline-start: 6px solid var(--sun);
+    border-inline-start: 2px solid var(--stroke);
     border-radius: var(--radius-icon);
     color: var(--ink-soft);
   }
@@ -230,7 +230,7 @@ const tocLabel = zh ? "文章目录" : "On this page";
     font-family: var(--font-mono);
     font-size: 0.88em;
     background: var(--sun-soft);
-    border: 1.5px solid var(--ink);
+    border: var(--line-thin);
     border-radius: 6px;
   }
 
@@ -250,20 +250,20 @@ const tocLabel = zh ? "文章目录" : "On this page";
     color: var(--ink);
     border: var(--line-thin);
     border-radius: var(--radius-icon);
-    box-shadow: 2.5px 2.5px 0 var(--ink);
+    box-shadow: var(--shadow-btn);
     transition:
       transform 180ms var(--spring),
       box-shadow 180ms var(--spring);
   }
 
   .prose :global(.code-copy:hover) {
-    transform: translate(-1.5px, -1.5px);
-    box-shadow: 4px 4px 0 var(--ink);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-card);
   }
 
   .prose :global(.code-copy:active) {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 var(--ink);
+    transform: translateY(1px);
+    box-shadow: none;
   }
 
   .prose :global(.copy-status:not(:empty)) {
