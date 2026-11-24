@@ -27,6 +27,9 @@ const TaxonomyPage = lazy(async () => {
 
 const PostsPage = lazy(() => import("./posts/posts-page"));
 const PostEditor = lazy(() => import("./posts/post-editor"));
+const JobsPage = lazy(() => import("./jobs/jobs-page"));
+const JobEditor = lazy(() => import("./jobs/job-editor"));
+const JobSourcesPage = lazy(() => import("./jobs/job-sources-page"));
 const TopicsPage = lazy(() =>
   import("./topics/topics-page").then(({ TopicsPage }) => ({
     default: TopicsPage,
@@ -150,6 +153,10 @@ export function App() {
           <Route path="/topics" element={<TopicsPage />} />
           <Route path="/topics/new" element={<TopicEditor />} />
           <Route path="/topics/:id" element={<TopicEditor />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/jobs/new" element={<JobEditor />} />
+          <Route path="/jobs/:id/edit" element={<JobEditor />} />
+          <Route path="/job-sources" element={<JobSourcesPage />} />
           <Route path="*" element={<Navigate replace to={dashboardPath} />} />
         </Route>
       </Routes>

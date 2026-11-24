@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import { CloudflareAdapter } from "elysia/adapter/cloudflare-worker";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { dashboardRoutes } from "./modules/dashboard/dashboard.routes";
+import { jobRoutes, jobSourceRoutes } from "./modules/jobs/jobs.routes";
 import { mediaRoutes, publicMediaRoutes } from "./modules/media/media.routes";
 import { postRoutes } from "./modules/posts/posts.routes";
 import { publicRoutes } from "./modules/public/public.routes";
@@ -55,6 +56,8 @@ export function createApp(getEnv: () => Cloudflare.Env) {
       .use(tagRoutes(getEnv))
       .use(postRoutes(getEnv))
       .use(topicRoutes(getEnv))
+      .use(jobRoutes(getEnv))
+      .use(jobSourceRoutes(getEnv))
       .use(mediaRoutes(getEnv))
       .use(publicMediaRoutes(getEnv))
       .use(publicTopicRoutes(getEnv))

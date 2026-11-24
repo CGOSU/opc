@@ -21,6 +21,7 @@ const migrations = [
     "astro_taxonomy_translations_schema_0009.sql",
   ],
   ["0010_topic_translations.sql", "astro_topic_translations_schema_0010.sql"],
+  ["0011_jobs.sql", "astro_jobs_schema_0011.sql"],
 ];
 
 for (const [name, source] of migrations) {

@@ -1,4 +1,5 @@
 import {
+  BriefcaseBusiness,
   FileText,
   FolderOpen,
   Layers,
@@ -6,6 +7,7 @@ import {
   Settings2,
   ShieldCheck,
   Tags,
+  Users,
 } from "lucide-react";
 import { Link, NavLink } from "react-router";
 import { cn } from "../lib/utils";
@@ -26,6 +28,13 @@ export const adminSections = [
       { path: "/topics", label: "专题管理", icon: Layers },
       { path: "/categories", label: "分类管理", icon: FolderOpen },
       { path: "/tags", label: "标签管理", icon: Tags },
+    ],
+  },
+  {
+    label: "推特招聘外链",
+    pages: [
+      { path: "/jobs", label: "招聘信息", icon: BriefcaseBusiness },
+      { path: "/job-sources", label: "博主库与拒收", icon: Users },
     ],
   },
   {
@@ -110,7 +119,7 @@ export function AdminSidebar({
               <NavLink
                 key={path}
                 to={path}
-                end={path !== "/posts" && path !== "/topics"}
+                end={path !== "/posts" && path !== "/topics" && path !== "/jobs"}
                 title={collapsed ? label : undefined}
                 onClick={onNavigate}
                 className={({ isActive }) =>

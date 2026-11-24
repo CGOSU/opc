@@ -56,6 +56,20 @@ function resolveBreadcrumbs(pathname: string): BreadcrumbItem[] {
       { label: "编辑专题" },
     ];
   }
+  if (matchPath({ path: "/jobs/new", end: true }, pathname)) {
+    return [
+      { label: "推特招聘外链" },
+      { label: "招聘信息", to: "/jobs" },
+      { label: "粘贴 X 链接录入" },
+    ];
+  }
+  if (matchPath({ path: "/jobs/:id/edit", end: true }, pathname)) {
+    return [
+      { label: "推特招聘外链" },
+      { label: "招聘信息", to: "/jobs" },
+      { label: "编辑招聘条目" },
+    ];
+  }
   const matches = ({ path }: { path: string }) =>
     matchPath({ path, end: path === "/" }, pathname);
   const section = adminSections.find(({ pages }) => pages.some(matches));

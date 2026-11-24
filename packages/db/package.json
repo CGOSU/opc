@@ -10,7 +10,8 @@
     "./posts": "./src/posts.ts",
     "./topics": "./src/topics.ts",
     "./dashboard": "./src/dashboard.ts",
-    "./site-settings": "./src/site-settings.ts"
+    "./site-settings": "./src/site-settings.ts",
+    "./jobs": "./src/jobs.ts"
   },
   "scripts": {
     "check": "tsc --noEmit"

@@ -54,6 +54,22 @@ function displayError(status: number, failure: unknown) {
       return "分类仍有关联文章，移除关联后才能删除。";
     case "TERM_NOT_FOUND":
       return "这条记录已不存在，请刷新列表。";
+    case "INVALID_SOURCE_URL":
+      return "请输入有效的 X / Twitter 推文链接（如 https://x.com/handle/status/123456）。";
+    case "INVALID_HANDLE":
+      return "博主 X 账号仅支持字母、数字与下划线（1–64 字符）。";
+    case "SOURCE_NOT_FOUND":
+      return "找不到对应的博主档案，可能已被删除。";
+    case "DUPLICATE_HANDLE":
+      return "该 X 博主账号已在博主库中。";
+    case "SOURCE_HAS_JOBS":
+      return "该博主仍有关联的招聘条目，无法删除。";
+    case "SOURCE_OPTED_OUT":
+      return "该博主已列入拒收名单（opt_out），系统已阻止录入或重新上架。";
+    case "JOB_NOT_FOUND":
+      return "找不到对应的招聘条目或语言版本。";
+    case "DUPLICATE_SOURCE_URL":
+      return "该 X 原推文链接已被收录，请勿重复录入。";
     case "INVALID_REQUEST":
       return "提交内容不符合要求，请检查字段。";
     default:

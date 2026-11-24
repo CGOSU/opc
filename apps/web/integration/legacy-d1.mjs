@@ -12,6 +12,7 @@ export function upgradeLegacyD1(state, fixtures, runD1) {
     "0008_post_translations.sql",
     "0009_taxonomy_translations.sql",
     "0010_topic_translations.sql",
+    "0011_jobs.sql",
   ];
   for (const file of readdirSync(generated)) {
     if (/^000[1-7]_.*\.sql$/.test(file)) {

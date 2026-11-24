@@ -1,5 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import {
+  BriefcaseBusiness,
   CornerDownLeft,
   ExternalLink,
   FilePlus2,
@@ -12,6 +13,7 @@ import {
   Settings2,
   ShieldCheck,
   Tags,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -70,6 +72,30 @@ const commands: CommandItem[] = [
     keywords: "tags taxonomy 标签 seo",
     icon: Tags,
     to: "/tags",
+  },
+  {
+    id: "jobs",
+    group: "推特招聘外链",
+    label: "招聘信息与巡检",
+    keywords: "jobs hiring twitter x 招聘 外链 复核 巡检",
+    icon: BriefcaseBusiness,
+    to: "/jobs",
+  },
+  {
+    id: "job-sources",
+    group: "推特招聘外链",
+    label: "博主库与拒收名单",
+    keywords: "sources creators bloggers opt_out 博主 拒收 撤下",
+    icon: Users,
+    to: "/job-sources",
+  },
+  {
+    id: "new-job",
+    group: "快捷操作",
+    label: "粘贴 X 链接录入招聘",
+    keywords: "new job parse url twitter x 录入 招聘",
+    icon: Plus,
+    to: "/jobs/new",
   },
   {
     id: "settings",
