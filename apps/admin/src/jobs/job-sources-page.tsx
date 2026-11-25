@@ -1,4 +1,3 @@
-import * as Dialog from "@radix-ui/react-dialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ExternalLink,
@@ -12,6 +11,12 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import { ConfirmDialog } from "../components/admin/confirm-dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from "../components/ui/dialog";
 import { PageHeader } from "../components/admin/page-header";
 import { SearchInput } from "../components/admin/search-input";
 import {
@@ -309,7 +314,8 @@ export default function JobSourcesPage() {
                     <td className="px-3 py-3.5 align-middle">
                       {source.optOut ? (
                         <p className="text-destructive">
-                          {source.optOutNote || "已列入拒收名单，禁止后续收录。"}
+                          {source.optOutNote ||
+                            "已列入拒收名单，禁止后续收录。"}
                         </p>
                       ) : (
                         <p className="text-muted-foreground">
@@ -327,7 +333,9 @@ export default function JobSourcesPage() {
                       <span
                         className={cn(
                           "font-mono font-semibold whitespace-nowrap tabular-nums",
-                          source.optOut ? "text-destructive" : "text-foreground",
+                          source.optOut
+                            ? "text-destructive"
+                            : "text-foreground",
                         )}
                       >
                         {source.optOut
@@ -399,223 +407,222 @@ export default function JobSourcesPage() {
       </section>
 
       {/* Create / Edit Source Dialog */}
-      <Dialog.Root
+      <Dialog
         open={dialogOpen}
-        onOpenChange={(next) => {
-          if (!saveMutation.isPending) setDialogOpen(next);
+        onOpenChange={(next, details) => {
+          if (saveMutation.isPending) details.cancel();
+          else setDialogOpen(next);
         }}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-[2px]" />
-          <Dialog.Content
-            aria-describedby={undefined}
-            className="fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[calc(100dvh-2rem)] max-w-lg -translate-y-1/2 overflow-y-auto rounded-panel border border-border bg-card p-6 shadow-xl outline-none"
-          >
-            <div className="flex items-start justify-between gap-3 border-b border-border pb-3.5">
-              <div>
-                <Dialog.Title className="text-base font-bold text-foreground">
-                  {editing
-                    ? `编辑博主档案：@${editing.handle}`
-                    : "新增 X 博主档案"}
-                </Dialog.Title>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  用于统一归属博主招聘信息、授权关系及拒收名单拦截。
-                </p>
-              </div>
-              <Dialog.Close asChild>
+        <DialogContent
+          aria-describedby={undefined}
+          className="fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[calc(100dvh-2rem)] max-w-lg -translate-y-1/2 overflow-y-auto rounded-panel border border-border bg-card p-6 shadow-xl outline-none"
+        >
+          <div className="flex items-start justify-between gap-3 border-b border-border pb-3.5">
+            <div>
+              <DialogTitle className="text-base font-bold text-foreground">
+                {editing
+                  ? `编辑博主档案：@${editing.handle}`
+                  : "新增 X 博主档案"}
+              </DialogTitle>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                用于统一归属博主招聘信息、授权关系及拒收名单拦截。
+              </p>
+            </div>
+            <DialogClose
+              render={
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
                   aria-label="关闭弹窗"
+                />
+              }
+            >
+              <X size={16} aria-hidden="true" />
+            </DialogClose>
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+            {formError && <ErrorState message={formError} />}
+
+            {!editing && (
+              <div className="space-y-1">
+                <label htmlFor="src-handle" className="text-xs font-semibold">
+                  X 账号（Handle）*
+                </label>
+                <Input
+                  id="src-handle"
+                  required
+                  value={form.handle}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      handle: e.currentTarget.value,
+                    }))
+                  }
+                  placeholder="例如 @marc_louvion 或 marc_louvion"
+                  className="font-mono text-xs"
+                />
+              </div>
+            )}
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1">
+                <label htmlFor="src-name" className="text-xs font-semibold">
+                  展示名称 *
+                </label>
+                <Input
+                  id="src-name"
+                  required
+                  maxLength={120}
+                  value={form.displayName}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      displayName: e.currentTarget.value,
+                    }))
+                  }
+                  placeholder="例如 Marc Lou"
+                />
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="src-rel" className="text-xs font-semibold">
+                  合作与授权关系
+                </label>
+                <Select
+                  id="src-rel"
+                  value={form.relationship}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      relationship: e.currentTarget.value as SourceRelationship,
+                    }))
+                  }
                 >
-                  <X size={16} aria-hidden="true" />
-                </Button>
-              </Dialog.Close>
+                  {(
+                    Object.entries(relationshipLabels) as [
+                      SourceRelationship,
+                      string,
+                    ][]
+                  ).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </Select>
+              </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-              {formError && <ErrorState message={formError} />}
+            <div className="space-y-1">
+              <label htmlFor="src-bio-zh" className="text-xs font-semibold">
+                中文简介 / 领域标签
+              </label>
+              <Textarea
+                id="src-bio-zh"
+                rows={2}
+                maxLength={500}
+                value={form.bioZh}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    bioZh: e.currentTarget.value,
+                  }))
+                }
+                placeholder="例如：独立产品开发者 · AI SaaS / 远程全栈"
+              />
+            </div>
 
-              {!editing && (
-                <div className="space-y-1">
-                  <label htmlFor="src-handle" className="text-xs font-semibold">
-                    X 账号（Handle）*
-                  </label>
-                  <Input
-                    id="src-handle"
-                    required
-                    value={form.handle}
+            <div className="space-y-1">
+              <label htmlFor="src-bio-en" className="text-xs font-semibold">
+                English Bio (Optional)
+              </label>
+              <Textarea
+                id="src-bio-en"
+                rows={2}
+                maxLength={500}
+                value={form.bioEn}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    bioEn: e.currentTarget.value,
+                  }))
+                }
+                placeholder="Indie maker sharing remote full-stack & AI roles."
+              />
+            </div>
+
+            <div className="space-y-2.5 rounded-control border border-destructive-border bg-destructive-surface/50 p-3.5">
+              <label className="flex cursor-pointer items-start gap-2.5 text-xs font-semibold text-destructive">
+                <input
+                  type="checkbox"
+                  checked={form.optOut}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      optOut: e.currentTarget.checked,
+                    }))
+                  }
+                  className="mt-0.5 size-4 rounded border-destructive accent-destructive"
+                />
+                <span>
+                  加入拒收名单（opt_out = true）：永久禁止录入此博主的 X 推文
+                </span>
+              </label>
+
+              {form.optOut && (
+                <div className="space-y-2.5 pl-6">
+                  <Textarea
+                    rows={2}
+                    maxLength={500}
+                    value={form.optOutNote}
                     onChange={(e) =>
                       setForm((prev) => ({
                         ...prev,
-                        handle: e.currentTarget.value,
+                        optOutNote: e.currentTarget.value,
                       }))
                     }
-                    placeholder="例如 @marc_louvion 或 marc_louvion"
-                    className="font-mono text-xs"
+                    placeholder="记录撤稿来源与日期（例如：2026-11-24 通过邮件申请撤下并拒绝后续收录）"
+                    className="bg-card text-xs"
                   />
+                  {editing && editing.totalCount > editing.removedCount && (
+                    <label className="flex cursor-pointer items-center gap-2 text-xs text-destructive">
+                      <input
+                        type="checkbox"
+                        checked={form.takedownExistingJobs}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            takedownExistingJobs: e.currentTarget.checked,
+                          }))
+                        }
+                        className="size-4 rounded border-destructive accent-destructive"
+                      />
+                      <span>
+                        同时将该博主现有未撤下招聘全部标记为「已撤下 410」
+                      </span>
+                    </label>
+                  )}
                 </div>
               )}
+            </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <label htmlFor="src-name" className="text-xs font-semibold">
-                    展示名称 *
-                  </label>
-                  <Input
-                    id="src-name"
-                    required
-                    maxLength={120}
-                    value={form.displayName}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        displayName: e.currentTarget.value,
-                      }))
-                    }
-                    placeholder="例如 Marc Lou"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label htmlFor="src-rel" className="text-xs font-semibold">
-                    合作与授权关系
-                  </label>
-                  <Select
-                    id="src-rel"
-                    value={form.relationship}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        relationship: e.currentTarget
-                          .value as SourceRelationship,
-                      }))
-                    }
-                  >
-                    {(
-                      Object.entries(relationshipLabels) as [
-                        SourceRelationship,
-                        string,
-                      ][]
-                    ).map(([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label htmlFor="src-bio-zh" className="text-xs font-semibold">
-                  中文简介 / 领域标签
-                </label>
-                <Textarea
-                  id="src-bio-zh"
-                  rows={2}
-                  maxLength={500}
-                  value={form.bioZh}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      bioZh: e.currentTarget.value,
-                    }))
-                  }
-                  placeholder="例如：独立产品开发者 · AI SaaS / 远程全栈"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label htmlFor="src-bio-en" className="text-xs font-semibold">
-                  English Bio (Optional)
-                </label>
-                <Textarea
-                  id="src-bio-en"
-                  rows={2}
-                  maxLength={500}
-                  value={form.bioEn}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      bioEn: e.currentTarget.value,
-                    }))
-                  }
-                  placeholder="Indie maker sharing remote full-stack & AI roles."
-                />
-              </div>
-
-              <div className="space-y-2.5 rounded-control border border-destructive-border bg-destructive-surface/50 p-3.5">
-                <label className="flex cursor-pointer items-start gap-2.5 text-xs font-semibold text-destructive">
-                  <input
-                    type="checkbox"
-                    checked={form.optOut}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        optOut: e.currentTarget.checked,
-                      }))
-                    }
-                    className="mt-0.5 size-4 rounded border-destructive accent-destructive"
-                  />
-                  <span>
-                    加入拒收名单（opt_out = true）：永久禁止录入此博主的 X 推文
-                  </span>
-                </label>
-
-                {form.optOut && (
-                  <div className="space-y-2.5 pl-6">
-                    <Textarea
-                      rows={2}
-                      maxLength={500}
-                      value={form.optOutNote}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          optOutNote: e.currentTarget.value,
-                        }))
-                      }
-                      placeholder="记录撤稿来源与日期（例如：2026-11-24 通过邮件申请撤下并拒绝后续收录）"
-                      className="bg-card text-xs"
-                    />
-                    {editing && editing.totalCount > editing.removedCount && (
-                      <label className="flex cursor-pointer items-center gap-2 text-xs text-destructive">
-                        <input
-                          type="checkbox"
-                          checked={form.takedownExistingJobs}
-                          onChange={(e) =>
-                            setForm((prev) => ({
-                              ...prev,
-                              takedownExistingJobs: e.currentTarget.checked,
-                            }))
-                          }
-                          className="size-4 rounded border-destructive accent-destructive"
-                        />
-                        <span>
-                          同时将该博主现有未撤下招聘全部标记为「已撤下 410」
-                        </span>
-                      </label>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex justify-end gap-2 border-t border-border pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={saveMutation.isPending}
-                  onClick={() => setDialogOpen(false)}
-                >
-                  取消
-                </Button>
-                <Button type="submit" disabled={saveMutation.isPending}>
-                  {saveMutation.isPending ? "保存中…" : "保存博主档案"}
-                </Button>
-              </div>
-            </form>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+            <div className="flex justify-end gap-2 border-t border-border pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={saveMutation.isPending}
+                onClick={() => setDialogOpen(false)}
+              >
+                取消
+              </Button>
+              <Button type="submit" disabled={saveMutation.isPending}>
+                {saveMutation.isPending ? "保存中…" : "保存博主档案"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <ConfirmDialog
         open={!!deleteTarget}

@@ -1,4 +1,3 @@
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Ellipsis, ExternalLink, Pencil, Trash2 } from "lucide-react";
@@ -8,6 +7,14 @@ import { toast } from "sonner";
 import { ConfirmDialog } from "../components/admin/confirm-dialog";
 import { LocaleBadge } from "../components/admin/locale-badge";
 import { Button } from "../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLinkItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 import { publicSiteOrigin } from "../lib/admin-api";
 import { cn } from "../lib/utils";
 import { taxonomyKey } from "../taxonomy/api";
@@ -56,59 +63,54 @@ function PostActions({ post }: { post: PostRow }) {
   });
   return (
     <>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <Button
-            ref={trigger}
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="size-8"
-            aria-label={`${post.title}：更多操作`}
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          ref={trigger}
+          render={<Button variant="ghost" size="icon" />}
+          className="size-8"
+          aria-label={`${post.title}：更多操作`}
+        >
+          <Ellipsis size={17} aria-hidden="true" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          finalFocus={() => {
+            const shouldRestore = !openingConfirmation.current;
+            openingConfirmation.current = false;
+            return shouldRestore;
+          }}
+        >
+          <DropdownMenuLinkItem
+            render={<Link to={editPath(post.id)} />}
+            closeOnClick
+            className={menuItem}
           >
-            <Ellipsis size={17} aria-hidden="true" />
-          </Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            align="end"
-            sideOffset={4}
-            className="z-20 min-w-36 rounded-control border border-border bg-card p-1 shadow-lg"
-            onCloseAutoFocus={(event) => {
-              if (openingConfirmation.current) event.preventDefault();
-              openingConfirmation.current = false;
+            <Pencil size={15} aria-hidden="true" /> 编辑
+          </DropdownMenuLinkItem>
+          <DropdownMenuLinkItem
+            href={new URL(post.path, publicSiteOrigin).href}
+            target="_blank"
+            rel="noreferrer"
+            closeOnClick
+            className={menuItem}
+          >
+            <ExternalLink size={15} aria-hidden="true" /> 在前台查看
+          </DropdownMenuLinkItem>
+          <DropdownMenuSeparator className="my-1 h-px bg-border" />
+          <DropdownMenuItem
+            className={cn(
+              menuItem,
+              "text-destructive data-highlighted:bg-destructive-surface",
+            )}
+            onClick={() => {
+              openingConfirmation.current = true;
+              setOpen(true);
             }}
           >
-            <DropdownMenu.Item asChild className={menuItem}>
-              <Link to={editPath(post.id)}>
-                <Pencil size={15} aria-hidden="true" /> 编辑
-              </Link>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild className={menuItem}>
-              <a
-                href={new URL(post.path, publicSiteOrigin).href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <ExternalLink size={15} aria-hidden="true" /> 在前台查看
-              </a>
-            </DropdownMenu.Item>
-            <DropdownMenu.Separator className="my-1 h-px bg-border" />
-            <DropdownMenu.Item
-              className={cn(
-                menuItem,
-                "text-destructive data-highlighted:bg-destructive-surface",
-              )}
-              onSelect={() => {
-                openingConfirmation.current = true;
-                setOpen(true);
-              }}
-            >
-              <Trash2 size={15} aria-hidden="true" /> 删除版本
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+            <Trash2 size={15} aria-hidden="true" /> 删除版本
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <ConfirmDialog
         returnFocusRef={trigger}
         title={`永久删除${language[post.locale]}版本？`}

@@ -1,4 +1,3 @@
-import * as Dialog from "@radix-ui/react-dialog";
 import {
   BriefcaseBusiness,
   CornerDownLeft,
@@ -16,8 +15,9 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { Dialog, DialogContent, DialogTitle } from "../components/ui/dialog";
 import { publicSiteOrigin } from "../lib/admin-api";
 import { cn } from "../lib/utils";
 import { dashboardPath, sessionPath, settingsPath } from "./admin-navigation";
@@ -147,6 +147,7 @@ export function CommandPalette({
   onOpenChange: (open: boolean) => void;
 }) {
   const navigate = useNavigate();
+  const searchInput = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -189,7 +190,7 @@ export function CommandPalette({
   }
 
   return (
-    <Dialog.Root
+    <Dialog
       open={open}
       onOpenChange={(next) => {
         if (!next) {
@@ -199,99 +200,95 @@ export function CommandPalette({
         onOpenChange(next);
       }}
     >
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-[2px]" />
-        <Dialog.Content
-          aria-describedby={undefined}
-          className="fixed inset-x-4 top-[14%] z-50 mx-auto max-w-lg overflow-hidden rounded-panel border border-border bg-card shadow-2xl outline-none"
-        >
-          <Dialog.Title className="sr-only">快速跳转命令面板</Dialog.Title>
-          <div className="flex items-center gap-2.5 border-b border-border px-3.5">
-            <Search
-              size={16}
-              aria-hidden="true"
-              className="shrink-0 text-muted-foreground"
-            />
-            <input
-              type="search"
-              autoFocus
-              value={query}
-              aria-label="搜索功能或页面"
-              placeholder="输入页面名称或操作，如「新建文章」「SEO」…"
-              className="h-12 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-              onChange={(event) => {
-                setQuery(event.currentTarget.value);
-                setActiveIndex(0);
-              }}
-              onKeyDown={(event) => {
-                if (event.key === "ArrowDown" && filtered.length) {
-                  event.preventDefault();
-                  setActiveIndex((current) => (current + 1) % filtered.length);
-                } else if (event.key === "ArrowUp" && filtered.length) {
-                  event.preventDefault();
-                  setActiveIndex(
-                    (current) =>
-                      (current - 1 + filtered.length) % filtered.length,
-                  );
-                } else if (
-                  event.key === "Enter" &&
-                  boundedIndex >= 0 &&
-                  filtered[boundedIndex]
-                ) {
-                  event.preventDefault();
-                  runCommand(filtered[boundedIndex]);
-                }
-              }}
-            />
-            <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
-              ESC
-            </kbd>
-          </div>
-          <div className="max-h-80 overflow-y-auto p-2" role="listbox">
-            {filtered.length === 0 ? (
-              <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-                未找到匹配的页面或快捷操作
-              </p>
-            ) : (
-              filtered.map((item, index) => {
-                const Icon = item.icon;
-                const active = index === boundedIndex;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="option"
-                    aria-selected={active}
-                    onMouseEnter={() => setActiveIndex(index)}
-                    onClick={() => runCommand(item)}
-                    className={cn(
-                      "flex w-full cursor-pointer items-center justify-between gap-3 rounded-control px-3 py-2.5 text-left text-sm transition-colors duration-100 outline-none",
-                      active
-                        ? "bg-accent font-medium text-foreground"
-                        : "text-foreground hover:bg-accent/70",
-                    )}
-                  >
-                    <span className="flex min-w-0 items-center gap-2.5">
-                      <Icon
-                        size={16}
-                        aria-hidden="true"
-                        className="shrink-0 text-muted-foreground"
-                      />
-                      <span className="truncate">{item.label}</span>
-                    </span>
-                    <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
-                      <span>{item.group}</span>
-                      {active && (
-                        <CornerDownLeft size={13} aria-hidden="true" />
-                      )}
-                    </span>
-                  </button>
+      <DialogContent
+        initialFocus={searchInput}
+        aria-describedby={undefined}
+        className="fixed inset-x-4 top-[14%] z-50 mx-auto max-w-lg overflow-hidden rounded-panel border border-border bg-card shadow-2xl outline-none"
+      >
+        <DialogTitle className="sr-only">快速跳转命令面板</DialogTitle>
+        <div className="flex items-center gap-2.5 border-b border-border px-3.5">
+          <Search
+            size={16}
+            aria-hidden="true"
+            className="shrink-0 text-muted-foreground"
+          />
+          <input
+            type="search"
+            ref={searchInput}
+            value={query}
+            aria-label="搜索功能或页面"
+            placeholder="输入页面名称或操作，如「新建文章」「SEO」…"
+            className="h-12 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            onChange={(event) => {
+              setQuery(event.currentTarget.value);
+              setActiveIndex(0);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowDown" && filtered.length) {
+                event.preventDefault();
+                setActiveIndex((current) => (current + 1) % filtered.length);
+              } else if (event.key === "ArrowUp" && filtered.length) {
+                event.preventDefault();
+                setActiveIndex(
+                  (current) =>
+                    (current - 1 + filtered.length) % filtered.length,
                 );
-              })
-            )}
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+              } else if (
+                event.key === "Enter" &&
+                boundedIndex >= 0 &&
+                filtered[boundedIndex]
+              ) {
+                event.preventDefault();
+                runCommand(filtered[boundedIndex]);
+              }
+            }}
+          />
+          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+            ESC
+          </kbd>
+        </div>
+        <div className="max-h-80 overflow-y-auto p-2" role="listbox">
+          {filtered.length === 0 ? (
+            <p className="px-3 py-8 text-center text-sm text-muted-foreground">
+              未找到匹配的页面或快捷操作
+            </p>
+          ) : (
+            filtered.map((item, index) => {
+              const Icon = item.icon;
+              const active = index === boundedIndex;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onClick={() => runCommand(item)}
+                  className={cn(
+                    "flex w-full cursor-pointer items-center justify-between gap-3 rounded-control px-3 py-2.5 text-left text-sm transition-colors duration-100 outline-none",
+                    active
+                      ? "bg-accent font-medium text-foreground"
+                      : "text-foreground hover:bg-accent/70",
+                  )}
+                >
+                  <span className="flex min-w-0 items-center gap-2.5">
+                    <Icon
+                      size={16}
+                      aria-hidden="true"
+                      className="shrink-0 text-muted-foreground"
+                    />
+                    <span className="truncate">{item.label}</span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
+                    <span>{item.group}</span>
+                    {active && <CornerDownLeft size={13} aria-hidden="true" />}
+                  </span>
+                </button>
+              );
+            })
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

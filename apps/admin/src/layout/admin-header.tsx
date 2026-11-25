@@ -1,5 +1,3 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   ChevronDown,
   ExternalLink,
@@ -14,6 +12,23 @@ import {
 import { useEffect, useState } from "react";
 import { Link, matchPath, useLocation } from "react-router";
 import { Button, buttonVariants } from "../components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuLinkItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 import { publicSiteOrigin } from "../lib/admin-api";
 import { cn } from "../lib/utils";
 import {
@@ -94,48 +109,38 @@ function MobileNavigation({ username }: { username: string }) {
   }, [open]);
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          aria-label="打开导航"
-        >
-          <Menu size={19} aria-hidden="true" />
-        </Button>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-[2px] md:hidden" />
-        <Dialog.Content
-          aria-describedby={undefined}
-          className="fixed inset-y-0 left-0 z-50 flex w-sidebar max-w-[calc(100vw-3rem)] flex-col border-r border-border bg-card shadow-xl outline-none md:hidden"
-        >
-          <div className="flex h-header shrink-0 items-center justify-between gap-2 border-b border-border px-4">
-            <Dialog.Title className="sr-only">OPC Admin 导航</Dialog.Title>
-            <AdminBrand showStatus />
-            <Dialog.Close asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label="关闭导航"
-              >
-                <X size={18} aria-hidden="true" />
-              </Button>
-            </Dialog.Close>
-          </div>
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-            <AdminSidebar onNavigate={() => setOpen(false)} />
-            <SidebarAccountCard
-              username={username}
-              onNavigate={() => setOpen(false)}
-            />
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        render={<Button type="button" variant="ghost" size="icon" />}
+        className="md:hidden"
+        aria-label="打开导航"
+      >
+        <Menu size={19} aria-hidden="true" />
+      </DialogTrigger>
+      <DialogContent
+        aria-describedby={undefined}
+        backdropClassName="md:hidden"
+        className="fixed inset-y-0 left-0 z-50 flex w-sidebar max-w-[calc(100vw-3rem)] flex-col border-r border-border bg-card shadow-xl outline-none md:hidden"
+      >
+        <div className="flex h-header shrink-0 items-center justify-between gap-2 border-b border-border px-4">
+          <DialogTitle className="sr-only">OPC Admin 导航</DialogTitle>
+          <AdminBrand showStatus />
+          <DialogClose
+            render={<Button type="button" variant="ghost" size="icon" />}
+            aria-label="关闭导航"
+          >
+            <X size={18} aria-hidden="true" />
+          </DialogClose>
+        </div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          <AdminSidebar onNavigate={() => setOpen(false)} />
+          <SidebarAccountCard
+            username={username}
+            onNavigate={() => setOpen(false)}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -145,64 +150,61 @@ function AccountMenu({
   onLogout,
 }: Pick<AdminHeaderProps, "username" | "logoutPending" | "onLogout">) {
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          aria-label="管理员菜单"
-          className="max-w-48 px-2"
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={<Button type="button" variant="ghost" />}
+        aria-label="管理员菜单"
+        className="max-w-48 px-2"
+      >
+        <span
+          aria-hidden="true"
+          className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground"
         >
-          <span
-            aria-hidden="true"
-            className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground"
-          >
-            {Array.from(username)[0]?.toUpperCase()}
-          </span>
-          <span className="hidden truncate text-sm font-medium sm:inline">
-            {username}
-          </span>
-          <ChevronDown
-            size={14}
-            aria-hidden="true"
-            className="shrink-0 text-muted-foreground"
-          />
-        </Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          align="end"
-          sideOffset={6}
-          collisionPadding={12}
-          className="z-30 w-56 rounded-control border border-border bg-card p-1 shadow-lg"
-        >
-          <DropdownMenu.Label className="break-all px-3 py-2 text-xs text-muted-foreground">
+          {Array.from(username)[0]?.toUpperCase()}
+        </span>
+        <span className="hidden truncate text-sm font-medium sm:inline">
+          {username}
+        </span>
+        <ChevronDown
+          size={14}
+          aria-hidden="true"
+          className="shrink-0 text-muted-foreground"
+        />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={6}
+        collisionPadding={12}
+        positionerClassName="z-30"
+        className="w-56"
+      >
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="break-all px-3 py-2 text-xs text-muted-foreground">
             <span className="block">系统管理员</span>
             <span className="mt-0.5 block text-sm font-semibold text-foreground">
               {username}
             </span>
-          </DropdownMenu.Label>
-          <DropdownMenu.Separator className="my-1 h-px bg-border" />
-          <DropdownMenu.Item asChild>
-            <Link
-              to={sessionPath}
-              className="flex min-h-control cursor-pointer items-center gap-2 rounded-control px-3 text-sm font-medium text-foreground outline-none data-highlighted:bg-accent"
-            >
-              <ShieldCheck size={15} aria-hidden="true" />
-              管理员账户
-            </Link>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className="my-1 h-px bg-border" />
+          <DropdownMenuLinkItem
+            render={<Link to={sessionPath} />}
+            closeOnClick
+            className="flex min-h-control cursor-pointer items-center gap-2 rounded-control px-3 text-sm font-medium text-foreground outline-none data-highlighted:bg-accent"
+          >
+            <ShieldCheck size={15} aria-hidden="true" />
+            管理员账户
+          </DropdownMenuLinkItem>
+          <DropdownMenuItem
             disabled={logoutPending}
-            onSelect={onLogout}
+            onClick={onLogout}
             className="flex min-h-control cursor-pointer items-center gap-2 rounded-control px-3 text-sm font-medium text-destructive outline-none data-disabled:opacity-60 data-highlighted:bg-destructive-surface"
           >
             <LogOut size={15} aria-hidden="true" />
             {logoutPending ? "正在退出…" : "退出登录"}
-          </DropdownMenu.Item>
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

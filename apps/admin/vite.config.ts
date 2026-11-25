@@ -6,6 +6,7 @@ const proxy = { "/api": "http://127.0.0.1:3001" };
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  resolve: { tsconfigPaths: true },
   server: { host: "localhost", port: 5173, strictPort: true, proxy },
   preview: { host: "localhost", port: 5173, strictPort: true, proxy },
 });
